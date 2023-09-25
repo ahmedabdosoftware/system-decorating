@@ -1,23 +1,56 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Dashboard from "../views/Dashboard.vue";
+import Reviews from "../views/Reviews.vue";
+import AddCatagory from "../views/category/AddCatagory.vue";
+import Category from "../views/category/Category.vue";
+import Product from "../views/product/Product.vue";
+import EditCategory from "../views/category/EditCategory.vue";
+import EditProduct from "../views/product/EditProduct.vue";
+import AddNewProduct from "../views/product/AddNewProduct.vue";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    name: "Dashboard",
+    component: Dashboard,
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    path: "/Reviews",
+    name: "Reviews",
+    component: Reviews,
+  }, 
+  {
+    path: "/addcatagory",
+    name: "AddCatagory",
+    component: AddCatagory,
+  },
+  {
+    path: "/Category",
+    name: "Category",
+    component: Category,
+  },
+  {
+    path: "/Product",
+    name: "Product",
+    component: Product,
+  },
+  {
+    path: "/AddNewProduct",
+    name: "AddNewProduct",
+    component: AddNewProduct,
+  },
+  {
+    path: "/EditCategory/:id",
+    name: "EditCategory",
+    component: EditCategory,
+  },
+  {
+    path: "/EditProduct/:id",
+    name: "EditProduct",
+    component: EditProduct,
   },
 ];
 

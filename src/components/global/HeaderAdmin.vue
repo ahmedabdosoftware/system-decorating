@@ -1,0 +1,136 @@
+<template>
+  <header :class="{ 'dark-mode-header': getDarkMode }">
+    <div :class="{ 'dark-mode-header-first': getDarkMode }">
+      <div>
+        <img
+          class="searchIcon"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzOOcc8zmCDsFQDkDQKfSwt-zN9jKB0xYhjg&usqp=CAU&reload=on"
+        />
+        <input
+          :class="{ 'dark-mode-header-first': getDarkMode }"
+          placeholder="search"
+          type="search"
+        />
+      </div>
+    </div>
+    <div>
+      <div class="icon-noti">
+        <img
+          class="icon"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkLqdXuGcusYYAIhZUSnkw7Ub3JaMhfHDrhg&usqp=CAU"
+        />
+      </div>
+      <div class="icon-noti">
+        <img
+          class="icon"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5WwKlKFSsvyMhbxygrwac256XsnEe-aPtkQ&usqp=CAU"
+        />
+      </div>
+      <div class="profile-cont">
+        <img
+          class="icon profile"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlo1-fGoWrSZLpqx-_GVEOJJRTi3xtkFdl6Q&usqp=CAU"
+        />
+      </div>
+    </div>
+  </header>
+</template>
+<script>
+// import router from "./router";
+export default {
+  name: "HeaderAdmin",
+  methods: {},
+  computed: {
+    getDarkMode() {
+      return this.$store.state.darkMode;
+    },
+  },
+};
+</script>
+
+<style scoped lang="scss">
+header {
+  width: 85%;
+  height: 63px ;
+  background-color: white;
+  // background-color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0px;
+  left: 15%;
+  z-index: 2;
+  border-bottom: 2px solid rgb(215, 213, 213);
+}
+
+header > div:nth-child(1) {
+  width: 28%;
+  height: 40px;
+  background-color: white;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-radius: 4px;
+  margin-left: 15px;
+  div {
+    display: flex;
+    align-items: center;
+    width: 70%;
+    height: 100%;
+    border-radius: 5px;
+    margin-left: 20px;
+    img {
+      width: 20%;
+      height: 30px;
+      mix-blend-mode: multiply;
+    }
+    input {
+      border-radius: 5px;
+      width: 80%;
+      height: 100%;
+      padding-left: 10px;
+      border: none;
+    }
+    input:focus {
+      outline: none;
+    }
+  }
+}
+header > div:nth-child(2) {
+  width: 170px;
+  height: 100%;
+  //   background-color: red;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.icon-noti {
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 10px;
+}
+.icon {
+  width: 20px;
+  height: 20px;
+}
+.profile-cont {
+  background-color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+}
+.profile {
+  border-radius: 20px;
+  width: 40px;
+  height: 40px;
+}
+.dark-mode-header {
+  background-color: black;
+  border-bottom: 2px solid rgb(26, 26, 26) !important;
+}
+.dark-mode-header-first {
+  background-color: rgb(36, 36, 36) !important;
+}
+</style>

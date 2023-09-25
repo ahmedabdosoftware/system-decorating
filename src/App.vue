@@ -1,32 +1,49 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
+  <div :class="{ 'dark-mode': getDarkMode }" id="app">
+    <!-- header component -->
+    <HeaderAdmin></HeaderAdmin>
+    <!-- Sidebar component -->
+    <Sidebar></Sidebar>
+    <router-view class="content-view" :class="{ 'dark-mode': getDarkMode }"  />
   </div>
 </template>
 
-<style lang="scss">
+<script>
+import HeaderAdmin from "../src/components/global/HeaderAdmin.vue";
+import Sidebar from "../src/components/global/Sidebar.vue";
+export default {
+  name: "App",
+  components: {
+    HeaderAdmin,
+    Sidebar,
+  },
+  computed: {
+    getDarkMode() {
+      return this.$store.state.darkMode;
+    },
+  },
+  // router,
+};
+</script>
+
+<style scoped lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  width: 100%;
+  min-height: 800px;
+  // background-color: antiquewhite;
 }
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.content-view {
+  min-height: 600px;
+  background-color: #f9f7f7;
+  margin-left: 15%;
+  box-sizing: border-box;
+}
+.dark-mode {
+  // background-color: rgb(237, 93, 93) !important;
+  background-color: rgb(19, 19, 19);
 }
 </style>
