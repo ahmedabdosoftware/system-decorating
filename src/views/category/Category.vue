@@ -214,6 +214,8 @@ export default {
   // background-color: aqua;
   display: flex;
   flex-wrap: wrap;
+  width: 85%;
+  // justify-content: flex-end;
 }
 .title {
   width: 100%;
@@ -481,5 +483,31 @@ export default {
 .dark-mode-box {
   background-color: black !important;
   box-shadow: 0 0 5px rgb(17, 16, 16);
+}
+// phone
+@media (max-width: 477px) {
+  .title {
+    > div:nth-of-type(2) {
+      input {
+        width: 130px;
+      }
+    }
+  }
+
+  .title {
+    height: 210px;
+    // background-color: red;
+    > div:first-child {
+      height: 60%;
+      flex-direction: column;
+      > div:first-child {
+        align-self: flex-start;
+        margin-top: 15px;
+      }
+      > div:nth-of-type(2) {
+        align-self: flex-end;
+      }
+    }
+  }
 }
 </style>

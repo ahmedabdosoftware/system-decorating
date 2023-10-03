@@ -86,7 +86,7 @@
           </div>
         </div>
         <div></div>
-        <div>
+        <div class="puplish-allCont">
           <div class="puplish-cont">
             <img
               class="puplish"
@@ -392,4 +392,20 @@ input[type="file"] {
   border: solid 1px rgb(28, 27, 27) !important;
 }
 // title.....
+// phone
+@media (max-width: 477px) {
+  .title {
+    p {
+      margin-left: 60px;
+    }
+  }
+  .puplish-allCont {
+    span {
+      padding-left: 15px;
+    }
+  }
+  .allContentt {
+    width: 370px !important;
+  }
+}
 </style>

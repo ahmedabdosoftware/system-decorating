@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar">
+  <div id="sidebar" class="sidebar">
     <div :class="{ 'dark-mode-content': getDarkMode }" class="content">
       <div :class="{ 'dark-mode-header': getDarkMode }" class="header">
         <img
@@ -10,17 +10,19 @@
           <p>locascanstyle</p>
         </div>
         <img
+          class="loggo"
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTUgxG9z03WuK9OPQ64aptvJjEyyPz2Cnhcw&usqp=CAU"
         />
+        <span v-on:click="disappear()" class="x">x</span>
       </div>
       <div class="links">
         <div :class="{ 'dark-mode-content': getDarkMode }">
           <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2srGxhD6w3lhTN62veAyoSsFyIbdbjYQQUQ&usqp=CAU"
           />
-          <router-link to="/">
+          <div :class="{ 'dark-mode-content': getDarkMode }">
             <p class="link">dashboard</p>
-          </router-link>
+          </div>
           <img
             class="arrow"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl6Jx0lu0D-qLbrrZtaMbMhb54XRiQHabqH9kXIesQhzX1fPbcM5O6OvGZzxZE9qqhHgM&usqp=CAU"
@@ -31,7 +33,7 @@
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLiqfpqLBM2Kj32rBRpIeMKImhTVpHbmd7FA&usqp=CAU"
           />
           <!-- Reviews -->
-          <router-link to="/Product">
+          <router-link to="/">
             <p class="link">products</p>
           </router-link>
           <img
@@ -101,16 +103,27 @@
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl6Jx0lu0D-qLbrrZtaMbMhb54XRiQHabqH9kXIesQhzX1fPbcM5O6OvGZzxZE9qqhHgM&usqp=CAU"
           />
         </div>
-        <div :class="{ 'dark-mode-content': getDarkMode }" class="setting">
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_XSDJ3W3SotE-UCiHeXCP5IjlGvMy4HSoyw&usqp=CAU"
-          />
-          <div :class="{ 'dark-mode-content': getDarkMode }">
-            <p class="link">setting</p>
+        <div :class="{ 'dark-mode-content': getDarkMode }" class="log-out">
+          <div
+            :class="{ 'dark-mode-content': getDarkMode }"
+            class="profile-cont"
+          >
+            <div class="contImge">
+              <img
+                class="profile"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlo1-fGoWrSZLpqx-_GVEOJJRTi3xtkFdl6Q&usqp=CAU"
+              />
+            </div>
+          </div>
+          <div
+            class="log-out-word"
+            :class="{ 'dark-mode-content': getDarkMode }"
+          >
+            <p class="link">log out</p>
           </div>
           <img
-            class="arrow"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl6Jx0lu0D-qLbrrZtaMbMhb54XRiQHabqH9kXIesQhzX1fPbcM5O6OvGZzxZE9qqhHgM&usqp=CAU"
+            class="log"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRebt6fBmYJPznKOuWjagvttAYLUb0XE9j-9A&usqp=CAU"
           />
         </div>
       </div>
@@ -137,33 +150,9 @@ export default {
     theme() {
       this.$store.commit("toggleDarkMode");
     },
-    // cliked(index) {
-    // let sidbar = document.querySelectorAll(".links >div");
-    // sidbar.forEach((element) => {
-    //   // nothing => 6
-    //   if (index == 6) {
-    //     console.log("nothing");
-    //   } else {
-    //     element.classList.remove("cliked");
-    //     element.children[1].classList.remove("cliked");
-    //     element.children[1].children[0].classList.remove("active");
-    //   }
-    // });
-    // // nothing => 6
-    // if (index == 6) {
-    //   console.log("nothing");
-    // } else {
-    //   // normal mood
-    //   if (this.getDarkMode == false) {
-    //     sidbar[index].classList.add("cliked");
-    //     sidbar[index].children[1].classList.add("cliked");
-    //   }
-    //   sidbar[index].children[1].children[0].classList.add("active");
-    // }
-    // if (index == 6) {
-    //   this.$store.commit("toggleDarkMode");
-    // }
-    // },
+    disappear() {
+      document.getElementById("sidebar").style.cssText = "left:-100%;";
+    },
   },
 };
 </script>
@@ -173,7 +162,7 @@ export default {
   width: 15%;
   height: 100vh;
   background-color: rgb(238, 232, 232);
-  background-color: rgb(205, 133, 133);
+  // background-color: rgb(205, 133, 133);
   position: fixed;
   left: 0px;
   top: 0px;
@@ -189,7 +178,7 @@ export default {
 }
 .header {
   width: 100%;
-  height: 10%;
+  height: 63px;
   // background-color: firebrick;
   display: flex;
   align-items: center;
@@ -239,17 +228,17 @@ export default {
   div:hover > div {
     background-color: rgb(220, 220, 245);
   }
-  div {
+   div {
     position: relative;
     border-radius: 5px;
     width: 100%;
-    height: 10%;
+    height: 63px;
     margin-bottom: 2px;
     background-color: white;
     display: flex;
     align-items: center;
     cursor: pointer;
-    img:first-child {
+    > img:first-child {
       width: 35px;
       height: 35px;
       margin-left: 20px;
@@ -258,6 +247,26 @@ export default {
       width: 20px;
       height: 20px;
       margin-left: 30px;
+    }
+    .profile-cont {
+      width: 70px;
+      height: 50px;
+      // background-color: salmon;
+      .contImge {
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+        background-color: white;
+        margin-left: 20px;
+        margin-top: 6px;
+        .profile {
+          width: 100%;
+          height: 100%;
+          border-radius: 20px;
+          margin-left: 0px;
+
+        }
+      }
     }
     div {
       p {
@@ -277,37 +286,30 @@ export default {
   width: 15px !important;
   height: 15px !important;
 }
-// .router-link-exact-active {
-//   p {
-//     color: blue;
-//   }
-//   // background-color: rgb(175, 175, 243);
-// }
-// .theme {
-//   margin-top: 20px;
-// }
-// .reveiws {
-//   border-bottom: 1px solid rgb(149, 147, 147);
-//   height: 14% !important;
-//   // background-color: red !important;
-//   img,
-//   p {
-//     margin-bottom: 18px;
-//   }
-//   img:first-child {
-//     width: 50px !important;
-//     height: 50px !important;
-//   }
-// }
-.setting {
-  border-top: 1px solid rgb(149, 147, 147);
+.log-out {
+  margin-top: 20px;
+  position: relative;
 }
-// .cliked {
-//   background-color: rgb(220, 220, 245) !important;
-// }
-// .active {
-// color: blue !important;
-// }
+.log-out::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0px;
+  width: 100%;
+  height: 1px;
+  background-color: rgb(181, 181, 182);
+}
+.log {
+  width: 35px;
+  height: 35px;
+}
+
+.log-out-word {
+  width: 100px !important;
+  p {
+    padding-left: 5px !important;
+  }
+}
 .router-link-exact-active {
   p {
     color: blue !important;
@@ -327,5 +329,39 @@ export default {
 }
 .mood {
   color: white;
+}
+.x {
+  width: 35px;
+  height: 35px;
+  display: none;
+  background-color: rgb(200, 199, 199);
+  margin-left: 70px;
+  text-align: center;
+  line-height: 35px;
+  font-size: 22px;
+  text-transform: capitalize;
+  border-radius: 17.5px;
+}
+/* media => ipad */
+@media (max-width: 821px) {
+  .sidebar {
+    left: -100%;
+    transition: 0.5s;
+    z-index: 4;
+    width: 35vw;
+    top: 0px;
+  }
+  .x {
+    display: block;
+  }
+  .loggo {
+    display: none;
+  }
+}
+// phone
+@media (max-width: 477px) {
+  .sidebar {
+    width: 60vw !important;
+  }
 }
 </style>

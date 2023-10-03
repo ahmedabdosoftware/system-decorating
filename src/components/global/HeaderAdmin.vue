@@ -1,7 +1,14 @@
 <template>
   <header :class="{ 'dark-mode-header': getDarkMode }">
-    <div :class="{ 'dark-mode-header-first': getDarkMode }">
-      <div>
+    <div :class="{ 'dark-mode': getDarkMode }">
+      <div class="cont-threeLines">
+        <img
+          v-on:click="appearMenue()"
+          class="threeLines"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDcuD37EZ7RcuSCK-xgiviaswyxNkGoXYggQ&usqp=CAU"
+        />
+      </div>
+      <div :class="{ 'dark-mode-header-first': getDarkMode }">
         <img
           class="searchIcon"
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzOOcc8zmCDsFQDkDQKfSwt-zN9jKB0xYhjg&usqp=CAU&reload=on"
@@ -39,7 +46,11 @@
 // import router from "./router";
 export default {
   name: "HeaderAdmin",
-  methods: {},
+  methods: {
+    appearMenue() {
+      document.getElementById("sidebar").style.cssText = "left:0%;";
+    },
+  },
   computed: {
     getDarkMode() {
       return this.$store.state.darkMode;
@@ -51,7 +62,7 @@ export default {
 <style scoped lang="scss">
 header {
   width: 85%;
-  height: 63px ;
+  height: 63px;
   background-color: white;
   // background-color: black;
   display: flex;
@@ -65,21 +76,28 @@ header {
 }
 
 header > div:nth-child(1) {
-  width: 28%;
+  min-width: 28%;
   height: 40px;
-  background-color: white;
+  // background-color: white;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   border-radius: 4px;
   margin-left: 15px;
-  div {
+  > div:first-child {
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 10px;
+  }
+  > div:nth-child(2) {
     display: flex;
     align-items: center;
     width: 70%;
     height: 100%;
     border-radius: 5px;
     margin-left: 20px;
+
     img {
       width: 20%;
       height: 30px;
@@ -126,11 +144,51 @@ header > div:nth-child(2) {
   width: 40px;
   height: 40px;
 }
+.threeLines {
+  width: 20px;
+  height: 20px;
+  display: none;
+}
+.cont-threeLines{
+  display: none;
+}
 .dark-mode-header {
   background-color: black;
   border-bottom: 2px solid rgb(26, 26, 26) !important;
 }
+.dark-mode {
+  background-color: black;
+}
 .dark-mode-header-first {
   background-color: rgb(36, 36, 36) !important;
+}
+
+/* media => ipad */
+@media (max-width: 821px) {
+  header {
+    width: 100%;
+    right: 0%;
+  }
+  .threeLines {
+    display: block;
+  }
+  .cont-threeLines{
+    display: block;
+  }
+}
+// phone
+@media (max-width: 477px) {
+  header{
+    >div:first-child{
+      // background-color: darkcyan;
+      >div:nth-child(2){
+        // background-color: red;
+        width: 170px !important;
+      }
+      >div:nth-child(1){
+        // background-color: aqua;
+      }
+    }
+  }
 }
 </style>

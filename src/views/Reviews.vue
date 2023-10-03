@@ -25,7 +25,7 @@
             <span>July</span>
           </div>
           <div>
-            <p>reviews until last month</p>
+            <p  class="reviewsLastMonth">reviews until last month</p>
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@
       <div :class="{ 'dark-mode-box': getDarkMode }">
         <div>
           <div>
-            <p :class="{ 'dark-mode-title': getDarkMode }">
+            <p class="date" :class="{ 'dark-mode-title': getDarkMode }">
               February 2022.july 2023
             </p>
           </div>
@@ -459,7 +459,6 @@ export default {
 }
 .contTitle {
   background-color: blue;
-  background-color: blue;
   height: 40px;
   width: 190px;
   display: flex;
@@ -520,6 +519,7 @@ export default {
   border-bottom: 5px solid rgb(203, 202, 202);
   // border-bottom-left-radius: 5px;
   border-top-left-radius: 5px;
+  // background-color: red;
 }
 .info-review > div {
   width: 30%;
@@ -623,6 +623,7 @@ export default {
       font-weight: 600;
       text-transform: capitalize;
       color: rgb(187, 188, 189);
+      // background-color: blue;
       .rating {
         margin-right: 15px;
       }
@@ -656,6 +657,7 @@ export default {
       text-align: center;
       line-height: 30px;
       margin-bottom: 20px;
+      // background-color: seagreen;
       font-weight: 600;
     }
   }
@@ -715,10 +717,12 @@ export default {
   width: 90%;
   min-height: 500px;
   background-color: white;
+  // background-color:salmon;
   display: flex;
   justify-content: flex-end;
   flex-wrap: wrap;
   > div {
+    // background-color: darkblue;
     width: 90%;
     height: 270px;
     position: relative;
@@ -737,7 +741,7 @@ export default {
   > div {
     // background-color: white;
     display: grid;
-    grid-template-columns: repeat(10, 10%);
+    grid-template-columns: repeat(10,10%);
     grid-template-rows: repeat(10, 10%);
     > div:first-child {
       grid-area: 2/1/5/2;
@@ -774,7 +778,7 @@ export default {
     > div:nth-child(3) {
       grid-area: 2/5/4/7;
       font-weight: 600;
-      // background-color: white;
+      // background-color: sienna;
       display: flex;
       align-items: center;
       justify-content: space-evenly;
@@ -847,4 +851,138 @@ export default {
   background-color: black !important;
   box-shadow: 0 0 5px rgb(17, 16, 16);
 }
+// ipad
+@media (max-width: 821px) {
+  .info-review > div:nth-of-type(3) {
+  > div:first-child {
+    > div {
+      width: 100% !important;
+    }
+ }
+}
+
+.contReviews {
+  > div {
+    > div:nth-child(3) {
+      grid-area: 2/5/4/9;
+    }
+    > div:nth-child(5) {
+      grid-area: 10/5/12/11;
+}
+}
+}
+}
+// phone
+@media (max-width: 477px) {
+  .info-review {
+    width: 100%;
+  height: 600px;
+  flex-wrap: wrap;
+}
+.info-review > div {
+  width: 50%;
+  height: 270px;
+}
+.info-review > div:nth-of-type(3){
+  width: 70%;
+}
+
+.info-review > div:nth-of-type(2)::after {
+  background-color:white !important;
+}
+.info-review > div:first-child,
+.info-review > div:nth-of-type(2){
+
+> div:first-child {
+    p {
+      margin-right: 0px;
+      // background-color: darksalmon;
+    }
+  }
+  > div:nth-of-type(2) {
+    p {
+      margin-right: 0px;
+      // background-color: red;
+    }
+  }
+  > div:nth-of-type(3) {
+    > div:first-child {
+      div {
+        margin-right: 0px;
+        // background-color: rgb(39, 130, 50);
+      }
+      .rate {
+        margin-left: 0px !important;
+        // background-color: rgb(13, 38, 128);
+      }
+    }
+
+    }
+  }
+
+  .rating{
+    margin-left:10px;
+    // background-color:salmon;
+  }
+  .reviewsLastMonth{
+    padding-left: 17px;
+    // background-color:salmon;
+  }
+  .contReviews {
+    width: 100%;
+  > div {
+    height: 400px !important;
+    width: 100%;
+    grid-template-columns: repeat(11,9%);
+  }
+ 
+  > div {
+    >div:first-child{
+      grid-area: 2/1/7/3;
+    }
+    > div:nth-child(2) {
+      grid-area: 2/3/7/6;
+      p:first-child {
+        padding-left: 5px
+      }
+      p:nth-child(3) {
+        margin-bottom: 0px;
+      }
+      p:nth-child(2),
+      p:nth-child(3) {
+        padding-left: 5px;
+      }
+    }
+    > div:nth-child(3) {
+      grid-area: 2/6/3/12;
+    }
+    > div:nth-child(4) {
+      grid-area: 3/6/10/12;
+    }
+    > div:nth-child(5) {
+      grid-area: 10/6/12/12;
+      div:first-child,
+      div:nth-child(2) {
+        width: 60px;
+        font-weight: 500;
+        height: 30px;
+        p{
+          font-size: 9px !important;
+          text-align: center;
+          line-height: 30px;
+          text-transform: capitalize;
+        }
+
+      }
+    }
+  }
+}
+
+
+
+}
+
+
+
+
 </style>

@@ -23,8 +23,10 @@
           </router-link>
         </div>
       </div>
+
       <div :class="{ 'dark-mode-box': getDarkMode }">
-        <input
+        <div class="">
+          <input
           :class="{ 'dark-mode-search': getDarkMode }"
           placeholder="search"
           type="search"
@@ -35,6 +37,7 @@
           <option>title</option>
           <option>price</option>
         </select>
+        </div>
         <div :class="{ 'dark-mode-box': getDarkMode }">
           <div>
             <button>products</button>
@@ -272,7 +275,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    div:first-child {
+    > div:first-child {
       background-color: blue;
       height: 40px;
       width: 190px;
@@ -280,7 +283,7 @@ export default {
       align-items: center;
       border-top-right-radius: 5px;
       border-bottom-right-radius: 5px;
-      div {
+      > div {
         width: 35px;
         height: 35px;
         border-radius: 17.5px;
@@ -313,7 +316,11 @@ export default {
         width: 100px;
         height: 40px;
         background-color: white;
+        // background-color: black;
         border-radius: 4px;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
         button {
           width: 60px;
           background-color: white;
@@ -337,40 +344,45 @@ export default {
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between ;
     align-items: center;
-    select {
-      margin-right: 400px;
-      border-radius: 5px;
-      height: 30px;
-      width: 100px;
-      text-transform: capitalize;
-      color: black;
-      border: solid 2px rgb(233, 230, 230);
+    div:first-child{
+      display: flex;
+      justify-content: space-evenly ;
+      align-items: center;
+      height: 100%;
+      width: 350px;
+      // background-color: red;
+      select {
+        // margin-right: 400px;
+        border-radius: 5px;
+        height: 30px;
+        width: 100px;
+        text-transform: capitalize;
+        color: black;
+        border: solid 2px rgb(233, 230, 230);
+      }
+      input {
+        height: 30px;
+        width: 200px;
+        padding-left: 5px;
+        color: black;
+        border: solid 2px rgb(233, 230, 230);
+        border-radius: 5px;
+      }
+      input:focus {
+        outline: none;
+      }
     }
-    input {
-      height: 30px;
-      width: 300px;
-      margin-left: 20px;
-      padding-left: 5px;
-      color: black;
-      border: solid 2px rgb(233, 230, 230);
-      border-radius: 5px;
-      // font-size: 18px;
-      // font-weight: 600;
-    }
-    input:focus {
-      outline: none;
-    }
-    > div {
-      width: 250px;
+    > div:nth-child(2) {
+      width: 350px;
       height: 40px;
       // background-color: red;
       display: flex;
       justify-content: space-evenly;
       align-items: center;
       div {
-        width: 45%;
+        width: 140px;
         display: flex;
         justify-content: space-evenly;
         align-items: center;
@@ -584,4 +596,44 @@ export default {
   background-color: black !important;
   box-shadow: 0 0 5px rgb(17, 16, 16);
 }
+@media (max-width: 477px) {
+  .title {
+    > div:nth-of-type(2) {
+      div:first-child{
+        width: 170px;
+        select {
+        width: 60px;
+      }
+      input {
+        width: 100px;
+      }
+      }
+      div:nth-child(2){
+        // background-color: aqua;
+        width: 180px;
+        div {
+        width: 80px;
+      }
+
+      }
+    }
+  }
+
+  .title {
+    height: 210px;
+    // background-color: red;
+    > div:first-child {
+      height: 60%;
+      flex-direction: column;
+      > div:first-child {
+        align-self: flex-start;
+        margin-top: 15px;
+      }
+      > div:nth-of-type(2) {
+        align-self: flex-end;
+      }
+    }
+  }
+}
+
 </style>

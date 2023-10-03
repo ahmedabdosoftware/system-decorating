@@ -232,6 +232,13 @@ button {
   background-color: black !important;
   border: solid 1px rgb(28, 27, 27) !important;
 }
+
+// phone
+@media(max-width:477px){
+  .title {
+margin-left: 20px;
+  }
+}
 </style>
 <!-- let formData = new FormData();
   formData.append("title", this.categoryTitle);

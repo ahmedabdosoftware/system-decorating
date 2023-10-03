@@ -3,7 +3,7 @@
     <!-- header component -->
     <HeaderAdmin></HeaderAdmin>
     <!-- Sidebar component -->
-    <Sidebar></Sidebar>
+    <Sidebar class="sidebar"></Sidebar>
     <router-view class="content-view" :class="{ 'dark-mode': getDarkMode }"  />
   </div>
 </template>
@@ -41,9 +41,18 @@ export default {
   background-color: #f9f7f7;
   margin-left: 15%;
   box-sizing: border-box;
+  width: 85%;
 }
 .dark-mode {
   // background-color: rgb(237, 93, 93) !important;
   background-color: rgb(19, 19, 19);
 }
+@media (max-width: 821px) {
+  .content-view {
+    width: 100% !important;
+    margin-left:0px;
+    // background-color: red ;
+  }
+}
+
 </style>

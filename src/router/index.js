@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Dashboard from "../views/Dashboard.vue";
+// import Dashboard from "../views/Dashboard.vue";
 import Reviews from "../views/Reviews.vue";
 import AddCatagory from "../views/category/AddCatagory.vue";
 import Category from "../views/category/Category.vue";
@@ -12,11 +12,11 @@ import AddNewProduct from "../views/product/AddNewProduct.vue";
 Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: "/",
-    name: "Dashboard",
-    component: Dashboard,
-  },
+  // {
+  //   path: "/",
+  //   name: "Dashboard",
+  //   component: Dashboard,
+  // },
   {
     path: "/Reviews",
     name: "Reviews",
@@ -33,7 +33,7 @@ const routes = [
     component: Category,
   },
   {
-    path: "/Product",
+    path: "/",
     name: "Product",
     component: Product,
   },
