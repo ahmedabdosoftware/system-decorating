@@ -1,13 +1,12 @@
 <template>
   <div class="contPro">
-    <div :class="{ 'dark-mode': getDarkMode }">
+    <div :class=" { 'dark-mode': getDarkMode }">
       <div>
-        <img :src="category.image" />
+        <img :src="category.imgUrl "  />
       </div>
       <div>
-        <span> {{ category.name }}</span>
-        <!-- <p>{{ category.kind }}</p> -->
-        <p>new</p>
+        <span> {{ category.name }}  </span>
+        <p >{{ category.desc }}</p>
         <div class="cont-star">
           <img
             class="star"
@@ -30,56 +29,56 @@
             src="https://img.freepik.com/free-vector/start_53876-25533.jpg"
           />
         </div>
-        <!-- <span> {{ category.price }} $</span> -->
-        <span>355 $</span>
+        <span>.....</span>
         <router-link
           :to="{ name: 'EditCategory', params: { id: category.id } }"
         >
           <button class="edit">edit</button>
         </router-link>
-        <button @click="delette(category.id)" class="delete">delete</button>
-        <!-- <img
-          class="shoppingCart"
-          src="https://images.all-free-download.com/images/graphiclarge/green_shopping_cart_icon_vector_280755.jpg"
-        /> -->
+        <button @click="delette(category.id)" class= "delete" > delete </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import { mapActions } from 'pinia';
+import { useCategoriesStore } from '@/store/categories/categories.js'
 import sweetalert from "sweetalert";
+
 export default {
   name: "BoxCatogery",
-  props: ["category"],
+  props: [ "category"],
   computed: {
     getDarkMode() {
       return this.$store.state.darkMode;
     },
   },
+  created(){
+    console.log(this.category)
+
+  },
+  
   methods: {
-    delette(id) {
-      axios
-        .delete(`https://api.escuelajs.co/api/v1/categories/${id}`)
-        .then((res) => {
-          this.$emit("update");
-          console.log(res.data);
-          console.log("done");
-          sweetalert({
-            text: "deleted",
-            icon: "success",
-          });
-        })
-        .catch((error) => {
-          console.log("not done");
-          console.log(id);
-          console.log(error);
-          sweetalert({
-            text: `${error}`,
-            icon: "error",
-          });
+    ...mapActions(useCategoriesStore, ['deleteCategory', 'deleteImageFromStorage']),
+    
+    async delette(id) {
+      try {
+        await this.deleteCategory(id);
+
+        await this.deleteImageFromStorage(this.category.imgUrl);
+        console.log("done");
+        sweetalert({
+          text: "Product deleted successfully",
+          icon: "success",
         });
+      } catch (error) {
+        console.error("Deletion failed", error);
+        sweetalert( {
+          text: `Error: ${error.message}`,
+          icon: "error",
+        } );
+      }
     },
   },
 };

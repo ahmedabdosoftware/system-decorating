@@ -9,7 +9,7 @@
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfifgpU6f6DdemdITBpg_essXRVuwWFaTnhJgl9QGDvchprPgRpZFDLgAZhDRlBiYvEd8&usqp=CAU"
             />
           </div>
-          <p :class="{ 'dark-mode-title': getDarkMode }">category grid</p>
+          <p :class=" { 'dark-mode-title': getDarkMode } ">category grid</p>
         </div>
         <div>
           <div class="export">
@@ -28,13 +28,15 @@
           :class="{ 'dark-mode-search': getDarkMode }"
           placeholder="search"
           type="search"
+          v-model="searchQuery"
+
         />
         <div :class="{ 'dark-mode-box': getDarkMode }">
           <div>
             <button>category</button>
             <img
-              class="arroow"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl6Jx0lu0D-qLbrrZtaMbMhb54XRiQHabqH9kXIesQhzX1fPbcM5O6OvGZzxZE9qqhHgM&usqp=CAU"
+              class="arroow point"
+              src="data:image/png;base64,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"
             />
           </div>
           <div>
@@ -48,12 +50,13 @@
       </div>
     </div>
     <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
-      <div v-for="category in categories" :key="category.id">
+       
+      <div v-for="category in filteredCategories" :key="category.id">
         <BoxCatogery
-          v-on:update="fetchData()"
           :category="category"
         ></BoxCatogery>
       </div>
+     
     </div>
     <div id="loader">
       <div class="lds-spinner">
@@ -73,142 +76,56 @@
     </div>
   </div>
 </template>
+
 <script>
-import axios from "axios";
+import { mapState, mapActions } from 'pinia';
+import { useCategoriesStore } from '@/store/categories/categories.js';
 import BoxCatogery from "@/components/global/BoxCatogery.vue";
+
 export default {
   name: "Category",
   components: {
     BoxCatogery,
   },
-  methods: {
-    // ============loader => start=============================================
-    loaderToggle: function (show) {
-      let loader = document.getElementById("loader");
-      if (show) {
-        loader.style.visibility = "visible";
-      } else {
-        loader.style.visibility = "hidden";
-      }
-    },
-    // ============loader => end=============================================
-    fetchData() {
-      this.loaderToggle(true);
-      axios
-        .get("https://api.escuelajs.co/api/v1/categories")
-        .then((res) => {
-          console.log(res.data);
-          this.categories = res.data;
-          this.loaderToggle(false);
-        })
-        .catch((error) => {
-          this.loaderToggle(false);
-          console.log(error);
-        });
-    },
+  data() {
+    return {
+      searchQuery: '',
+    };
   },
   computed: {
     getDarkMode() {
       return this.$store.state.darkMode;
     },
+    ...mapState(useCategoriesStore, ['categories']),
+    filteredCategories() {
+      const query = this.searchQuery.toLowerCase();
+      // just to be more clear code and less time (optmization) but this condition not  nessesry event the query is "empty string" no problem will return all categories
+      if (!query) {
+        return this.categories;
+      }
+      return this.categories.filter(category =>
+        category.name.toLowerCase().includes(query)
+      );
+    },
   },
-  data() {
-    return {
-      categories: [],
-      staticCategories: [
-        {
-          name: "summer collection",
-          kind: "keyboard",
-          price: 498,
-          key: 1,
-          img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB8CyDKJBg1Idxh1pQV0BwaSeZE3Z7u1M5tA&usqp=CAU",
-        },
-        {
-          name: "summer collection",
-          kind: "maous",
-          price: 298,
-          key: 2,
-          // img: "https://cdn.shopify.com/s/files/1/0517/5590/9295/products/zero-zr6806-keyboard-mouse-combo_1024x1024.jpg?v=1670316801",
-          img: "https://m.media-amazon.com/images/I/71SmrOjHDFL.__AC_SX300_SY300_QL70_ML2_.jpg",
-        },
-        {
-          name: "summer collection",
-          kind: "computer bag",
-          price: 198,
-          key: 3,
-          img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5YlbBb2_c54i-Pv_cLx85is081ot1ARhgOA&usqp=CAU",
-        },
-        {
-          name: "summer collection",
-          kind: "computer bag",
-          price: 198,
-          key: 4,
-          img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQkQSy_sjvfzpe_aVbE7GZQATp0ULZfFLtjg&usqp=CAU",
-        },
-        {
-          name: "summer collection",
-          kind: "keyboard",
-          price: 198,
-          key: 5,
-          img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFBTrs0_O2lDfrv1LlWOTvPWrOlBr10gYa-A&usqp=CAU",
-        },
-        {
-          name: "summer collection",
-          kind: "screen",
-          price: 198,
-          key: 6,
-          img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZl463wq1QoTxeTN-GVsJJEbEK1_HcGzh6lw&usqp=CAU",
-        },
-        {
-          name: "summer collection",
-          kind: "screen",
-          price: 198,
-          key: 7,
-          img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSTtGWOI8blbxRNJVsPxep8Oz86Lz7cZWXqg&usqp=CAU",
-        },
-        {
-          name: "summer collection",
-          kind: "screen",
-          price: 198,
-          key: 8,
-          img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk0UOArKhz2BFiNUjwofg72xda44ARg20nEQ&usqp=CAU",
-        },
-        {
-          name: "summer collection",
-          kind: "keyboard",
-          price: 198,
-          key: 9,
-          img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUof-4StmY-ULSCWvJivM-lYA7XoYDwmvBRw&usqp=CAU",
-        },
-        {
-          name: "summer collection",
-          kind: "pools",
-          price: 338,
-          key: 10,
-          img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxAexdVWH5im3_naeoYOew94UBxRFMnut34A&usqp=CAU",
-        },
-        {
-          name: "summer collection",
-          kind: "pools",
-          price: 338,
-          key: 11,
-          img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgtneQOCZmzYS1uZMDtQg3ehKDxP_hHVSByQ&usqp=CAU",
-        },
-        {
-          name: "summer collection",
-          kind: "pools",
-          price: 338,
-          key: 12,
-          img: "https://m.media-amazon.com/images/I/61kCTnNQe6L._AC_SX569_.jpg",
-        },
-      ],
-    };
+  methods: {
+    ...mapActions(useCategoriesStore, ['fetchCategories']),
+    loaderToggle(show) {
+        let loader = document.getElementById("loader");
+        if (loader) {
+            loader.style.visibility = show ? "visible" : "hidden";
+        }
+    },
   },
-  mounted() {
-    this.fetchData();
+ async created() {
+  this.loaderToggle(true)
+  await this.fetchCategories();
+  this.loaderToggle(false)
+
   },
 };
 </script>
+
 <style scoped lang="scss">
 .category {
   // background-color: aqua;
@@ -300,7 +217,7 @@ export default {
       height: 30px;
       margin-left: 20px;
       padding-left: 5px;
-      color: rgb(233, 230, 230);
+     // color: rgb(233, 230, 230);
       border: solid 2px rgb(233, 230, 230);
       border-radius: 5px;
       // font-size: 18px;
@@ -336,10 +253,15 @@ export default {
   width: 15px;
   height: 15px;
 }
+.arroow.point {
+  width: 7px;
+  height: 7px;
+}
 
 .allContent {
   width: 96%;
   min-height: 400px;
+  margin-bottom: 160px;
   background-color: white;
   display: flex;
   flex-wrap: wrap;
@@ -373,6 +295,7 @@ export default {
   font-weight: 500;
   font-size: 19px;
 }
+
 /* loader => start  */
 .lds-spinner {
   color: official;

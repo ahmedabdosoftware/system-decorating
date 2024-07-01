@@ -2,54 +2,38 @@
   <div class="contPro">
     <div :class="{ 'dark-mode': getDarkMode }">
       <div>
-        <img :src="oneProduct.category.image" />
+        <img :src="oneProduct.imageUrl" />
       </div>
       <div>
-        <span> {{ oneProduct.title }}</span>
-        <!-- <p>{{ category.kind }}</p> -->
+        <span> {{ oneProduct.name | subName }}</span>
         <p class="descrption">{{ oneProduct.description | sub }}</p>
         <div class="cont-star">
-          <img
-            class="star"
-            src="https://img.freepik.com/free-vector/start_53876-25533.jpg"
-          />
-          <img
-            class="star"
-            src="https://img.freepik.com/free-vector/start_53876-25533.jpg"
-          />
-          <img
-            class="star"
-            src="https://img.freepik.com/free-vector/start_53876-25533.jpg"
-          />
-          <img
-            class="star"
-            src="https://img.freepik.com/free-vector/start_53876-25533.jpg"
-          />
-          <img
-            class="star"
-            src="https://img.freepik.com/free-vector/start_53876-25533.jpg"
-          />
+          <img class="star" src="https://img.freepik.com/free-vector/start_53876-25533.jpg" />
+          <img class="star" src="https://img.freepik.com/free-vector/start_53876-25533.jpg" />
+          <img class="star" src="https://img.freepik.com/free-vector/start_53876-25533.jpg" />
+          <img class="star" src="https://img.freepik.com/free-vector/start_53876-25533.jpg" />
+          <img class="star" src="https://img.freepik.com/free-vector/start_53876-25533.jpg" />
         </div>
-        <!-- <span> {{ category.price }} $</span> -->
-        <span>{{ oneProduct.price }}</span>
-        <router-link
-          :to="{ name: 'EditProduct', params: { id: oneProduct.id } }"
-        >
+        <span>{{ oneProduct.priceMaterial }} $ Material</span>
+        <span>{{ oneProduct.priceWithLabor }} $ Labor</span>
+        <router-link :to="{ name: 'EditProduct', params: { id: oneProduct.id } }">
           <button class="edit">edit</button>
         </router-link>
         <button class="delete" @click="delette(oneProduct.id)">delete</button>
-        <!-- <img
-            class="shoppingCart"
-            src="https://images.all-free-download.com/images/graphiclarge/green_shopping_cart_icon_vector_280755.jpg"
-          /> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+
+// actions 
+import { mapActions } from 'pinia';
+import { useProductsStore } from '@/store/products/products.js'
+
+// sweetalert 
 import sweetalert from "sweetalert";
+
 export default {
   name: "BoxProduct",
   props: ["oneProduct"],
@@ -59,31 +43,35 @@ export default {
     },
   },
   methods: {
-    delette(id) {
-      axios
-        .delete(`https://api.escuelajs.co/api/v1/products/${id}`)
-        .then((res) => {
-          console.log(res.data);
-          console.log("done");
-          this.$emit('updateAfterDelte')
-          sweetalert({
-            text: "deleted",
-            icon: "success",
-          });
-        })
-        .catch((error) => {
-          console.log("not done");
-          console.log(error);
-          sweetalert({
-            text: `${error}`,
-            icon: "error",
-          });
+    // ============ my actions => start =============================================
+    ...mapActions(useProductsStore, ['deleteProduct', 'deleteImageFromStorage']),
+    // ============ my actions => end ==============================================
+
+    async delette(id) {
+      try {
+        await this.deleteProduct(id);
+        console.log("Product deleted from database");
+        
+        await this.deleteImageFromStorage(this.oneProduct.imageUrl);
+        console.log("Product image deleted from storage");
+
+        sweetalert({
+          text: "Product deleted successfully",
+          icon: "success",
         });
+      } catch (error) {
+        console.error("Deletion failed", error);
+        sweetalert({
+          text: `Error: ${error.message}`,
+          icon: "error",
+        });
+      }
     },
   },
 };
-//  console.log(pro)
 </script>
+
+
 <style scoped>
 * {
   padding: 0%;
@@ -92,15 +80,6 @@ export default {
   font-family: Arial, Helvetica, sans-serif;
   font-weight: 600;
 }
-/* cont all products */
-/* .contPro {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    align-content: space-around;
-  } */
 .contPro {
   width: 100%;
   height: 100%;
@@ -155,16 +134,15 @@ export default {
   /* background-color: rgb(155, 77, 77); */
 }
 /* price and  short descrption */
-/* .contPro > div > div:nth-child(2) p, */
-.contPro > div > div:nth-child(2) span:nth-of-type(2) {
+.contPro > div > div:nth-child(2) span:nth-of-type(2),
+.contPro > div > div:nth-child(2) span:nth-of-type(3)  {
   text-transform: capitalize;
   color: #088178;
   font-size: 18px;
-  /* background-color: salmon; */
 }
-/* .contPro >div >div:nth-child(2) span:nth-of-type(2){
-      background-color: red;
-  } */
+.contPro > div > div:nth-child(2) span:nth-of-type(3){
+  margin: 5px 0px 0px 15px ;
+}
 .cont-star {
   margin-left: 15px;
 }
@@ -174,14 +152,7 @@ export default {
   height: 20px;
   margin-left: -5px;
 }
-/* shoppingCart */
-/* .shoppingCart {
-    width: 37px;
-    height: 37px;
-    position: absolute;
-    right: 10px;
-    bottom: 14px;
-  } */
+
 .delete,
 .edit {
   width: 55px;
@@ -206,7 +177,7 @@ export default {
 }
 .descrption {
   font-size: 14px;
-  /* background-color: red; */
+  width: 100%;
 }
 .dark-mode {
   background-color: black !important;

@@ -10,7 +10,7 @@
             >product title</label
           >
           <input
-            v-model="categoryTitle"
+            v-model="productTitle"
             type="text"
             placeholder="title product"
           />
@@ -26,7 +26,7 @@
         </div>
         <div class="imgeCont">
           <input
-            v-on:change="pushOnArray()"
+            v-on:change="pushOnArray($event)"
             id="inputField"
             type="file"
             placeholder="url category"
@@ -55,10 +55,13 @@
         <div class="contCatoSup">
           <div class="cato">
             <label :class="{ 'dark-mode-title': getDarkMode }">catogery</label>
-            <select>
-              <option>phone</option>
-              <option>screen</option>
-              <option>ipad</option>
+            <select v-model="selectedCategoryId">
+              <option value="null">
+                  choose
+              </option>
+              <option v-for="category in categories" :value="category.id" :key="category.id">
+                 {{ category.name }}
+              </option>
             </select>
           </div>
           <div class="sup">
@@ -73,15 +76,14 @@
         </div>
         <div>
           <div class="price">
-            <label :class="{ 'dark-mode-title': getDarkMode }">price</label>
-            <input v-model="price" placeholder="type here" type="text" />
+            <label :class="{ 'dark-mode-title': getDarkMode }">price Material</label>
+            <input v-model="priceMaterial" placeholder="type here" type="text" />
+            <label :class="{ 'dark-mode-title': getDarkMode }">price With Labor</label>
+            <input v-model="priceWithLabor" placeholder="type here" type="text" />
           </div>
           <div class="price type">
-            <select>
-              <option>USD</option>
-              <option>EGP</option>
-              <option>EURO</option>
-            </select>
+            <label :class="{ 'dark-mode-title': getDarkMode }">offer price (optionally) </label>
+            <input v-model="offerPrice" placeholder="type here" type="text" />
           </div>
         </div>
         <div></div>
@@ -96,80 +98,154 @@
             >puplish on site</span
           >
         </div>
-        <div></div>
-
         <div>
           <button class="supmit" @click="creatNewProduct">supmit item</button>
         </div>
       </form>
     </div>
+    <div id="loader">
+      <div class="lds-spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
-import axios from "axios";
+
+// actions 
+import { mapActions , mapState } from 'pinia'
+
+//store
+import { useProductsStore } from '@/store/products/products.js'
+import { useCategoriesStore } from '@/store/categories/categories.js';
+
+// sweetalert 
 import sweetalert from "sweetalert";
 
 export default {
   name: "AddNewProduct",
-  components: {},
   data() {
     return {
-      categoryTitle: "",
+      productTitle: "",
       description: "",
       imageUrl: [],
       tags: "",
-      price: "",
+      priceMaterial: "",
+      priceWithLabor: "",
+      offerPrice:"",
+      selectedCategoryId: null,
+
     };
   },
   computed: {
     getDarkMode() {
       return this.$store.state.darkMode;
     },
+
+    ...mapState(useCategoriesStore, ['categories']),
+
+    
+
+  },
+  async created() {
+    await this.fetchCategories();
+    //console.log(this.categories[0])
+    //this.selectedCategoryId = this.categories[0].name;
+
   },
   methods: {
-    pushOnArray: function () {
-      this.imageUrl.push(
-        URL.createObjectURL(document.getElementById("inputField").files[0])
-      );
-      console.log(this.imageUrl);
-      console.log(document.getElementById("up"));
+    // ============ my actions => start =============================================
+
+    ...mapActions( useProductsStore, ['addProduct', 'uploadImage']),
+    ...mapActions(useCategoriesStore, ['fetchCategories']),
+
+
+    // ============ my actions => end ==============================================
+    // ============ loader Toggle => start ==============================================
+    loaderToggle(show) {
+      let loader = document.getElementById("loader");
+      if (loader) {
+        loader.style.visibility = show ? "visible" : "hidden";
+      }
     },
+    // ============ loader Toggle => end ==============================================
+    // ============ FileReader  for show the selected image localy before upload => start =============================================
+
+    pushOnArray(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageUrll = e.target.result;
+          this.imageUrl.push(imageUrll);
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+
+    // ============ FileReader for show the selected image localy before upload => end ==============================================
+
     click(el) {
       document.getElementById("inputField").click();
       el.preventDefault();
     },
-    creatNewProduct(e) {
+
+    // ============ creat New Product => start =====================================
+
+    async creatNewProduct(e) {
       e.preventDefault();
-      console.log("send");
-      let body = {
-        title: this.categoryTitle,
-        price: parseInt(this.price),
-        description: this.description,
-        categoryId: 1,
-        images: ["https://placeimg.com/640/480/any"],
-      };
-      axios
-        .post(`https://api.escuelajs.co/api/v1/products/`, body, {
-          headers: {
-            "content-type": "application/json",
-          },
-        })
-        .then((res) => {
+      try {
+        this.loaderToggle(true)
+        if (this.imageUrl.length > 0) {
+          console.log(this.imageUrl[0])
+          
+          const downloadURL = await this.uploadImage(this.imageUrl[0]);
+          console.log(downloadURL)
+          let obj = {
+            name: this.productTitle,
+            priceMaterial: parseInt(this.priceMaterial),
+            priceWithLabor: parseInt(this.priceWithLabor),
+            offerPrice: parseInt(this.offerPrice),
+            description: this.description,
+            categoryId: this.selectedCategoryId,
+            imageUrl: downloadURL,
+          };
+          await this.addProduct(obj);
           sweetalert({
             text: "created",
             icon: "success",
           });
-          console.log(res);
-        })
-        .catch((error) => {
-          sweetalert({
-            text: "uncreated",
-            icon: "error",
-          });
-          console.log(error);
+          this.loaderToggle(false)
+
+        }
+      } catch (error) {
+        sweetalert({
+          text: "uncreated",
+          icon: "error",
         });
+        console.log(error);
+        this.loaderToggle(false)
+
+      }
     },
+
+    // ============ creat New Product => end =======================================
+    
+
+
   },
+
 };
 </script>
 <style scoped lang="scss">
@@ -213,7 +289,7 @@ export default {
   height: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-content: space-evenly;
   > div {
     width: 100%;
@@ -222,8 +298,7 @@ export default {
     margin-top: 20px;
   }
   > div:nth-child(7),
-  > div:nth-child(8),
-  > div:nth-child(9) {
+  > div:nth-child(8) {
     display: flex;
     width: 35%;
     align-items: center;
@@ -238,26 +313,31 @@ export default {
       transform: translate(-50%, -50%);
     }
   }
-
-  > div:nth-child(10) {
+  > div:nth-child(8){
+    margin-left: -33% !important;
+  }
+  > div:nth-child(9) {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    width: 40%;
+    width: 100%;
+    height: 40px !important;
     .supmit {
-      width: 60%;
-      height: 40%;
+      width: 30%;
+      height: 90%;
       background-color: blue;
       text-transform: capitalize;
       color: white;
-      margin-left: 20px;
+      margin-left: 22px;
       border-radius: 5px;
       cursor: pointer;
     }
   }
   > div:nth-child(6) {
-    width: 40%;
+    height: 19% !important;
+    
     .type {
+      height: 50%;
       select {
         margin-top: 23px;
       }
@@ -401,5 +481,99 @@ input[type="file"] {
     width: 370px !important;
   }
 }
+
+/* loader => start  */
+.lds-spinner {
+  color: official;
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-spinner div {
+  transform-origin: 40px 40px;
+  animation: lds-spinner 1.2s linear infinite;
+}
+.lds-spinner div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 3px;
+  left: 37px;
+  width: 6px;
+  height: 18px;
+  border-radius: 20%;
+  background: rgb(27, 25, 25);
+}
+.lds-spinner div:nth-child(1) {
+  transform: rotate(0deg);
+  animation-delay: -1.1s;
+}
+.lds-spinner div:nth-child(2) {
+  transform: rotate(30deg);
+  animation-delay: -1s;
+}
+.lds-spinner div:nth-child(3) {
+  transform: rotate(60deg);
+  animation-delay: -0.9s;
+}
+.lds-spinner div:nth-child(4) {
+  transform: rotate(90deg);
+  animation-delay: -0.8s;
+}
+.lds-spinner div:nth-child(5) {
+  transform: rotate(120deg);
+  animation-delay: -0.7s;
+}
+.lds-spinner div:nth-child(6) {
+  transform: rotate(150deg);
+  animation-delay: -0.6s;
+}
+.lds-spinner div:nth-child(7) {
+  transform: rotate(180deg);
+  animation-delay: -0.5s;
+}
+.lds-spinner div:nth-child(8) {
+  transform: rotate(210deg);
+  animation-delay: -0.4s;
+}
+.lds-spinner div:nth-child(9) {
+  transform: rotate(240deg);
+  animation-delay: -0.3s;
+}
+.lds-spinner div:nth-child(10) {
+  transform: rotate(270deg);
+  animation-delay: -0.2s;
+}
+.lds-spinner div:nth-child(11) {
+  transform: rotate(300deg);
+  animation-delay: -0.1s;
+}
+.lds-spinner div:nth-child(12) {
+  transform: rotate(330deg);
+  animation-delay: 0s;
+}
+@keyframes lds-spinner {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+#loader {
+  width: 500px;
+  height: 900px;
+  visibility: hidden;
+  /* background-color: slategray; */
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* loader => end  */
 
 </style>

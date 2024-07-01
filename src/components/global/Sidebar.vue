@@ -70,9 +70,9 @@
           <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSK5SVZyPZ9FutKKbuGHMdONvMIjDyLdKBgIA&usqp=CAU"
           />
-          <div :class="{ 'dark-mode-content': getDarkMode }">
-            <p class="link">hot offeer</p>
-          </div>
+          <router-link to="/users/technicalPages/Technical">
+            <p class="link">technicals</p>
+          </router-link>
           <img
             class="arrow"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSl6Jx0lu0D-qLbrrZtaMbMhb54XRiQHabqH9kXIesQhzX1fPbcM5O6OvGZzxZE9qqhHgM&usqp=CAU"

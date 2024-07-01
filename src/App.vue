@@ -37,7 +37,7 @@ export default {
 }
 
 .content-view {
-  min-height: 600px;
+  min-height: 100vh;
   background-color: #f9f7f7;
   margin-left: 15%;
   box-sizing: border-box;

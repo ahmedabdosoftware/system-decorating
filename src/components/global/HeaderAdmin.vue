@@ -78,7 +78,7 @@ header {
 header > div:nth-child(1) {
   min-width: 28%;
   height: 40px;
-  // background-color: white;
+  // background-color: black;
   display: flex;
   justify-content: flex-start;
   align-items: center;

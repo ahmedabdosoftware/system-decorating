@@ -9,7 +9,7 @@
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUQUVkx6lAgtb3-3fMuDZnDixihOSrrNSAOg&usqp=CAU"
             />
           </div>
-          <p :class="{ 'dark-mode-title': getDarkMode }">product grid</p>
+          <p :class="{ 'dark-mode-title': getDarkMode }">technicals grid</p>
         </div>
         <div>
           <div class="export">
@@ -18,8 +18,8 @@
             />
             <button>export</button>
           </div>
-          <router-link to="/AddNewProduct">
-            <button class="add">+ add product</button>
+          <router-link to="/users/technical/AddTechnical">
+            <button class="add">+ add technical</button>
           </router-link>
         </div>
       </div>
@@ -59,11 +59,14 @@
     </div>
     <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
 
-     <div v-for="product in getProduct" :key="product.id">
+    <!-- <div v-for="product in getProduct" :key="product.id">
+
         <BoxProduct
           :oneProduct="product"
         ></BoxProduct>
       </div>
+      
+    -->
       
 
     </div>
@@ -99,12 +102,12 @@ import { useProductsStore } from '@/store/products/products.js'
 import { useCategoriesStore } from '@/store/categories/categories.js';
 
 // BoxProduct
-import BoxProduct from "@/components/global/BoxProduct.vue";
+//import BoxProduct from "@/components/global/BoxProduct.vue";
 
 export default {
   name: "Product",
   components: {
-   BoxProduct,
+  // BoxProduct,
   },
   computed: {
     getDarkMode() {

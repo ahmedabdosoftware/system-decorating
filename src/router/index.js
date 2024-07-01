@@ -8,6 +8,8 @@ import Product from "../views/product/Product.vue";
 import EditCategory from "../views/category/EditCategory.vue";
 import EditProduct from "../views/product/EditProduct.vue";
 import AddNewProduct from "../views/product/AddNewProduct.vue";
+import Technical from "../views/users/technicalPages/Technical.vue";
+import AddTechnical from "../views/users/technicalPages/AddTechnical.vue";
 
 Vue.use(VueRouter);
 
@@ -21,6 +23,16 @@ const routes = [
     path: "/Reviews",
     name: "Reviews",
     component: Reviews,
+  }, 
+  {
+    path: "/users/technicalPages/Technical",
+    name: "Technical",
+    component: Technical,
+  }, 
+  {
+    path: "/users/technical/AddTechnical",
+    name: "AddTechnical",
+    component: AddTechnical,
   }, 
   {
     path: "/addcatagory",
