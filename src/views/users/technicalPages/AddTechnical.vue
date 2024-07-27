@@ -18,6 +18,10 @@
           <input v-model="password" type="password" placeholder="Enter your password" required />
         </div>
         <div>
+          <label :class="{ 'dark-mode-title': getDarkMode }">Number</label>
+          <input v-model="number" type="phone" placeholder="Enter your number" required />
+        </div>
+        <div>
           <label :class="{ 'dark-mode-title': getDarkMode }">Email</label>
           <input v-model="email" type="email" placeholder="Enter your Email" required />
           <p class="note">You will be able to edit it later.</p>
@@ -27,7 +31,7 @@
           <input id="fileImage" class="filee" type="file" @change="handleFileUpload" />
         </div>
         <div>
-          <router-link to="/Category"><button type="button">Cancel</button></router-link>
+          <router-link to="/dashboard/users/technicalPages/Technical"><button type="button">Cancel</button></router-link>
           <button class="create" type="submit">Create</button>
         </div>
       </form>
@@ -36,20 +40,22 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'pinia';
+import { mapActions } from 'pinia';
 import { useUserStore } from '@/store/auth/auth.js';
 
 export default {
+  name: "AddTechnical",
   data() {
     return {
       name: '',
       password: '',
       email: '',
+      number:null,
       file: null, // for add picture
+      profileImageURL:'',
     };
   },
   computed: {
-    ...mapState(useUserStore, ['user', 'role']),
     getDarkMode() {
       return false;
     }
@@ -61,9 +67,11 @@ export default {
     },
     async createNewTechnical() {
       try {
-        const user = await this.registerUser({ email: this.email, password: this.password, name: this.name, role: 'admin' });
+        const userCredential = await this.registerUser({ email: this.email, password: this.password, name: this.name, number: this.number, role: 'technical' , profileImageURL : this.profileImageURL});
+        const userId= userCredential.user.uid
+        //console.log("from create",userId)
         if (this.file) {
-          await this.uploadImage({ uid: user.uid, file: this.file });
+          await this.uploadImage({ uid:userId, file: this.file });
         }
         alert('User created successfully!');
       } catch (error) {
@@ -93,7 +101,7 @@ export default {
     width: 370px;
     display: flex;
     flex-wrap: wrap;
-    height: 600px;
+    height: 680px;
     background-color: white;
     border-radius: 10px;
     border: solid 1px rgb(181, 179, 179);
@@ -114,19 +122,20 @@ export default {
   // cont-form.....
   .allContent form {
     width: 100%;
-    height: 530px;
-    //background-color: rgb(60, 82, 69);
+    height: 580px;
+  // background-color: rgb(60, 82, 69);
     display: flex;
     flex-wrap: wrap;
   }
   .allContent form > div {
+   // background-color: rgb(48, 129, 82);
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     padding-left: 20px;
     input {
-      width: 80%;
-      height: 30px;
+      width: 90%;
+      height: 35px;
       border-radius: 5px;
     }
   }
@@ -136,7 +145,7 @@ export default {
     height: 12%;
     // background-color: red;
   }
-  .cont-form > div:nth-child(2) {
+  .cont-form > div:nth-child(2),.cont-form > div:nth-child(3) {
     width: 100%;
     height: 15%;
   //background-color: sandybrown;
@@ -144,17 +153,28 @@ export default {
       height: 50px;
     }
   }
-  .cont-form > div:nth-child(3) {
+  .cont-form > div:nth-child(4) {
     width: 100%;
     height:25%;
    // background-color: seagreen;
   }
   
-  .cont-form > div:nth-child(4) input {
-    height: 50px;
-   // border: 2px dotted rgb(59, 59, 63);
-   
-  }
+  .cont-form > div:nth-child(5){
+      width: 100%;
+      height: 18%;
+     // background-color: saddlebrown;
+
+      input {
+      height: 50px;
+        // border: 2px dotted rgb(59, 59, 63);
+        &:focus {
+          outline: none; 
+        }
+     
+    }
+    
+  
+    }
   
   // input file
   input[type="file"]{
@@ -175,16 +195,7 @@ export default {
           margin-left:-7px ;
    }
   
-  .cont-form > div:nth-child(4) input:focus {
-    outline: none;
-  }
-  .cont-form > div:nth-child(4){
-    width: 100%;
-    height: 18%;
-    //background-color: saddlebrown;
-
-  }
-  .cont-form > div:nth-child(5) {
+  .cont-form > div:nth-child(6) {
     width: 100%;
     height: 15%;
     //background-color: saddlebrown;
@@ -196,7 +207,7 @@ export default {
       background-color: rgb(67, 67, 227);
       width: 120px;
       // cursor: pointer;
-      margin-right: 7px;
+      margin-right: 33px;
       // border: none;
       color: white;
       // font-weight: bold;

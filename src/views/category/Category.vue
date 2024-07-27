@@ -18,7 +18,7 @@
             />
             <button>export</button>
           </div>
-          <router-link to="/addcatagory">
+          <router-link to="/dashboard/addcatagory">
             <button class="add">+ add catagory</button>
           </router-link>
         </div>
@@ -56,7 +56,8 @@
           :category="category"
         ></BoxCatogery>
       </div>
-     
+      <NoData v-if="filteredCategories.length == 0" context="categories"></NoData>
+
     </div>
     <div id="loader">
       <div class="lds-spinner">
@@ -79,13 +80,19 @@
 
 <script>
 import { mapState, mapActions } from 'pinia';
+//  store
 import { useCategoriesStore } from '@/store/categories/categories.js';
-import BoxCatogery from "@/components/global/BoxCatogery.vue";
+//  BoxCatogery
+import BoxCatogery from "@/components/categories/BoxCatogery.vue";
+ // NoData
+ import NoData from "@/shared/components/noData/NoData.vue";
 
 export default {
   name: "Category",
   components: {
     BoxCatogery,
+    NoData,
+
   },
   data() {
     return {
@@ -131,7 +138,6 @@ export default {
   // background-color: aqua;
   display: flex;
   flex-wrap: wrap;
-  width: 85%;
   // justify-content: flex-end;
 }
 .title {

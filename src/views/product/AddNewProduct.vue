@@ -78,7 +78,7 @@
           <div class="price">
             <label :class="{ 'dark-mode-title': getDarkMode }">price Material</label>
             <input v-model="priceMaterial" placeholder="type here" type="text" />
-            <label :class="{ 'dark-mode-title': getDarkMode }">price With Labor</label>
+            <label :class="{ 'dark-mode-title': getDarkMode }">price With Labor (if there is)</label>
             <input v-model="priceWithLabor" placeholder="type here" type="text" />
           </div>
           <div class="price type">
@@ -254,6 +254,8 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
+  margin-bottom: 13px;
+  //background-color: aqua;
 }
 .title {
   width: 470px;

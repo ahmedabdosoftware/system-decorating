@@ -22,10 +22,7 @@
     </div>
     <div>
       <div class="icon-noti">
-        <img
-          class="icon"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkLqdXuGcusYYAIhZUSnkw7Ub3JaMhfHDrhg&usqp=CAU"
-        />
+        <font-awesome-icon icon="store"  class="icon"/>
       </div>
       <div class="icon-noti">
         <img
@@ -61,7 +58,7 @@ export default {
 
 <style scoped lang="scss">
 header {
-  width: 85%;
+  width: 100%;
   height: 63px;
   background-color: white;
   // background-color: black;
@@ -70,7 +67,6 @@ header {
   align-items: center;
   position: sticky;
   top: 0px;
-  left: 15%;
   z-index: 2;
   border-bottom: 2px solid rgb(215, 213, 213);
 }
@@ -163,6 +159,12 @@ header > div:nth-child(2) {
   background-color: rgb(36, 36, 36) !important;
 }
 
+@media print {
+  header {
+    display: none ;
+  }
+  }
+
 /* media => ipad */
 @media (max-width: 821px) {
   header {
@@ -191,4 +193,5 @@ header > div:nth-child(2) {
     }
   }
 }
+
 </style>

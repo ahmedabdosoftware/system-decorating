@@ -1,6 +1,6 @@
 <template>
   <!-- /* eslint-disable */ -->
-  <div class="technichal">
+  <div class="clint">
     <div class="title">
       <div>
         <div class="contTitle">
@@ -9,7 +9,7 @@
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfifgpU6f6DdemdITBpg_essXRVuwWFaTnhJgl9QGDvchprPgRpZFDLgAZhDRlBiYvEd8&usqp=CAU"
             />
           </div>
-          <p :class=" { 'dark-mode-title': getDarkMode } ">technichal grid</p>
+          <p :class=" { 'dark-mode-title': getDarkMode } ">clint grid</p>
         </div>
         <div>
           <div class="export">
@@ -18,8 +18,8 @@
             />
             <button>export</button>
           </div>
-          <router-link to="/dashboard/users/technical/AddTechnical">
-            <button class="add">+ add technichal</button>
+          <router-link to="/dashboard/users/clint/AddClint">
+            <button class="add">+ add clint</button>
           </router-link>
         </div>
       </div>
@@ -33,7 +33,7 @@
         />
         <div :class="{ 'dark-mode-box': getDarkMode }">
           <div>
-            <button>technichal</button>
+            <button>clint</button>
             <img
               class="arroow point"
               src="data:image/png;base64,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"
@@ -87,7 +87,7 @@ import { useGetUserStore } from '@/store/users/users.js';
  import UsersList from "@/components/users/UsersList.vue";
 
 export default {
-  name: "Category",
+  name: "clint",
   components: {
     NoData,
     UsersList,
@@ -99,7 +99,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useGetUserStore, ['technicalUsers']),
+    ...mapState(useGetUserStore, ['clientUsers']),
     getDarkMode() {
       return this.$store.state.darkMode;
     },
@@ -107,10 +107,10 @@ export default {
       const query = this.searchQuery.toLowerCase();
       // just to be more clear code and less time (optmization) but this condition not  nessesry event the query is "empty string" no problem will return all categories
       if (!query) {
-        return this.technicalUsers;
+        return this.clientUsers;
       }
-      return this.technicalUsers.filter(technicalUser =>
-      technicalUser.name.toLowerCase().includes(query)
+      return this.clientUsers.filter(clientUser =>
+      clientUser.name.toLowerCase().includes(query)
       );
     },
   },
@@ -133,10 +133,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.technichal {
+.clint {
   // background-color: aqua;
   display: flex;
   flex-wrap: wrap;
+  // justify-content: flex-end;
 }
 .title {
   width: 100%;

@@ -45,7 +45,7 @@
           </div>
         </div>
         <div>
-          <router-link to="/Category"> <button>cancle</button> </router-link>
+          <router-link to="/dashboard/Category"> <button>cancle</button> </router-link>
           <button class="creat" @click="creatNewCategory">creat</button>
         </div>
       </form>

@@ -265,7 +265,7 @@ export default {
         this.loaderToggle(false)
 
       } 
-      this.$router.push('/'); 
+      this.$router.push('/dashboard/Product'); 
 
 },
 

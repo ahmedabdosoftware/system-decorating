@@ -1,29 +1,7 @@
 <template>
   <!-- /* eslint-disable */ -->
-  <div class="category">
+  <div class="oredrs">
     <div class="title">
-      <div>
-        <div class="contTitle">
-          <div>
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUQUVkx6lAgtb3-3fMuDZnDixihOSrrNSAOg&usqp=CAU"
-            />
-          </div>
-          <p :class="{ 'dark-mode-title': getDarkMode }">product grid</p>
-        </div>
-        <div>
-          <div class="export">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmvEXj1Sr-tzeKuEP9PgzajIUDvR_-L-zfkg&usqp=CAU"
-            />
-            <button>export</button>
-          </div>
-          <router-link to="/dashboard/AddNewProduct">
-            <button class="add">+ add product</button>
-          </router-link>
-        </div>
-      </div>
-
       <div :class="{ 'dark-mode-box': getDarkMode }">
         <div class="">
           <input
@@ -33,18 +11,18 @@
           v-model="searchQuery" 
         />
         <select placeholder="filter"  class="filter" v-model="selectedFilter">
-          <option value="name">title</option>
-          <option value="priceMaterial">priceMaterial</option>
-          <option value="priceWithLabor">priceWithLabor</option>
+          <option value="date">date</option>
+          <option value="customerName">customer</option>
+          <option value="numberOfOrder">order number</option>
         </select>
         </div>
         <div :class="{ 'dark-mode-box': getDarkMode }">
           <div>
-            <select placeholder="filter"  class="filter categoriesFilter"  v-model="selectedCategory">
-              <option>all</option>
-              <option v-for="category in categories" :value="category.id" :key="category.id">
-                 {{ category.name }}
-              </option>
+            <select placeholder="filter"  class="filter"  v-model="selectStatus">
+              <option  value="all">الكل</option>
+              <option value="1">مؤكد</option>
+              <option value="2">منتهى </option>
+             
             </select>
           </div>
           <div>
@@ -58,15 +36,10 @@
       </div>
     </div>
     <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
-
-     <div v-for="product in getProduct" :key="product.id">
-        <BoxProduct
-          :oneProduct="product"
-        ></BoxProduct>
-      </div>
-      <NoData v-if="getProduct.length == 0" context="products"></NoData>
-
-
+      
+      <ListTable v-if="getOrders.length > 0" :orders="getOrders"  class="ListTable_cont"></ListTable>
+      <NoData v-else  context="orders"></NoData>
+   
     </div>
     <div id="loader">
       <div class="lds-spinner">
@@ -96,64 +69,68 @@
 // actions 
 import {  mapState , mapActions } from 'pinia'
 //store
-import { useProductsStore } from '@/store/products/products.js'
-import { useCategoriesStore } from '@/store/categories/categories.js';
+import { useOrdersStore } from '@/store/order/orders.js';
 
-// BoxProduct
-import BoxProduct from "@/components/products/BoxProduct.vue";
+// ListTable
+import ListTable from "@/components/orders/ListTable.vue";
 
-  // NoData
+// NoData
 import NoData from "@/shared/components/noData/NoData.vue";
 
 export default {
-  name: "Product",
+  name: "Order",
   components: {
-   BoxProduct,
-   NoData,
+    ListTable,
+    NoData,
   },
   computed: {
     getDarkMode() {
       return this.$store.state.darkMode;
     },
-    ...mapState(useProductsStore, ['products']),
-    ...mapState(useCategoriesStore, ['categories']),
+    ...mapState(useOrdersStore, ['orders']),
 
   // ============ filter => start=======================================
         
-        getProduct() {
-          let filteredProducts = this.products;
-          
-          // فلترة حسب الفئة
-          if (this.selectedCategory !== 'all') {
-            filteredProducts = filteredProducts.filter(
-              product => product.categoryId === this.selectedCategory
+        getOrders() {
+          let filteredOrders = this.orders.filter(order => order.status !== '0');
+          if (this.profileId) {
+              filteredOrders = filteredOrders.filter(order => 
+              order.customerId === this.profileId || order.technicalId === this.profileId
+            );
+          }          
+          // فلترة حسب الحالة
+          if (this.selectStatus !== 'all') {
+            filteredOrders = filteredOrders.filter(
+              order => order.status == this.selectStatus
             );
           }
           
-          // البحث
-          if (this.searchQuery) {
-            filteredProducts = filteredProducts.filter(product => {
-              const valueToSearch = product[this.selectedFilter].toString().toLowerCase();
-              return valueToSearch.includes(this.searchQuery.toLowerCase());
-            });
-          }
-          
-          return filteredProducts;
+            // البحث
+        if (this.searchQuery) {
+          filteredOrders = filteredOrders.filter(order => {
+            const valueToSearch = order[this.selectedFilter].toString().toLowerCase();
+            console.log(order[this.selectedFilter].toString().toLowerCase())
+            return valueToSearch.includes(this.searchQuery.toLowerCase());
+          });
+        }
+                     
+          return filteredOrders;
         }
   // ============ filter => end=======================================
    
   },
    created(){
-     this.fetchProducts()
-     this.fetchCategories();
+    
+     this.fetchOrders()
+     this.profileId = this.$route.params.profileId;
 
   },
   methods: {
     
     // ============ my actions => start=======================================
 
-    ...mapActions(useProductsStore, ['fetchProducts']),
-    ...mapActions(useCategoriesStore, ['fetchCategories']),
+    ...mapActions(useOrdersStore, ['fetchOrders']),
+
 
 
     // ============ my actions => end==========================================
@@ -190,9 +167,9 @@ export default {
   data() {
     return {
       searchQuery: '',
-      selectedCategory: 'all',
-      selectedFilter: 'name',
-      
+      selectStatus: 'all',
+      selectedFilter: 'date',
+      profileId: null,
     };
   },
  
@@ -200,7 +177,7 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.category {
+.oredrs {
  // background-color: aqua;
   display: flex;
   flex-wrap: wrap;
@@ -208,79 +185,15 @@ export default {
 
 .title {
   width: 100%;
-  height: 180px;
+  height: 80px;
+  margin-top: 25px;
   //background-color: sandybrown;
   display: flex;
   flex-wrap: wrap;
+ 
   > div:first-child {
-    width: 100%;
-    height: 60%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    > div:first-child {
-      background-color: blue;
-      height: 40px;
-      width: 190px;
-      display: flex;
-      align-items: center;
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
-      > div {
-        width: 35px;
-        height: 35px;
-        border-radius: 17.5px;
-        margin-left: 10px;
-        background-color: white;
-
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-      p {
-        text-transform: capitalize;
-        text-align: center;
-        margin-left: 20px;
-        font-size: 18px;
-        font-weight: 600;
-        color: white;
-        margin-right: 10px;
-      }
-    }
-    > div:nth-of-type(2) {
-      width: 340px;
-      height: 80px;
-      // background-color: greenyellow;
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
-      > div {
-        width: 100px;
-        height: 40px;
-        background-color: white;
-        // background-color: black;
-        border-radius: 4px;
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        button {
-          width: 60px;
-          background-color: white;
-          // background-color: black;
-          color: black;
-        }
-        img {
-          width: 20px;
-          height: 20px;
-          margin-left: 10px;
-        }
-      }
-    }
-  }
-  > div:nth-of-type(2) {
     width: 96%;
-    height: 40%;
+    height: 100%;
     margin-left: 4%;
     background-color: white;
     //background-color: rgb(129, 76, 19);
@@ -295,7 +208,7 @@ export default {
       align-items: center;
       height: 100%;
       width: 350px;
-      // background-color: red;
+       //background-color: red;
       select {
         // margin-right: 400px;
         border-radius: 5px;
@@ -320,22 +233,32 @@ export default {
     > div:nth-child(2) {
       width: 350px;
       height: 40px;
-      // background-color: red;
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
-      div {
-        width: 140px;
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        height: 80%;
-        border-radius: 3px;
-        background-color: white;
+       //background-color: red;
+       display: flex;
+       justify-content: space-evenly;
+       align-items: center;
+       select {
+        border-radius: 5px;
+        height: 30px;
+        text-transform: capitalize;
+        color: black;
+        border: solid 2px rgb(233, 230, 230);
+        width: 100% !important;
+
+      }
+       div {
+         width: 140px;
+         display: flex;
+         justify-content: space-evenly;
+         align-items: center;
+         height: 80%;
+         border-radius: 3px;
+         background-color: white;
         border: 2px solid rgb(222, 218, 218);
         button {
           background-color: white;
         }
+
       }
     }
   }
@@ -352,7 +275,6 @@ export default {
   width: 96%;
   min-height: 400px;
   background-color: white;
-  //background-color: rgb(207, 70, 70);
   margin-bottom: 160px;
   display: flex;
   flex-wrap: wrap;
@@ -361,15 +283,12 @@ export default {
   margin-left: 4%;
 }
 .allContent > div {
-  width: 300px;
+  width: 100%;
   height: 400px;
   margin-top: 15px;
   margin-bottom: 15px;
- // background-color: red;
 }
-.categoriesFilter{
-  width: 100% !important;
-}
+
 .add {
   width: 140px;
   height: 40px;
@@ -545,43 +464,34 @@ export default {
   box-shadow: 0 0 5px rgb(17, 16, 16);
 }
 @media (max-width: 477px) {
-  .title {
-    > div:nth-of-type(2) {
-      div:first-child{
-        width: 170px;
-        select {
-        width: 60px;
-      }
-      input {
-        width: 100px;
-      }
-      }
-      div:nth-child(2){
-        // background-color: aqua;
-        width: 180px;
-        div {
-        width: 80px;
-      }
-
-      }
-    }
+  .allContent {
+    margin-bottom: 250px;
   }
-
   .title {
-    height: 210px;
-    // background-color: red;
     > div:first-child {
-      height: 60%;
-      flex-direction: column;
-      > div:first-child {
-        align-self: flex-start;
-        margin-top: 15px;
-      }
-      > div:nth-of-type(2) {
-        align-self: flex-end;
+        div:first-child{
+         // background-color: aqua;
+          width: 170px;
+          select {
+          width: 60px;
+        }
+        input {
+          width: 100px;
+        }
+        }
+        div:nth-child(2){
+         // background-color: aqua;
+          width: 180px;
+          div {
+          width: 80px;
+        }
+
       }
     }
   }
+
+  
 }
+
 
 </style>

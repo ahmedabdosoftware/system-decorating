@@ -10,6 +10,14 @@ import { createPinia, PiniaVuePlugin } from 'pinia'
 import { useUserStore } from '@/store/auth/auth.js';
 
 
+//plugins 
+
+//FontAwesomeIcon
+import FontAwesomeIcon from './plugins/fontawesome'
+Vue.component('font-awesome-icon', FontAwesomeIcon)
+
+
+
 //scss
 import "../src/scss/main.scss";
 
@@ -30,10 +38,10 @@ Vue.directive("font", {
 });
 
 new Vue({
-  router,
-  pinia,
-  store,
   render: (h) => h(App),
+  pinia,
+  router,
+  store,
 }).$mount("#app");
 
 // call handleAuthStateChanged with every reload
