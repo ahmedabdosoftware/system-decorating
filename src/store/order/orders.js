@@ -7,9 +7,18 @@ export const useOrdersStore = defineStore('orders', {
   }),
   actions: {
     async fetchOrders() {
-      const querySnapshot = await db.collection('orders').get();
+      const querySnapshot = await db.collection('orders').orderBy('numberOfOrder', 'desc').get();
       this.orders = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     },
+    async generateOrderNumber() {
+      const ordersSnapshot = await db.collection('orders').orderBy('numberOfOrder', 'desc').limit(1).get();
+      if (!ordersSnapshot.empty) {
+        const lastOrder = ordersSnapshot.docs[0].data();
+        return (parseInt(lastOrder.numberOfOrder)+1);
+      } else {
+        return 1; 
+      }
+  },
     async addOrder(order) {
       const orderRef = await db.collection('orders').add(order);
       await this.fetchOrders();

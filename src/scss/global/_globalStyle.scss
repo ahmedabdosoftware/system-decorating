@@ -1,6 +1,221 @@
 *{
     font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
+
 :root{
     --popularCalar:blue;
   }
+
+
+ // global form style
+
+.error{
+    color: red;
+    margin-top: 5px;
+    font-size: 13px;
+  }
+
+.disabled-btn{
+  opacity: 0.4;
+  cursor:not-allowed;
+  }
+
+
+// form  => start
+// (used in order and finachial form)
+
+
+//debug color => will delete 
+$test_color:rgb(92, 89, 89);
+$header_color: #9f9bec;
+$main_color: rgb(185, 173, 247);
+$buttom_color: #6a64f1;
+$buttom_font: 19px;
+
+%use_flex{
+  display: flex;
+  flex-wrap: wrap;
+}
+%center_flex{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+%btn-style{
+  text-align: center;
+  font-size: $buttom_font;
+  border-radius: 5px;
+  border: none;
+  font-weight: 500;
+  background-color: $buttom_color;
+  color: white;
+  cursor: pointer;
+
+}
+
+.formbold-mb-3 {
+  margin-bottom: 15px;
+}
+
+.formbold-main-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+ // background-color: red;
+  width: 100%;
+}
+
+.formbold-form-wrapper {
+  margin: 0 auto;
+  max-width: 570px;
+  width: 100%;
+  background: white;
+ // background-color: rgb(73, 64, 64);
+  padding: 40px;
+}
+
+.formbold-img {
+  display: block;
+  margin: 0 auto 45px;
+}
+
+.formbold-input-wrapp > div {
+  display: flex;
+  gap: 20px;
+}
+
+.formbold-input-flex {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+.formbold-input-flex > div {
+  width: 50%;
+}
+.formbold-form-input {
+  width: 100%;
+  padding: 13px 22px;
+  border-radius: 5px;
+  border: 1px solid #dde3ec;
+  background: #ffffff;
+  font-weight: 500;
+  font-size: 16px;
+  color: #536387;
+  outline: none;
+  resize: none;
+}
+.formbold-form-input::placeholder,
+select.formbold-form-input,
+.formbold-form-input[type='date']::-webkit-datetime-edit-text,
+.formbold-form-input[type='date']::-webkit-datetime-edit-month-field,
+.formbold-form-input[type='date']::-webkit-datetime-edit-day-field,
+.formbold-form-input[type='date']::-webkit-datetime-edit-year-field {
+  color: rgba(83, 99, 135, 0.5);
+}
+
+.formbold-form-input:focus {
+  border-color: #6a64f1;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+}
+.formbold-form-label {
+  color: #07074D;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+
+
+.cont_add_del_upda{
+
+@extend %use_flex;
+align-items: center;
+
+}
+
+.addProduct-btn,.updateProduct-btn{
+  @extend %btn-style;
+  width: 200px;
+  height: 40px;  
+}
+.deleteProduct-btn{
+  @extend %btn-style;
+  width: 100px;
+  height: 30px;
+  background-color:red;  
+  margin-left:15px;
+}
+.deleteProduct-btn,.updateProduct-btn{
+display:none;
+}
+.addProduct-btn_hidde{
+display:none;
+}
+.deleteProduct-btn_show,.updateProduct-btn_show{
+display:block;
+}
+
+.formbold-w-45 {
+  width: 45%;
+}
+.warning-message {
+color: red;
+margin-top: 10px;
+}
+.info-message{
+
+margin-top: 10px;
+color:  #6a64f1;
+}
+.formbold-btn {
+  @extend %btn-style;
+  width: 100%;
+  margin-top: 25px;
+  padding: 14px 25px;
+  height: 50px !important;
+  
+}
+.formbold-btn:hover {
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 477px) {
+
+ .formbold-main-wrapper {
+   padding: 0px !important;
+  }
+}
+
+// form  => end 
+// (used in order and finachial form)
+
+// mode => start
+
+.dark-mode-title {
+  color: white !important;
+}
+.dark-moode {
+  background-color: black !important;
+  border: solid 1px rgb(28, 27, 27)  !important;
+}
+
+.dark-mode-search {
+  background-color: rgb(36, 36, 36);
+  border: none !important;
+}
+.dark-mode {
+  background-color: rgb(9, 9, 9) !important;
+}
+
+.dark-mode-box {
+  background-color: black !important;
+  box-shadow: 0 0 5px rgb(17, 16, 16);
+}
+// mode => end

@@ -1,130 +1,174 @@
 <template>
-  <div class="addProduct">
-    <div class="title">
-      <p :class="{ 'dark-mode-title': getDarkMode }">create product</p>
-    </div>
-    <div :class="{ 'dark-moode': getDarkMode }" class="allContentt">
-      <form class="cont-form">
-        <div class="name">
-          <label :class="{ 'dark-mode-title': getDarkMode }"
-            >product title</label
-          >
-          <input
-            v-model="productTitle"
-            type="text"
-            placeholder="title product"
-          />
-        </div>
-        <div class="description">
-          <label :class="{ 'dark-mode-title': getDarkMode }">description</label>
-          <input
-            v-model="description"
-            type="text"
-            placeholder="description product"
-          />
-          <p class="note">you will be able to edit it later.</p>
-        </div>
-        <div class="imgeCont">
-          <input
-            v-on:change="pushOnArray($event)"
-            id="inputField"
-            type="file"
-            placeholder="url category"
-          />
-          <div class="uploadCont uploadContImge">
-            <img id="up" class="upload" v-bind:src="imageUrl[0]" />
-          </div>
-          <div class="uploadCont uploadContImge">
-            <img id="up" class="upload" v-bind:src="imageUrl[1]" />
-          </div>
-          <div class="uploadCont uploadContImge">
-            <img id="up" class="upload" v-bind:src="imageUrl[2]" />
-          </div>
-          <div v-on:click="click()" id="btn" class="uploadCont uploadImge">
-            <img
-              class="upload"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbQN9NvIcWwtddjv-IerO_kox9AJ0cCFU2Ew&usqp=CAU"
-            />
-            <span class="upUnderImge">upload</span>
-          </div>
-        </div>
-        <div class="tags">
-          <label>tags</label>
-          <input v-model="tags" type="text" placeholder="enter tags" />
-        </div>
-        <div class="contCatoSup">
-          <div class="cato">
-            <label :class="{ 'dark-mode-title': getDarkMode }">catogery</label>
-            <select v-model="selectedCategoryId">
-              <option value="null">
-                  choose
-              </option>
-              <option v-for="category in categories" :value="category.id" :key="category.id">
-                 {{ category.name }}
-              </option>
-            </select>
-          </div>
-          <div class="sup">
-            <label>sup catogery</label>
-            <select>
-              <option>iphone</option>
-              <option>samsung</option>
-              <option>dell</option>
-              <option>hpp</option>
-            </select>
-          </div>
-        </div>
-        <div>
-          <div class="price">
-            <label :class="{ 'dark-mode-title': getDarkMode }">price Material</label>
-            <input v-model="priceMaterial" placeholder="type here" type="text" />
-            <label :class="{ 'dark-mode-title': getDarkMode }">price With Labor (if there is)</label>
-            <input v-model="priceWithLabor" placeholder="type here" type="text" />
-          </div>
-          <div class="price type">
-            <label :class="{ 'dark-mode-title': getDarkMode }">offer price (optionally) </label>
-            <input v-model="offerPrice" placeholder="type here" type="text" />
-          </div>
-        </div>
-        <div></div>
-        <div class="puplish-allCont">
-          <div class="puplish-cont">
-            <img
-              class="puplish"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTb7SOrFrM0RaPa7ttuu-j-V5kD-Sdxlkb5FOsSQ4PJIdI2puYqEyTiOGHSnushuXmnLmE&usqp=CAU"
-            />
-          </div>
-          <span :class="{ 'dark-mode-title': getDarkMode }"
-            >puplish on site</span
-          >
-        </div>
-        <div>
-          <button class="supmit" @click="creatNewProduct">supmit item</button>
-        </div>
-      </form>
-    </div>
-    <div id="loader">
-      <div class="lds-spinner">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+  <ValidationObserver ref="observer" v-slot="{ invalid }">
+    <div class="addProduct">
+      <div class="title">
+        <p :class="{ 'dark-mode-title': getDarkMode }">create product</p>
       </div>
+      <div :class="{ 'dark-moode': getDarkMode }" class="allContentt">
+        <form class="cont-form" @submit.prevent="creatNewProduct">
+          <div class="name">
+            <label :class="{ 'dark-mode-title': getDarkMode }">product title</label>
+            <ValidationProvider
+              name="Product Title"
+              rules="required"
+              v-slot="{ errors }"
+            >
+              <input
+                v-model="productTitle"
+                type="text"
+                placeholder="title product"
+              />
+              <span class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
+          </div>
+          <div class="description">
+            <label :class="{ 'dark-mode-title': getDarkMode }">description</label>
+            <ValidationProvider
+              name="Description"
+              rules="required"
+              v-slot="{ errors }"
+            >
+              <input
+                v-model="description"
+                type="text"
+                placeholder="description product"
+              />
+              <span class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
+            <p class="note">you will be able to edit it later.</p>
+          </div>
+          
+          <div class="imgeCont">
+            <ValidationProvider
+              name="Image"
+              rules="required|image"
+              v-slot="{ errors }"
+            >
+              <input
+                v-on:change.prevent="pushOnArray()"
+                id="inputField"
+                type="file"
+              />
+              <span>{{ errors[0] }}</span>
+            </ValidationProvider>
+            <div class="uploadCont uploadContImge">
+              <img id="up" class="upload" v-bind:src="imageUrl[0]" />
+            </div>
+            <div class="uploadCont uploadContImge">
+              <img id="up" class="upload" v-bind:src="imageUrl[1]" />
+            </div>
+            <div class="uploadCont uploadContImge">
+              <img id="up" class="upload" v-bind:src="imageUrl[2]" />
+            </div>
+            <div v-on:click.prevent="uploadFile()" id="btn" class="uploadCont uploadImge">
+              <img
+                class="upload"
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbQN9NvIcWwtddjv-IerO_kox9AJ0cCFU2Ew&usqp=CAU"
+              />
+              <span class="upUnderImge">upload</span>
+            </div>
+          </div>
+          <div class="tags">
+            <label>tags</label>
+            <input v-model="tags" type="text" placeholder="enter tags" />
+          </div>
+          <div class="contCatoSup">
+            <div class="cato">
+              <label :class="{ 'dark-mode-title': getDarkMode }">category</label>
+                <select v-model="selectedCategoryId">
+                  <option v-for="category in categories" :value="category.id" :key="category.id">
+                    {{ category.name }}
+                  </option>
+                </select>
+            </div>
+            <div></div>
+          </div>
+          <div class="contPrice">
+            <div class="price">
+              <label :class="{ 'dark-mode-title': getDarkMode }">price Material</label>
+              <ValidationProvider
+                name="Price Material"
+                rules="required|numeric|min_value:0"
+                v-slot="{ errors }"
+              >
+                <input v-model="priceMaterial" placeholder="type here" type="text" />
+                <span class="error">{{ errors[0] }}</span>
+              </ValidationProvider>
+              <label :class="{ 'dark-mode-title': getDarkMode }">price With Labor </label>
+              <ValidationProvider
+                name="Price With Labor"
+                rules="required|numeric|min_value:0"
+                v-slot="{ errors }"
+              >
+                <input v-model="priceWithLabor" placeholder="type here" type="text" />
+                <span class="error">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+            <div class="price offer">
+              <label :class="{ 'dark-mode-title': getDarkMode }">offer price (optionally)</label>
+              <ValidationProvider
+                name="Offer Price"
+                rules="numeric|min_value:0"
+                v-slot="{ errors }"
+              >
+                <input v-model="offerPrice" placeholder="type here" type="text" />
+                <span class="error">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+          </div>
+          <div class="puplish-allCont">
+            <div class="price-options">
+              <label>
+                <input type="checkbox" v-model="showLaborPrice" />
+                Show Labor Price on Site
+              </label>
+            </div>
+            <div class="display-options">
+              <label>
+                <input type="checkbox" v-model="displayOnSite" />
+                Display Product on Site
+              </label>
+            </div>
+          </div>
+          <div class="submit_cont">
+            <button class="submit" :class="{ 'disabled-btn': invalid }" :disabled="invalid" @click="creatNewProduct">submit item</button>
+          </div>
+        </form>
+      </div>
+      <CircleLoader :show="isLoading" />
+
     </div>
-  </div>
+  </ValidationObserver>
 </template>
+
 <script>
+
+import { required, numeric, min_value, image } from 'vee-validate/dist/rules';
+import { extend } from 'vee-validate';
+
+// Register rules with custom messages
+    extend('required', {
+      ...required,
+      message: '{_field_} is required to create a product.'
+    });
+    extend('numeric', {
+      ...numeric,
+      message: '{_field_} must be a number.'
+    });
+    extend('min_value', {
+      ...min_value,
+      message: '{_field_} must be at least {min}.'
+    });
+    extend('image', {
+      ...image,
+      message: '{_field_} must be a valid image file.'
+    });
 
 // actions 
 import { mapActions , mapState } from 'pinia'
+
+// CircleLoader
+import CircleLoader from '@/shared/components/loading/CircleLoader.vue';
 
 //store
 import { useProductsStore } from '@/store/products/products.js'
@@ -135,6 +179,9 @@ import sweetalert from "sweetalert";
 
 export default {
   name: "AddNewProduct",
+  components: {
+    CircleLoader,
+  },
   data() {
     return {
       productTitle: "",
@@ -144,7 +191,11 @@ export default {
       priceMaterial: "",
       priceWithLabor: "",
       offerPrice:"",
-      selectedCategoryId: null,
+      showLaborPrice: false,
+      displayOnSite: true,
+      selectedCategoryId:'',
+      // loading 
+      isLoading: false
 
     };
   },
@@ -155,13 +206,12 @@ export default {
 
     ...mapState(useCategoriesStore, ['categories']),
 
-    
 
   },
   async created() {
     await this.fetchCategories();
-    //console.log(this.categories[0])
-    //this.selectedCategoryId = this.categories[0].name;
+    this.selectedCategoryId =  this.categories[0].id
+   
 
   },
   methods: {
@@ -172,33 +222,34 @@ export default {
 
 
     // ============ my actions => end ==============================================
-    // ============ loader Toggle => start ==============================================
-    loaderToggle(show) {
-      let loader = document.getElementById("loader");
-      if (loader) {
-        loader.style.visibility = show ? "visible" : "hidden";
-      }
-    },
-    // ============ loader Toggle => end ==============================================
+   
     // ============ FileReader  for show the selected image localy before upload => start =============================================
+      pushOnArray: function () {
 
-    pushOnArray(event) {
+
       const file = event.target.files[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const imageUrll = e.target.result;
-          this.imageUrl.push(imageUrll);
-        };
-        reader.readAsDataURL(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrll = e.target.result;
+        this.imageUrl.push(imageUrll);
+      };
+      reader.readAsDataURL(file);
       }
-    },
+
+
+
+      },
+
+
+
+// ============ push On Array after make url from file => end=============================================
+
 
     // ============ FileReader for show the selected image localy before upload => end ==============================================
 
-    click(el) {
+    uploadFile() {
       document.getElementById("inputField").click();
-      el.preventDefault();
     },
 
     // ============ creat New Product => start =====================================
@@ -206,7 +257,7 @@ export default {
     async creatNewProduct(e) {
       e.preventDefault();
       try {
-        this.loaderToggle(true)
+        this.isLoading = true;
         if (this.imageUrl.length > 0) {
           console.log(this.imageUrl[0])
           
@@ -220,13 +271,15 @@ export default {
             description: this.description,
             categoryId: this.selectedCategoryId,
             imageUrl: downloadURL,
+            showLaborPrice: this.showLaborPrice,
+            displayOnSite: this.displayOnSite,
           };
           await this.addProduct(obj);
           sweetalert({
             text: "created",
             icon: "success",
           });
-          this.loaderToggle(false)
+          this.isLoading = false;
 
         }
       } catch (error) {
@@ -235,7 +288,7 @@ export default {
           icon: "error",
         });
         console.log(error);
-        this.loaderToggle(false)
+        this.isLoading = false;
 
       }
     },
@@ -278,14 +331,6 @@ export default {
   border-radius: 10px;
   border: solid 1px rgb(181, 179, 179);
 }
-.puplish-cont {
-  width: 25px;
-  height: 25px;
-  margin-left: 10px;
-  background-color: white;
-  border-radius: 12.5px;
-  position: relative;
-}
 .allContentt form {
   width: 100%;
   height: 100%;
@@ -300,32 +345,15 @@ export default {
     margin-top: 20px;
   }
   > div:nth-child(7),
-  > div:nth-child(8) {
-    display: flex;
-    width: 35%;
-    align-items: center;
-    justify-content: space-around;
-    > div .puplish {
-      width: 180%;
-      height: 180%;
-      mix-blend-mode: multiply;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
-  }
-  > div:nth-child(8){
-    margin-left: -33% !important;
-  }
-  > div:nth-child(9) {
+  
+ .submit_cont {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     width: 100%;
     height: 40px !important;
-    .supmit {
-      width: 30%;
+    button {
+      width: 30% ;
       height: 90%;
       background-color: blue;
       text-transform: capitalize;
@@ -345,28 +373,28 @@ export default {
       }
     }
   }
-  > div:nth-child(5),
+  > .contCatoSup,
   > div:nth-child(6) {
     padding-left: 20px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    > div {
+     div {
       display: flex;
       flex-wrap: wrap;
       align-content: space-evenly;
       width: 49%;
       height: 90%;
-      > select,
-      > input {
+       select,
+       input {
         width: 90%;
         border-radius: 5px;
       }
     }
   }
-  > div:nth-child(1),
-  > div:nth-child(2),
-  > div:nth-child(4) {
+  .name,
+  .description,
+  .tags {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -374,6 +402,7 @@ export default {
     padding-left: 20px;
     input {
       width: 90%;
+      height: 25px;
       border-radius: 5px;
     }
   }
@@ -392,7 +421,15 @@ export default {
 }
 .description {
   input {
-    height: 50%;
+    height: 45px  !important;
+  }
+}
+.puplish-allCont{
+  width: 100% !important;
+  padding-left: 10px;
+  >div{
+  margin-left: 10px;
+
   }
 }
 .name,
@@ -451,6 +488,11 @@ input[type="file"] {
   width: 50px;
   height: 40%;
 }
+
+.disabled-btn{
+opacity: 0.4;
+cursor:not-allowed;
+}
 #up {
   width: 100%;
   height: 100%;
@@ -459,14 +501,7 @@ input[type="file"] {
 .upUnderImge {
   text-transform: capitalize;
 }
-.dark-mode-title {
-  color: white !important;
-}
-.dark-moode {
-  background-color: black !important;
-  border: solid 1px rgb(28, 27, 27) !important;
-}
-// title.....
+
 // phone
 @media (max-width: 477px) {
   .title {
@@ -474,108 +509,12 @@ input[type="file"] {
       margin-left: 60px;
     }
   }
-  .puplish-allCont {
-    span {
-      padding-left: 15px;
-    }
-  }
   .allContentt {
     width: 370px !important;
   }
+  .puplish-allCont,.price{
+  font-size: 14px;
 }
-
-/* loader => start  */
-.lds-spinner {
-  color: official;
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
 }
-.lds-spinner div {
-  transform-origin: 40px 40px;
-  animation: lds-spinner 1.2s linear infinite;
-}
-.lds-spinner div:after {
-  content: " ";
-  display: block;
-  position: absolute;
-  top: 3px;
-  left: 37px;
-  width: 6px;
-  height: 18px;
-  border-radius: 20%;
-  background: rgb(27, 25, 25);
-}
-.lds-spinner div:nth-child(1) {
-  transform: rotate(0deg);
-  animation-delay: -1.1s;
-}
-.lds-spinner div:nth-child(2) {
-  transform: rotate(30deg);
-  animation-delay: -1s;
-}
-.lds-spinner div:nth-child(3) {
-  transform: rotate(60deg);
-  animation-delay: -0.9s;
-}
-.lds-spinner div:nth-child(4) {
-  transform: rotate(90deg);
-  animation-delay: -0.8s;
-}
-.lds-spinner div:nth-child(5) {
-  transform: rotate(120deg);
-  animation-delay: -0.7s;
-}
-.lds-spinner div:nth-child(6) {
-  transform: rotate(150deg);
-  animation-delay: -0.6s;
-}
-.lds-spinner div:nth-child(7) {
-  transform: rotate(180deg);
-  animation-delay: -0.5s;
-}
-.lds-spinner div:nth-child(8) {
-  transform: rotate(210deg);
-  animation-delay: -0.4s;
-}
-.lds-spinner div:nth-child(9) {
-  transform: rotate(240deg);
-  animation-delay: -0.3s;
-}
-.lds-spinner div:nth-child(10) {
-  transform: rotate(270deg);
-  animation-delay: -0.2s;
-}
-.lds-spinner div:nth-child(11) {
-  transform: rotate(300deg);
-  animation-delay: -0.1s;
-}
-.lds-spinner div:nth-child(12) {
-  transform: rotate(330deg);
-  animation-delay: 0s;
-}
-@keyframes lds-spinner {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-#loader {
-  width: 500px;
-  height: 900px;
-  visibility: hidden;
-  /* background-color: slategray; */
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-/* loader => end  */
 
 </style>

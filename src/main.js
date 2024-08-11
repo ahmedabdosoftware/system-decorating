@@ -30,6 +30,13 @@ Vue.config.productionTip = false;
 Vue.use(PiniaVuePlugin)
 const pinia = createPinia()
 
+
+
+// vee-validate
+import { ValidationObserver, ValidationProvider } from 'vee-validate';
+Vue.component('ValidationObserver', ValidationObserver);
+Vue.component('ValidationProvider', ValidationProvider);
+
 // directive
 Vue.directive("font", {
   bind: function (el) {

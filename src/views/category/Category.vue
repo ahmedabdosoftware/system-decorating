@@ -50,31 +50,15 @@
       </div>
     </div>
     <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
-       
-      <div v-for="category in filteredCategories" :key="category.id">
-        <BoxCatogery
-          :category="category"
-        ></BoxCatogery>
+
+      <div v-if="isLoading">
+        <BoxSkeletonLoader v-for="n in 6" :key="n" />
       </div>
-      <NoData v-if="filteredCategories.length == 0" context="categories"></NoData>
+      <CategoryList v-else-if="filteredCategories.length > 0" :Categories="filteredCategories"></CategoryList>
+      <NoData v-else context="categories"></NoData>
 
     </div>
-    <div id="loader">
-      <div class="lds-spinner">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-    </div>
+   
   </div>
 </template>
 
@@ -82,21 +66,28 @@
 import { mapState, mapActions } from 'pinia';
 //  store
 import { useCategoriesStore } from '@/store/categories/categories.js';
-//  BoxCatogery
-import BoxCatogery from "@/components/categories/BoxCatogery.vue";
+//  CategoryList
+import CategoryList from "@/components/categories/CategoryList.vue";
  // NoData
  import NoData from "@/shared/components/noData/NoData.vue";
+// Skeleton Box
+import BoxSkeletonLoader from '@/shared/components/loading/skeletonLoader/BoxSkeletonLoader.vue';
+
 
 export default {
   name: "Category",
   components: {
-    BoxCatogery,
+    CategoryList,
     NoData,
+    BoxSkeletonLoader,
+
 
   },
   data() {
     return {
       searchQuery: '',
+      isLoading: true,
+
     };
   },
   computed: {
@@ -117,17 +108,12 @@ export default {
   },
   methods: {
     ...mapActions(useCategoriesStore, ['fetchCategories']),
-    loaderToggle(show) {
-        let loader = document.getElementById("loader");
-        if (loader) {
-            loader.style.visibility = show ? "visible" : "hidden";
-        }
-    },
+  
   },
  async created() {
-  this.loaderToggle(true)
   await this.fetchCategories();
-  this.loaderToggle(false)
+  this.isLoading = false;
+
 
   },
 };
@@ -276,11 +262,12 @@ export default {
   margin-left: 4%;
   margin-top: 2px;
 }
-.allContent > div {
-  width: 300px;
-  height: 380px;
-  margin-top: 15px;
-  margin-bottom: 15px;
+.allContent > div  {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  width: 100%;
+  min-height: 380px;
   // background-color: red;
 }
 .add {
@@ -302,117 +289,8 @@ export default {
   font-size: 19px;
 }
 
-/* loader => start  */
-.lds-spinner {
-  color: official;
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-.lds-spinner div {
-  transform-origin: 40px 40px;
-  animation: lds-spinner 1.2s linear infinite;
-}
-.lds-spinner div:after {
-  content: " ";
-  display: block;
-  position: absolute;
-  top: 3px;
-  left: 37px;
-  width: 6px;
-  height: 18px;
-  border-radius: 20%;
-  background: rgb(27, 25, 25);
-}
-.lds-spinner div:nth-child(1) {
-  transform: rotate(0deg);
-  animation-delay: -1.1s;
-}
-.lds-spinner div:nth-child(2) {
-  transform: rotate(30deg);
-  animation-delay: -1s;
-}
-.lds-spinner div:nth-child(3) {
-  transform: rotate(60deg);
-  animation-delay: -0.9s;
-}
-.lds-spinner div:nth-child(4) {
-  transform: rotate(90deg);
-  animation-delay: -0.8s;
-}
-.lds-spinner div:nth-child(5) {
-  transform: rotate(120deg);
-  animation-delay: -0.7s;
-}
-.lds-spinner div:nth-child(6) {
-  transform: rotate(150deg);
-  animation-delay: -0.6s;
-}
-.lds-spinner div:nth-child(7) {
-  transform: rotate(180deg);
-  animation-delay: -0.5s;
-}
-.lds-spinner div:nth-child(8) {
-  transform: rotate(210deg);
-  animation-delay: -0.4s;
-}
-.lds-spinner div:nth-child(9) {
-  transform: rotate(240deg);
-  animation-delay: -0.3s;
-}
-.lds-spinner div:nth-child(10) {
-  transform: rotate(270deg);
-  animation-delay: -0.2s;
-}
-.lds-spinner div:nth-child(11) {
-  transform: rotate(300deg);
-  animation-delay: -0.1s;
-}
-.lds-spinner div:nth-child(12) {
-  transform: rotate(330deg);
-  animation-delay: 0s;
-}
-@keyframes lds-spinner {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-#loader {
-  width: 500px;
-  height: 500px;
-  visibility: hidden;
-  /* background-color: slategray; */
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-/* loader => end  */
-// .aded{
-//   width: 30px;
-//   height: 30px;
-// }
-.dark-mode-search {
-  background-color: rgb(36, 36, 36);
-  border: none !important;
-}
-.dark-mode {
-  background-color: rgb(9, 9, 9) !important;
-}
-.dark-mode-title {
-  color: white !important;
-}
-.dark-mode-box {
-  background-color: black !important;
-  box-shadow: 0 0 5px rgb(17, 16, 16);
-}
+
+
 // phone
 @media (max-width: 477px) {
   .title {

@@ -1,0 +1,497 @@
+<template>
+    <div>
+      <div class="fatoora">
+        <div  class="fatoora__header">
+          <div>
+          
+          </div>
+          <div>
+            <button>بيان اسعار</button>
+            <span>  {{ orderInfo.numberOfOrder }}  :رقم</span>
+          </div>
+          <div>
+            <p class="logoFatora"> <span>جاما</span> للديكور</p>
+            <p class="categories">  بانوهات كرانيش اسقف معلقة بديل خشب بديل رخام </p>
+       
+          </div>
+        </div>
+        <div  class="fatoora__title">
+            <div>
+              <p v-if="orderInfo">
+                  نوع الفاتورة :
+                   {{ orderInfo.invoiceType }} 
+              </p>
+            </div>
+            <div>
+                <p  v-if="orderInfo">  
+                  {{ orderInfo.date }}  
+                  : تحرير فى 
+                </p>
+              
+                <p v-if="orderInfo">
+                    {{ orderInfo.customerName }}
+                : اسم العميل     
+                </p>
+            </div>
+
+        </div>
+        <div  class="fatoora__table" >
+          <table class="table">
+            <thead>
+              <tr>
+                <th>الاجمالى</th>
+                <th>قيمة الخصم</th>
+                <th>الكمية</th>
+                <th>السعر</th>
+                <th>كود الصنف</th>
+                <th>اسم الصنف</th>
+              </tr>
+            </thead>
+            <tbody v-if="orderInfo">
+              <tr v-for="(product, index) in orderInfo.products" :key="index">
+                <td>{{ calculateTotalPrice(product) }}</td>
+                <td>{{ calculateDiscount(product) }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.productInfo.priceMaterial }}</td>
+                <td>{{ product.productInfo.name }}</td>
+                <td>{{ categoryName(product) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div  class="fatoora__sales">
+          <p>اجمالى الخصم: <span>{{ calculateTotalDiscount }}</span></p>
+          <p>الاجمالى : <span>{{ calculateGrandTotal }}</span></p>
+          <p v-if="orderInfo.invoiceType === 'تركيب وتوريد' || orderInfo.invoiceType === 'تركيب'  "> المصنعية: <span>{{ calculateTotalInstallation }}</span></p>
+
+        </div>
+        <div  class="fatoora__notes">
+          <p>البضاعة المباعة لا ترد ولا تستبدل الا فى خلال 14 يوم كحد اقصى من تاريخ الفاتورة</p>
+          <p>فى حالة التركيب يرجى من العميل توفير سلالم للفنيين</p>
+        </div>
+        <div class="qrcode_cont">
+          <canvas id="qr-code"></canvas>
+        </div>
+      </div>
+      <div class="fatoora__btns">
+          <button @click.prevent="goBack">عودة للطلبات</button>
+      </div>
+    </div>
+</template>
+
+<script>
+import { mapState, mapActions } from 'pinia'
+import { useCategoriesStore } from '@/store/categories/categories.js';
+
+import QRCode from 'qrcode'; 
+import { nextTick } from 'vue'
+
+
+export default {
+  name: "ShowFatoora",
+  components: {},
+  props: ["orderInfo"],
+
+  computed: {
+    getDarkMode() {
+      return this.$store.state.darkMode;
+    },
+    ...mapState(useCategoriesStore, ['categories']),
+
+        // حساب إجمالي الخصومات
+    calculateTotalDiscount() {
+        const totalDiscount = this.orderInfo.products.reduce((total, product) => {
+        const productTotalPrice = product.productInfo.priceMaterial * product.quantity;
+        const discountAmount = productTotalPrice * (product.price_offer / 100);
+        return total + discountAmount;
+      }, 0);
+      return totalDiscount.toFixed(2)
+    },
+    // حساب الإجمالي الكلي بعد الخصومات
+    calculateGrandTotal() {
+      const grandTotal = this.orderInfo.products.reduce((total, product) => {
+        const productTotalPrice = product.productInfo.priceMaterial * product.quantity;
+        const discountAmount = productTotalPrice * (product.price_offer / 100);
+        return total + (productTotalPrice - discountAmount);
+      }, 0);
+      return grandTotal.toFixed(2);
+    },
+
+    // حساب اجمالي التركيب
+    calculateTotalInstallation() {
+
+    if (this.orderInfo.laborPrice) {
+      
+      return this.orderInfo.laborPrice;
+      
+    }else{
+      
+      const totalInstallation =this.orderInfo.products.reduce((total, product) => {
+        if(product.productInfo.priceWithLabor){
+          const productInstallationPrice = product.productInfo.priceWithLabor * product.quantity;
+          return total + productInstallationPrice;
+        }else{
+          console.log('no labor for that :', product)
+          console.log('total until now :', total)
+          return total 
+        }
+      }, 0);
+      
+      return totalInstallation.toFixed(2);
+
+    }
+    },
+  },
+  async created() {
+    
+    this.fetchCategories();
+    try {
+      await nextTick(); // انتظر حتى يتم تحميل الـ DOM
+      this.generateQRCode();  
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  },
+  
+  methods: {
+    ...mapActions(useCategoriesStore, ['fetchCategories']),
+
+     calculateTotalPrice(product) {
+      const productTotalPrice = product.productInfo.priceMaterial * product.quantity;
+      const discountAmount = productTotalPrice * (product.price_offer / 100);
+      return (productTotalPrice - discountAmount).toFixed(2);
+   },
+    calculateDiscount(product) {
+      const productTotalPrice = product.productInfo.priceMaterial * product.quantity;
+      const discountAmount = productTotalPrice * (product.price_offer / 100);
+      return  discountAmount.toFixed(2);
+    },
+    categoryName(product){
+      const categoryProductName = this.categories.find(category => category.id === product.productInfo.categoryId) 
+      console.log(categoryProductName);
+      if(categoryProductName){
+        return categoryProductName.name
+      }
+    },
+    async generateQRCode() {
+      try {
+        const qrCodeData = 'https://www.example.com'; 
+        const qrCanvas = document.getElementById('qr-code');
+        await QRCode.toCanvas(qrCanvas, qrCodeData);
+      } catch (error) {
+        console.error('Error generating QR code:', error);
+      }
+    },
+    goBack() {
+        const layout = this.$route.meta.layout;
+        if (layout === 'DashboardLayout') {
+            this.$router.push('/dashboard/Order');
+        } else if (layout === 'profileInDashboardLayout') {
+            const profileId = this.$route.params.profileId;
+            this.$router.push(`/dashboard/profile/${profileId}`);
+        } else if (layout === 'profileOutDashboardLayout') {
+            const profileId = this.$route.params.profileId;
+            this.$router.push(`/profile/${profileId}`);
+        }
+    },
+  },
+  data() {
+    return {
+    
+    };
+  },
+};
+</script>
+<style  scoped lang="scss">
+
+// **fatora section** => start
+
+//varibles
+
+$buttom_fatoora_background:rgb(235, 229, 229);
+$buttom_font_fatoora: 22px;
+$font_weight_fatoora: 700;
+$border_fatoora:2px solid rgb(71, 71, 71);
+$buttom_color_fattora: black;
+$buttom_font: 19px;
+
+
+//reset => normalize 
+*{
+  margin: 0px;
+}
+
+
+//extends
+
+%btn-style{
+  text-align: center;
+  font-size: $buttom_font;
+  border-radius: 5px;
+  border: none;
+  font-weight: 500;
+  background-color: $buttom_color_fattora;
+  color: white;
+  cursor: pointer;
+
+}
+
+%use_flex{
+  display: flex;
+  flex-wrap: wrap;
+}
+%center_flex{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+%btn-style_fatoora{
+  text-align: center;
+  font-size: $buttom_font_fatoora;
+  border-radius: 5px;
+  border: none;
+  font-weight: 700;
+  background-color:$buttom_fatoora_background;
+  color: block;
+  cursor: pointer;
+
+}
+
+%font{
+  font: {
+      size:19px;
+      weight:600;
+    }
+}
+
+//start your style
+
+ .fatoora{
+    @extend %use_flex;
+    justify-content:center;
+    width: 60%;
+    min-height:100vh;
+ //   background-color: red;
+    margin: auto;
+    margin-top: 32px;
+    border :$border_fatoora;
+    border-radius: 5px;
+  
+}
+
+.fatoora__header{
+  @extend %use_flex;
+  justify-content: space-evenly;
+  width: 100%;
+  height:250px;
+   //background-color: rgb(153, 141, 141);
+   
+   >div{
+     width: 30%;
+     height: 100%;
+    // background-color: antiquewhite;
+    }
+    >div:nth-child(3){
+    @extend %use_flex;
+    justify-content: end;
+    align-content: space-evenly;
+    .logoFatora{
+      font-size: 40px;
+      color: rgb(110, 108, 105);
+      text-align: end;
+
+      span{
+        font-family: Arial, Helvetica, sans-serif;
+        color: black;
+      }
+    }
+    .categories{
+      color: rgb(110, 108, 105);
+      font-size: 30px;
+      text-align: end;
+    }
+
+  }
+  >div:nth-child(2){
+    
+    @extend %use_flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+
+    button{
+      
+      @extend %btn-style_fatoora;
+        width: 60%;
+        height: 50px;
+        margin-bottom: 15px;
+        border: $border_fatoora;
+      }
+      span{
+        width: 100px;
+        height: 40px;
+        line-height: 40px;
+        @extend %font;
+        
+          //background-color:$buttom_fatoora_background;
+        }
+
+   }
+
+  
+ }
+
+ .fatoora__title{
+  width: 95%;
+  height: 130px;
+  border: $border_fatoora;
+  @extend %use_flex;
+  justify-content: space-evenly;
+  >div{
+    width: 40%;
+    height: 100%;
+   // background-color: aliceblue;
+
+     p {
+        //background-color: rgb(104, 149, 189);
+        margin-top: 20px;
+        text-align: end;
+        font-weight: $font_weight_fatoora;
+        font-size: $buttom_font_fatoora;
+      }
+    }
+    
+    
+  }
+  
+  .fatoora__table{
+    width: 95%;
+    min-height: 70px;
+    // background-color: rgb(172, 42, 42);
+    .table{
+      width: 100%;
+      height: 100%;
+   // background-color: salmon;
+   tr{
+
+     height: 30px;
+     td,th{
+
+       border: $border_fatoora;
+       text-align: center;
+       //background-color: sandybrown;
+       
+     }
+
+    }
+  }
+  
+}
+.fatoora__sales{
+  width: 95%;
+  height: 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content:space-evenly;
+  padding-left: 20px;
+  margin-top: 14px;
+  p{
+    //width: 280px;
+    text-align: start;
+    @extend %font;
+    
+    span{
+      border: 2px solid black;
+      padding: 4px;
+    }
+  }
+
+}
+.fatoora__notes{
+  width: 95%;
+  height: 100px;
+  margin-top: 14px;
+
+  //background-color: rgb(33, 108, 170);
+  
+  @extend %font;
+
+  >p:nth-child(2){
+    background-color: bisque;
+    padding: 4px;
+    display: inline-block;
+    
+  }
+  
+  
+}
+.qrcode_cont{
+  
+  width: 100%;
+  height: 120px;
+  @extend %center_flex;
+  
+}
+
+.fatoora__btns{
+  @extend %center_flex;
+  width: 100%;
+  height: 120px;
+  //background-color: rgb(173, 62, 173);
+  
+    button{
+    margin-bottom: 15px;
+    width: 60%;
+    height: 50px;
+      border: $border_fatoora;
+      @extend %btn-style_fatoora;
+
+    }
+
+  
+ 
+}
+@media (max-width: 450px){
+
+
+  //fatoora
+  .fatoora{
+  width: 100%;
+  
+ }
+
+//fatoora__header
+ .fatoora__header{
+ 
+   >div:nth-child(2){
+   
+      button{
+          width: 90%;
+        }
+
+   }
+
+  
+ }
+
+  //fatoora__title
+ .fatoora__title{
+ 
+  >div:nth-child(2){
+    width:60%;
+  }
+
+
+ }
+
+
+
+}
+
+
+
+// **fatora section** => end
+
+
+
+</style>

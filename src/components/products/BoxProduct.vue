@@ -81,8 +81,10 @@ export default {
   font-weight: 600;
 }
 .contPro {
-  width: 100%;
-  height: 100%;
+  width: 300px;
+  height: 380px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 /* cont one product */
 .contPro > div {

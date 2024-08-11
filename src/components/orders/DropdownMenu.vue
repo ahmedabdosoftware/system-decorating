@@ -14,6 +14,12 @@
       <a v-if="isAdmin||isClint" href="#" @click.prevent="Fatora(order)">
         <span>فاتورة</span> <font-awesome-icon class="icon" :icon="['fas', 'file-invoice']" />
       </a>
+      <a v-if="order.financialClientTransactionId && (isAdmin || isClint)" href="#" @click.prevent="financial('TransactionDetails',order.financialClientTransactionId)">
+      <span>م.العميل </span> <font-awesome-icon class="icon" :icon="['fas', 'file-invoice']" />
+      </a>
+      <a v-if="order.financialTechnicalTransactionId && (isAdmin || isTechnical)" href="#" @click.prevent="financial('TransactionDetails',order.financialTechnicalTransactionId)">
+        <span> م.الفنى</span> <font-awesome-icon class="icon" :icon="['fas', 'file-invoice']" />
+      </a>
       <a v-if="order.customerInfo.number && isTechnical||isAdmin " :href="'https://wa.me/2' + order.customerInfo.number" target="_blank">
         <span>واتس</span> <font-awesome-icon class="icon" :icon="['fab', 'whatsapp']" />
       </a>
@@ -25,7 +31,7 @@
 <script>
 
 
-// actions 
+// actions , states
 import { mapActions,mapState } from 'pinia'
 //store
 import { useOrdersStore } from '@/store/order/orders.js';
@@ -64,6 +70,18 @@ export default {
       if (this.visible) {
         this.$emit('closeOthers');
       }
+    },
+    financial(section, id){
+      const profileId = this.$route.params.profileId;
+      const layout = this.$route.meta.layout;
+      console.log("financial layout:", layout);
+      if (layout === 'DashboardLayout') {
+        this.$router.push( `/dashboard/${section}/${id}`);
+      } else if (layout === 'profileInDashboardLayout') {
+        this.$router.push( `/dashboard/profile/${profileId}/${section}/${id}`);
+      } else if (layout === 'profileOutDashboardLayout') {
+        this.$router.push( `/profile/${profileId}/${section}/${id}`);
+      }   
     },
     viewDetails(order) {
       console.log("View details of order:", order);

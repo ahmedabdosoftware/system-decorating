@@ -44,7 +44,7 @@
           <font-awesome-icon v-if="!isCollapsed" class="arrow" icon="chevron-down" />
         </div>
         <div :class="{ 'dark-mode-content': getDarkMode }">
-          <router-link  to="/Category">
+          <router-link  to="/dashboard/Category">
             <font-awesome-icon class="iconAwesome" icon="folder" />
           </router-link>
           <router-link v-if="!isCollapsed" to="/dashboard/Category">

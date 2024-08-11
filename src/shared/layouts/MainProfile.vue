@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'dark-mode': getDarkMode }" id="profile-layout">
-    <div v-if="userInfo" class="infoUser">
+    <div v-if="userInfo" class="infoUser" id="infoUser">
       <div class="background">
         <div class="imge-profilee">
           <img class="imge-pro" :src="userInfo.profileImageURL || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR05q_vg5Ux_rPqNDBBeYLc1BHrG-qjaw7_tA&usqp=CAU'" alt="Profile Image">
@@ -58,6 +58,7 @@ export default {
       const layout = this.$route.meta.layout;
 
       if (layout === 'DashboardLayout') {
+        
         return `/dashboard/profile/${profileId}/${section}`;
       } else if (layout === 'profileInDashboardLayout') {
         return `/dashboard/profile/${profileId}/${section}`;
@@ -222,5 +223,12 @@ export default {
   .dark-mode {
     background-color: rgb(19, 19, 19);
   }
+  @media print{
+      #infoUser{
+        display: none !important;
+      }
+    
+    
+    }
   </style>
   

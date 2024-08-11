@@ -50,28 +50,14 @@
       </div>
     </div>
     <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
-       
-      <UsersList v-if="filteredUsers.length > 0" :users="filteredUsers" ></UsersList>
+      <TableSkeleton v-if="isLoading" :rows="5" :columns="6" />
 
-      <NoData v-if="filteredUsers.length == 0" context="users"></NoData>
+      <UsersList v-else-if="filteredUsers.length > 0" :users="filteredUsers" ></UsersList>
+
+      <NoData v-else context="users"></NoData>
 
     </div>
-    <div id="loader">
-      <div class="lds-spinner">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-    </div>
+   
   </div>
 </template>
 
@@ -80,10 +66,13 @@ import { mapState, mapActions } from 'pinia';
 //  store
 import { useGetUserStore } from '@/store/users/users.js';
 
- // NoData
+  // NoData
  import NoData from "@/shared/components/noData/NoData.vue";
 
- // UsersList
+  // Skeleton Box
+  import TableSkeleton from '@/shared/components/loading/skeletonLoader/TableSkeleton.vue';
+ 
+  // UsersList
  import UsersList from "@/components/users/UsersList.vue";
 
 export default {
@@ -91,11 +80,14 @@ export default {
   components: {
     NoData,
     UsersList,
+    TableSkeleton,
 
   },
   data() {
     return {
       searchQuery: '',
+      isLoading: true,
+
     };
   },
   computed: {
@@ -116,17 +108,11 @@ export default {
   },
   methods: {
     ...mapActions(useGetUserStore, ['fetchUsers']),
-    loaderToggle(show) {
-        let loader = document.getElementById("loader");
-        if (loader) {
-            loader.style.visibility = show ? "visible" : "hidden";
-        }
-    },
+    
   },
  async created() {
-  this.loaderToggle(true)
   await this.fetchUsers();
-  this.loaderToggle(false)
+  this.isLoading = false;
 
   },
 };

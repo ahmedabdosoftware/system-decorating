@@ -26,6 +26,8 @@ import MainProfile from "@/shared/layouts/MainProfile.vue";
 import UserOrder from "../views/UserProfile/UserOrder.vue";
 import UserFinancial from "../views/UserProfile/financial/UserFinancial.vue";
 import AddFinancial from "../views/UserProfile/financial/AddFinancial.vue";
+import TransactionDetails from "../views/UserProfile/financial/TransactionDetails.vue";
+import EditTransaction from "../views/UserProfile/financial/EditTransaction.vue";
 import UserProjects from "../views/UserProfile/UserProjects.vue";
 import UserSetting from "../views/UserProfile/UserSetting.vue";
 
@@ -111,6 +113,12 @@ const routes = [
         meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
       },
       {
+        path: "TransactionDetails/:transactionId",
+        name: "TransactionDetails",
+        component: TransactionDetails,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+      {
         path: "Reviews",
         name: "Reviews",
         component: Reviews,
@@ -159,6 +167,24 @@ const routes = [
             path: "financial",
             name: "AdminUserFinancial",
             component: UserFinancial,
+            meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
+          },
+          {
+            path: "AddFinancial",
+            name: "AdminAddFinancial",
+            component: AddFinancial,
+            meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
+          },
+          {
+            path: "TransactionDetails/:transactionId",
+            name: "AdminTransactionDetails",
+            component: TransactionDetails,
+            meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
+          },
+          {
+            path: "EditTransaction/:transactionId",
+            name: "AdminEditTransaction",
+            component: EditTransaction,
             meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
           },
           {
@@ -212,9 +238,15 @@ const routes = [
         meta: { requiresAuth: true, roles: ['technical', 'clint', 'admin'] ,layout: 'profileOutDashboardLayout'},
       },
       {
-        path: "AddFinancial",
-        name: "UserAddFinancial",
-        component: AddFinancial,
+        path: "TransactionDetails/:transactionId",
+        name: "UserTransactionDetails",
+        component: TransactionDetails,
+        meta: { requiresAuth: true, roles: ['technical', 'clint', 'admin'] ,layout: 'profileOutDashboardLayout'},
+      },
+      {
+        path: "EditTransaction/:transactionId",
+        name: "UserEditTransaction",
+        component: EditTransaction,
         meta: { requiresAuth: true, roles: ['technical', 'clint', 'admin'] ,layout: 'profileOutDashboardLayout'},
       },
       {
