@@ -81,7 +81,14 @@
                   </option>
                 </select>
             </div>
-            <div></div>
+            <div class="cato">
+              <label :class="{ 'dark-mode-title': getDarkMode }">unit</label>
+                <select v-model="selectedUnitId" @change="fetchUnitName">
+                  <option v-for="unit in units" :value="unit.id" :key="unit.id">
+                    {{ unit.name }}
+                  </option>
+                </select>
+            </div>       
           </div>
           <div class="contPrice">
             <div class="price">
@@ -112,6 +119,15 @@
                 v-slot="{ errors }"
               >
                 <input v-model="offerPrice" placeholder="type here" type="text" />
+                <span class="error">{{ errors[0] }}</span>
+              </ValidationProvider>
+              <label :class="{ 'dark-mode-title': getDarkMode }">buy price </label>
+              <ValidationProvider
+                name="buy Price"
+                rules="numeric|min_value:0"
+                v-slot="{ errors }"
+              >
+                <input v-model="buyPrice" placeholder="type here" type="text" />
                 <span class="error">{{ errors[0] }}</span>
               </ValidationProvider>
             </div>
@@ -170,6 +186,7 @@ import { mapActions, mapState } from 'pinia';
 //store
 import { useProductsStore } from '@/store/products/products.js'
 import { useCategoriesStore } from '@/store/categories/categories.js';
+import { useUnitsStore } from '@/store/products/units/units.js';
 
 // CircleLoader
 import CircleLoader from '@/shared/components/loading/CircleLoader.vue';
@@ -191,7 +208,10 @@ export default {
       priceMaterial: "",
       priceWithLabor: "",
       offerPrice:"",
+      buyPrice:"",
       selectedCategoryId: '',
+      selectedUnitId:'',
+      unitName:'',
       id: null,
       clickedBeforeToUpload:false,
       oldImageUrl:"",
@@ -208,12 +228,15 @@ export default {
 
     ...mapState(useProductsStore, ['products']),
     ...mapState(useCategoriesStore, ['categories']),
+    ...mapState(useUnitsStore, ['units']),
+
 
 
   },
   async created() {
     
     await this.fetchCategories();
+    await this.fetchUnits();
     
     this.id = this.$route.params.id;
     this.fetchDetails()
@@ -228,7 +251,17 @@ export default {
 
     ...mapActions(useProductsStore, ['updateProduct', 'deleteImageFromStorage', 'uploadImage']),
     ...mapActions(useCategoriesStore, ['fetchCategories']),
+    ...mapActions(useUnitsStore, ['fetchUnits']),  
 
+
+    
+    fetchUnitName(){
+      const unit = this.units.find(unit => unit.id === this.selectedUnitId);
+        if(unit){
+
+          this.unitName= unit
+        }
+    },
     // ============ my actions => end=============================================
 
     fetchDetails(){
@@ -243,7 +276,10 @@ export default {
        this.priceMaterial = product.priceMaterial;
        this.priceWithLabor = product.priceWithLabor;
        this.offerPrice = product.offerPrice || 0;
+       this.buyPrice = product.buyPrice || 0;
        this.selectedCategoryId = product.categoryId;
+       this.selectedUnitId = product.unitId;
+       this.unitName = product.unitName;
        this.showLaborPrice = product.showLaborPrice || false;
        this.displayOnSite = product.displayOnSite || true;
  
@@ -298,8 +334,13 @@ export default {
           priceMaterial: parseInt(this.priceMaterial),
           priceWithLabor: parseInt(this.priceWithLabor),
           offerPrice: parseInt(this.offerPrice),
+          buyPrice: parseInt(this.buyPrice),
           description: this.description,
           categoryId: this.selectedCategoryId,
+          unitId: this.selectedUnitId,
+          unitName: this.unitName,
+          showLaborPrice: this.showLaborPrice,
+          displayOnSite: this.displayOnSite,
           id: this.id,
         };
         
@@ -554,5 +595,16 @@ cursor:not-allowed;
   font-size: 14px;
 }
 }
-
+// phone max-width:365px
+@media(max-width:365px){
+      
+      .allContentt {
+        width: 350px !important;
+        }
+        .title {
+          width: 350px;
+      }    
+      .allContentt form {
+      }                                     
+      }    
 </style>

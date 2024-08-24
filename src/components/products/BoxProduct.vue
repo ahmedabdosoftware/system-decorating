@@ -14,8 +14,8 @@
           <img class="star" src="https://img.freepik.com/free-vector/start_53876-25533.jpg" />
           <img class="star" src="https://img.freepik.com/free-vector/start_53876-25533.jpg" />
         </div>
-        <span>{{ oneProduct.priceMaterial }} $ Material</span>
-        <span v-if="oneProduct.priceWithLabor">{{ oneProduct.priceWithLabor }} $ Labor</span>
+        <span>{{ oneProduct.priceMaterial }} :  سعرال{{ oneProduct.unitName.name }}</span>
+        <span v-if="oneProduct.priceWithLabor">{{ oneProduct.priceWithLabor }} : مصنعية</span>
         <router-link :to="{ name: 'EditProduct', params: { id: oneProduct.id } }">
           <button class="edit">edit</button>
         </router-link>

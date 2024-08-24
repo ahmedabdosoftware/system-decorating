@@ -31,7 +31,7 @@
   };
   </script>
   
-  <style scoped>
+  <style scoped lang="scss">
   #main-layout {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -42,7 +42,8 @@
   
 .content-view {
   min-height: 100vh;
-  background-color: #f9f7f7;
+  background-color: hsl(0, 100%, 98%);
+// background-color: rgba(139, 69, 19, 0.05); // بني فاتح جدًا مع شفافية 5%
   margin-left: 17%;
   box-sizing: border-box;
   width: 83%;

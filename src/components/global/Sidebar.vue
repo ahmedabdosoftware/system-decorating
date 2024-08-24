@@ -1,430 +1,563 @@
 <template>
-  <div id="sidebar" :class="['sidebar', { 'sidebar-collapsed': isCollapsed }]">    
-    <div :class="{ 'dark-mode-content': getDarkMode }" class="content">
-      <div :class="{ 'dark-mode-header': getDarkMode }" class="header">
-        <img
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeyjanmXwnnw7x5aS6nIg_ssKuT1kC0RgjkA&usqp=CAU"
-        />
-        <div v-if="!isCollapsed">
-          <p>admin</p>
-          <p>locascanstyle</p>
-        </div>
-        <img
-          class="loggo"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTUgxG9z03WuK9OPQ64aptvJjEyyPz2Cnhcw&usqp=CAU"
-        />
-        <span v-on:click="disappear()" class="x">x</span>
-      </div>
-      <div class="links">
-        <div :class="{ 'dark-mode-content': getDarkMode }">
-            <router-link to="/dashboard">
-              <font-awesome-icon class="iconAwesome" icon="house" />
-            </router-link>
-            <router-link to="/dashboard" v-if="!isCollapsed" >
-              <p class="link">dashboard</p>
-            </router-link>
-            <font-awesome-icon class="arrow" />
-        </div>
-        <div :class="{ 'dark-mode-content': getDarkMode }">
-          <router-link  to="/dashboard/Product">
-             <font-awesome-icon class="iconAwesome" icon="store" />
-          </router-link>
-          <router-link v-if="!isCollapsed" to="/dashboard/Product">
-            <p class="link">products</p>
-          </router-link>
-          <font-awesome-icon v-if="!isCollapsed" class="arrow" icon="chevron-down" />
-        </div>
-        <div :class="{ 'dark-mode-content': getDarkMode }">
-          <router-link  to="/dashboard/Order">
-            <font-awesome-icon class="iconAwesome" icon="briefcase" />
-          </router-link >
-          <router-link v-if="!isCollapsed" to="/dashboard/Order">
-            <p class="link">orders</p>
-          </router-link>
-          <font-awesome-icon v-if="!isCollapsed" class="arrow" icon="chevron-down" />
-        </div>
-        <div :class="{ 'dark-mode-content': getDarkMode }">
-          <router-link  to="/dashboard/Category">
-            <font-awesome-icon class="iconAwesome" icon="folder" />
-          </router-link>
-          <router-link v-if="!isCollapsed" to="/dashboard/Category">
-            <p class="link">category</p>
-          </router-link>
-          <font-awesome-icon v-if="!isCollapsed" class="arrow" icon="chevron-down" />
-        </div>
-        <div :class="{ 'dark-mode-content': getDarkMode }">
-          <router-link to="/dashboard/users/technicalPages/Technical">
-            <font-awesome-icon class="iconAwesome" icon="tools" />
-          </router-link>
-          <router-link v-if="!isCollapsed" to="/dashboard/users/technicalPages/Technical">
-            <p class="link">technicals</p>
-          </router-link>
-          <font-awesome-icon v-if="!isCollapsed" class="arrow" icon="chevron-down" />
-        </div>
-        <div :class="{ 'dark-mode-content': getDarkMode }">
-          <router-link  to="/dashboard/users/clintPages/Clint">
-            <font-awesome-icon class="iconAwesome" icon="user-tie" />
-          </router-link>
-          <router-link v-if="!isCollapsed" to="/dashboard/users/clintPages/Clint">
-            <p class="link">clients</p>
-          </router-link>
-          <font-awesome-icon v-if="!isCollapsed" class="arrow" icon="chevron-down" />
-        </div>
-        <div :class="{ 'dark-mode-content': getDarkMode }" class="projects">
-          <router-link to="/dashboard/Projects">
-            <font-awesome-icon class="iconAwesome" icon="project-diagram" />
-          </router-link>
-          <router-link v-if="!isCollapsed" to="/dashboard/Projects">
-            <p class="link">projects</p>
-          </router-link>
-          <font-awesome-icon class="arrow" />
-        </div>
-        <div :class="{ 'dark-mode-content': getDarkMode }" class="reviews">
-          <router-link to="/dashboard/Reviews">
-            <font-awesome-icon class="iconAwesome" icon="comments" />
-          </router-link>
-          <router-link v-if="!isCollapsed" to="/dashboard/Reviews">
-            <p class="link">reviews</p>
-          </router-link>
-          <font-awesome-icon class="arrow" />
-        </div>
-        <div :class="{ 'dark-mode-content': getDarkMode }" class="themeCont">
-            <font-awesome-icon @click="theme()" class="iconAwesome" icon="adjust" />
-            <div v-if="!isCollapsed" class="theme" :class="{ 'dark-mode-content': getDarkMode }">
-              <p @click="theme()" class="link theme">theme</p>
-                <font-awesome-icon  class="iconAwesome" :icon="getDarkMode ? 'moon' : 'sun'" />
-            </div>
-            <font-awesome-icon class="arrow"  />
-        </div>
-        <div :class="{ 'dark-mode-content': getDarkMode }" class="log-out" @click="logOut">
-          <div
-            :class="{ 'dark-mode-content': getDarkMode }"
-            class="profile-cont"
-          >
-            <div class="contImge">
-              <font-awesome-icon class="profile" icon="user-circle" />
-            </div>
+    <div id="sidebar" :class="['sidebar', { 'sidebar-collapsed': isCollapsed }]">    
+      <div :class="{ 'dark-mode-content': getDarkMode }" class="content">
+        <div :class="{ 'dark-mode-header': getDarkMode }" class="header">
+          <img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeyjanmXwnnw7x5aS6nIg_ssKuT1kC0RgjkA&usqp=CAU"
+          />
+          <div v-if="!isCollapsed">
+            <p>admin</p>
+            <p>locascanstyle</p>
           </div>
-          <div v-if="!isCollapsed"
-            class="log-out-word"
-            :class="{ 'dark-mode-content': getDarkMode }"
-          >
-            <p class="link">log out</p>
-          </div>
-          <font-awesome-icon v-if="!isCollapsed" class="log" icon="sign-out-alt" />
+          <img
+            class="loggo"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTUgxG9z03WuK9OPQ64aptvJjEyyPz2Cnhcw&usqp=CAU"
+          />
+          <span v-on:click="disappear()" class="x">x</span>
         </div>
-      </div>
-      <div class="toggle-button" @click="toggleSidebar">
-        <font-awesome-icon :icon="isCollapsed ? 'chevron-right' : 'chevron-left'" />
+        <div class="links">
+          <div :class="{ 'dark-mode-content': getDarkMode }">
+              <router-link to="/dashboard">
+                <font-awesome-icon class="iconAwesome" icon="house" />
+              </router-link>
+              <router-link to="/dashboard" v-if="!isCollapsed" >
+                <p class="link">dashboard</p>
+              </router-link>
+              <font-awesome-icon class="arrow" />
+          </div>
+          <div @click="toggleSubMenu('products')" :class="[{'different-color': isProductsOpen, 'dark-mode-content': getDarkMode}, 'product-sup']">
+            <font-awesome-icon class="iconAwesome" icon="store" />
+            <p class="link products_p">products</p>
+            <font-awesome-icon v-if="!isCollapsed" class="arrow" :icon="isProductsOpen ? 'chevron-up' : 'chevron-down'" />
+
+                <!--slot -->
+                <DropDownMenuSidebar v-show="isCollapsed">
+                  <router-link to="/dashboard/Product">
+                     products
+                  </router-link>
+                  <router-link to="/dashboard/AddNewProduct">
+                    add products
+                  </router-link>
+                  <router-link to="/dashboard/units">
+                    units
+                  </router-link>
+                  <router-link to="/dashboard/notes">
+                    notes
+                  </router-link>
+                  <router-link to="/dashboard/Category">
+                    categories
+                  </router-link>
+                  <router-link to="/dashboard/addcatagory">
+                    add category
+                  </router-link>
+                </DropDownMenuSidebar>
+
+              </div>
+              <div v-show="isProductsOpen && !isCollapsed"  :class="[{'different-color': isProductsOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
+                <font-awesome-icon class="iconAwesome" icon="chevron-right" />
+                <router-link v-if="!isCollapsed" to="/dashboard/Product">
+                  <p class="link">list of products</p>
+                </router-link>
+              </div>
+              <div  v-show="isProductsOpen && !isCollapsed" :class="[{'different-color': isProductsOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
+                <font-awesome-icon class="iconAwesome" icon="chevron-right" />
+                
+                <router-link v-if="!isCollapsed" to="/dashboard/AddNewProduct">
+                  <p class="link">add products</p>
+                </router-link>
+              </div>
+              <div  v-show="isProductsOpen && !isCollapsed" :class="[{'different-color': isProductsOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
+                <font-awesome-icon class="iconAwesome" icon="chevron-right" />
+                
+                <router-link v-if="!isCollapsed" to="/dashboard/units">
+                  <p class="link">units</p>
+                </router-link>
+              </div>
+              <div  v-show="isProductsOpen && !isCollapsed" :class="[{'different-color': isProductsOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
+                <font-awesome-icon class="iconAwesome" icon="chevron-right" />
+                
+                <router-link v-if="!isCollapsed" to="/dashboard/notes">
+                  <p class="link">notes</p>
+                </router-link>
+              </div>
+              <div  v-show="isProductsOpen && !isCollapsed" :class="[{'different-color': isProductsOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
+                <font-awesome-icon class="iconAwesome" icon="chevron-right" />                
+                <router-link v-if="!isCollapsed"  to="/dashboard/Category">
+                  <p class="link">list of categories</p>
+                </router-link>
+              </div>
+              <div  v-show="isProductsOpen && !isCollapsed" :class="[{'different-color': isProductsOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
+                <font-awesome-icon class="iconAwesome" icon="chevron-right" />                
+                <router-link v-if="!isCollapsed" to="/dashboard/addcatagory">
+                  <p class="link">add category</p>
+                </router-link>
+              </div>
+          <div :class="{ 'dark-mode-content': getDarkMode }">
+            <router-link  to="/dashboard/Order">
+              <font-awesome-icon class="iconAwesome" icon="briefcase" />
+            </router-link >
+            <router-link v-if="!isCollapsed" to="/dashboard/Order">
+              <p class="link">orders</p>
+            </router-link>
+          </div>
+          <div :class="{ 'dark-mode-content': getDarkMode }">
+            <router-link to="/dashboard/users/technicalPages/Technical">
+              <font-awesome-icon class="iconAwesome" icon="tools" />
+            </router-link>
+            <router-link v-if="!isCollapsed" to="/dashboard/users/technicalPages/Technical">
+              <p class="link">technicals</p>
+            </router-link>
+          </div>
+          <div :class="{ 'dark-mode-content': getDarkMode }">
+            <router-link  to="/dashboard/users/clintPages/Clint">
+              <font-awesome-icon class="iconAwesome" icon="user-tie" />
+            </router-link>
+            <router-link v-if="!isCollapsed" to="/dashboard/users/clintPages/Clint">
+              <p class="link">clients</p>
+            </router-link>
+          </div>
+          <div :class="{ 'dark-mode-content': getDarkMode }" class="projects">
+            <router-link to="/dashboard/Projects">
+              <font-awesome-icon class="iconAwesome" icon="project-diagram" />
+            </router-link>
+            <router-link v-if="!isCollapsed" to="/dashboard/Projects">
+              <p class="link">projects</p>
+            </router-link>
+          </div>
+          <div :class="{ 'dark-mode-content': getDarkMode }" class="reviews">
+            <router-link to="/dashboard/Reviews">
+              <font-awesome-icon class="iconAwesome" icon="comments" />
+            </router-link>
+            <router-link v-if="!isCollapsed" to="/dashboard/Reviews">
+              <p class="link">reviews</p>
+            </router-link>
+          </div>
+           <!-- Storage Section -->
+        <div :class="{ 'dark-mode-content': getDarkMode }">
+          <router-link  to="/dashboard/Storage">
+            <font-awesome-icon class="iconAwesome" icon="box-open" />
+          </router-link>
+          <router-link v-if="!isCollapsed" to="/dashboard/Storage">
+            <p class="link">Storage</p>
+          </router-link>
+        </div>
+
+        <!-- Purchases Section -->
+        <div :class="{ 'dark-mode-content': getDarkMode }">
+          <router-link  to="/dashboard/Purchases">
+            <font-awesome-icon class="iconAwesome" icon="shopping-cart" />
+          </router-link>
+          <router-link v-if="!isCollapsed" to="/dashboard/Purchases">
+            <p class="link">Purchases</p>
+          </router-link>
+        </div>
+          <div :class="{ 'dark-mode-content': getDarkMode }" class="themeCont">
+              <font-awesome-icon @click="theme()" class="iconAwesome" icon="adjust" />
+              <div v-if="!isCollapsed" class="theme" :class="{ 'dark-mode-content': getDarkMode }">
+                <p @click="theme()" class="link theme">theme</p>
+                  <font-awesome-icon  class="iconAwesome" :icon="getDarkMode ? 'moon' : 'sun'" />
+              </div>
+              <font-awesome-icon class="arrow"  />
+          </div>
+          <div :class="{ 'dark-mode-content': getDarkMode }" class="log-out" @click="logOut">
+            <div
+              :class="{ 'dark-mode-content': getDarkMode }"
+              class="profile-cont"
+            >
+              <div class="contImge">
+                <font-awesome-icon class="profile" icon="user-circle" />
+              </div>
+            </div>
+            <div v-if="!isCollapsed"
+              class="log-out-word"
+              :class="{ 'dark-mode-content': getDarkMode }"
+            >
+              <p class="link">log out</p>
+            </div>
+            <font-awesome-icon v-if="!isCollapsed" class="log" icon="sign-out-alt" />
+          </div>
+        </div>
+        <div class="toggle-button" @click="toggleSidebar">
+          <font-awesome-icon :icon="isCollapsed ? 'chevron-right' : 'chevron-left'" />
+        </div>
       </div>
     </div>
-  </div>
-</template>
-<script>
-import { useUserStore } from '@/store/auth/auth.js';
-import { mapActions } from "pinia";
-
-export default {
-  data() {
-    return {
-      // discPage: "this is sidbar",
-      isCollapsed: false
-
-    };
+  </template>
+  <script>
+  import { useUserStore } from '@/store/auth/auth.js';
+  import { mapActions } from "pinia";
+  // Skeleton DropDownMenuSidebar 
+  import DropDownMenuSidebar from '@/components/global/DropDownMenuSidebar.vue';
+ 
+  
+  export default {
+    data() {
+      return {
+        // discPage: "this is sidbar",
+        isCollapsed: false,
+        isProductsOpen: false, // حالة التحكم في ظهور القائمة الفرعية
+  
+      };
+    },
+    components: {
+      DropDownMenuSidebar,
   },
-  name: "Sidebar",
-  computed: {
-    getDarkMode() {
-      return this.$store.state.darkMode;
+    name: "Sidebar",
+    computed: {
+      getDarkMode() {
+        return this.$store.state.darkMode;
+      },
+      mood() {
+        return this.$store.state.mood;
+      },
     },
-    mood() {
-      return this.$store.state.mood;
+    methods: {
+      ...mapActions(useUserStore, ["logout"]),
+  
+     async logOut(){
+       await this.logout()
+       this.$router.push('/login');
+      }
+      ,
+      theme() {
+        this.$store.commit("toggleDarkMode");
+      },
+      disappear() {
+        document.getElementById("sidebar").style.cssText = "left:-100%;";
+      },
+      toggleSidebar() {
+      this.isCollapsed = !this.isCollapsed;
+      document.querySelector('#main-layout').classList.toggle('sidebar-collapsed', this.isCollapsed);
     },
-  },
-  methods: {
-    ...mapActions(useUserStore, ["logout"]),
-
-   async logOut(){
-     await this.logout()
-     this.$router.push('/login');
+    toggleSubMenu(menu) {
+      if (menu === 'products') {
+        this.isProductsOpen = !this.isProductsOpen;
+      }
     }
-    ,
-    theme() {
-      this.$store.commit("toggleDarkMode");
     },
-    disappear() {
-      document.getElementById("sidebar").style.cssText = "left:-100%;";
-    },
-    toggleSidebar() {
-    this.isCollapsed = !this.isCollapsed;
-    document.querySelector('#main-layout').classList.toggle('sidebar-collapsed', this.isCollapsed);
-  }
-  },
-};
-</script>
-
-<style lang="scss">
-.sidebar {
-  width: 17%;
-  height: 100vh;
-  background-color: white;
-  position: fixed;
-  left: 0px;
-  top: 0px;
-  transition: width 0.3s ease;
-  &.sidebar-collapsed {
-    width: 5% !important; // إضافة !important لتعزيز الأولوية
-  }
-}
-.sidebar > div {
-  width: 100%;
-  height: 80%;
-  border-radius: 5px;
-  display: flex;
-  flex-wrap: wrap;
-  background-color: white;
-  // background-color: rgb(205, 133, 133);
-}
-.header {
-  width: 100%;
-  height: 63px;
-  //background-color: firebrick;
-  display: flex;
-  align-items: center;
-  border-bottom: 2px solid rgb(215, 213, 213);
-  div {
-    width: 30%;
-    height: 100%;
-    // background-color: rebeccapurple;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    p:first-child {
-      color: blue;
-      text-transform: capitalize;
-      font-size: 18px;
-      font-weight: 600;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-    p:nth-child(2) {
-      font-size: 10px;
-      color: rgb(121, 120, 120);
-    }
-  }
-  img {
-    width: 40px;
-    height: 100%;
-  }
-  img:first-child {
-    margin-left: 5px;
-  }
-  img:nth-child(3) {
-    margin-left: 60px;
-  }
-}
-.links {
-  width: 100%;
-  height: 90%;
-  // background-color: skyblue;
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  div:hover {
-    background-color: rgb(220, 220, 245);
-  }
-  div:hover > div {
-    background-color: rgb(220, 220, 245);
-  }
-   div {
-    position: relative;
-    border-radius: 5px;
-    width: 100%;
-    height: 55px;
-    margin-bottom: 2px;
+  };
+  </script>
+  
+  <style lang="scss">
+  .sidebar {
+    width: 17%;
+    height: 100vh;
     background-color: white;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    transition: all 0.3s ease;
+    overflow-y: auto;
+    //overflow-x: visible;
+    &.sidebar-collapsed {
+      width: 5% !important; // إضافة !important لتعزيز الأولوية
+    }
+  }
+  .sidebar > div {
+    width: 100%;
+    height: 80%;
+    border-radius: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    background-color: white;
+    // background-color: rgb(205, 133, 133);
+  }
+  .header {
+    width: 100%;
+    height: 63px;
+    //background-color: firebrick;
     display: flex;
     align-items: center;
-    cursor: pointer;
-     .iconAwesome {
-      width: 30px;
-      height: 30px;
-      margin-left: 20px;
-      margin-right: 6px;
-      
+    border-bottom: 2px solid rgb(215, 213, 213);
+    div {
+      width: 30%;
+      height: 100%;
+      // background-color: rebeccapurple;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+  
+      p:first-child {
+        color: blue;
+        text-transform: capitalize;
+        font-size: 18px;
+        font-weight: 600;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      p:nth-child(2) {
+        font-size: 10px;
+        color: rgb(121, 120, 120);
+      }
     }
-    img:nth-of-type(1) {
-      width: 20px;
-      height: 20px;
-      margin-left: 30px;
+    img {
+      width: 40px;
+      height: 100%;
     }
-    .profile-cont {
-      width: 70px;
-      height: 50px;
-      // background-color: salmon;
-      .contImge {
-        width: 40px;
-        height: 40px;
-        border-radius: 20px;
-        background-color: white;
+    img:first-child {
+      margin-left: 5px;
+    }
+    img:nth-child(3) {
+      margin-left: 60px;
+    }
+  }
+  .links {
+    width: 100%;
+    height: 90%;
+    // background-color: skyblue;
+    transition: height 0.3s ease;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    div:hover {
+      background-color: rgb(220, 220, 245);
+    }
+    div:hover > div {
+      background-color: rgb(220, 220, 245);
+    }
+     div {
+      position: relative;
+      border-radius: 5px;
+      width: 100%;
+      height: 55px;
+      margin-bottom: 2px;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+       .iconAwesome {
+        width: 30px;
+        height: 30px;
         margin-left: 20px;
-        margin-top: 6px;
-        .profile {
-          width: 100%;
-          height: 100%;
+        margin-right: 6px;
+        
+      }
+      img:nth-of-type(1) {
+        width: 20px;
+        height: 20px;
+        margin-left: 30px;
+      }
+      .profile-cont {
+        width: 70px;
+        height: 50px;
+        // background-color: salmon;
+        .contImge {
+          width: 40px;
+          height: 40px;
           border-radius: 20px;
-          margin-left: 0px;
-
+          background-color: white;
+          margin-left: 20px;
+          margin-top: 6px;
+          .profile {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            margin-left: 0px;
+  
+          }
+        }
+      }
+      div {
+        p {
+          font-size: 17px;
+          text-transform: capitalize;
+          padding-left: 6px;
+          font-weight: 600;
+          cursor: pointer;
+          // color:rgb(121, 120, 120);
         }
       }
     }
-    div {
-      p {
-        font-size: 17px;
-        text-transform: capitalize;
-        padding-left: 6px;
-        font-weight: 600;
-        cursor: pointer;
-        // color:rgb(121, 120, 120);
-      }
+  }
+  .arrow {
+    position: absolute;
+    right: 10px;
+    width: 15px !important;
+    height: 15px !important;
+  }
+  .themeCont {
+    margin-top: 20px;
+    position: relative;
+    //background-color: rgb(49, 49, 194)!important;
+  }
+  .themeCont::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 0px;
+    width: 100%;
+    height: 1px;
+    background-color: rgb(181, 181, 182);
+  }
+  .log {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .log-out-word {
+    width: 100px !important;
+    p {
+      padding-left: 5px !important;
     }
   }
-}
-.arrow {
-  position: absolute;
-  right: 10px;
-  width: 15px !important;
-  height: 15px !important;
-}
-.themeCont {
-  margin-top: 20px;
-  position: relative;
-  //background-color: rgb(49, 49, 194)!important;
-}
-.themeCont::after {
-  content: "";
-  position: absolute;
-  top: -10px;
-  left: 0px;
-  width: 100%;
-  height: 1px;
-  background-color: rgb(181, 181, 182);
-}
-.log {
-  width: 35px;
-  height: 35px;
-}
-
-.log-out-word {
-  width: 100px !important;
-  p {
-    padding-left: 5px !important;
-  }
-}
-// collapse=> start
-.toggle-button {
-  position: absolute;
-  top: 65px;
-  right: -10px;
-  cursor: pointer;
-  border: 2px solid #ccc;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  padding: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: white;
-
+  // collapse=> start
+  .toggle-button {
+    position: absolute;
+    top: 65px;
+    right: -4px;
+    cursor: pointer;
+    border: 2px solid #ccc;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
   
-}
+    
+  }
+  
+  .sidebar-collapsed .links div .link,
+  .sidebar-collapsed .header div,
+  .sidebar-collapsed .header img:nth-of-type(2) ,
+  .sidebar-collapsed .log-out-word {
+    display: none !important;
+  }
+  .sidebar-collapsed .toggle-button{
+    right: 0px;
+  }
+  // toggle-collapse => end
 
-.sidebar-collapsed .links div .link,
-.sidebar-collapsed .header div,
-.sidebar-collapsed .header img:nth-of-type(2) ,
-.sidebar-collapsed .log-out-word {
-  display: none !important;
+  // supMenue
+.products_p{
+ 
+  color:rgb(121, 120, 120);
+  font-size: 18px;
+  font-weight: bold;
+      
+     
 }
-.sidebar-collapsed .toggle-button{
-  right: 0px;
+.different-color{
+  //background-color:rgb(121, 120, 120) !important;
 }
-// toggle-collapse => end
-.router-link-exact-active {
-  p {
-    color: blue !important;
-  }
-}
-.dark-mode-header {
-  border-bottom: 2px solid rgb(26, 26, 26) !important;
-}
-.dark-mode-content {
-  background-color: black !important;
-}
-.links-div {
-  background-color: black !important;
-}
-.moodd {
-  font-size: 13px;
-}
-.mood {
-  color: white;
-}
-.x {
-  width: 35px;
-  height: 35px;
-  display: none;
-  background-color: rgb(200, 199, 199);
-  margin-left: 70px;
-  text-align: center;
-  line-height: 35px;
-  font-size: 22px;
-  text-transform: capitalize;
-  border-radius: 17.5px;
-}
-/* media => ipad */
-@media (max-width: 821px) {
-  .sidebar {
-    left: -100%;
-    transition: 0.5s;
-    z-index: 4;
-    width: 35vw;
-    top: 0px;
-  }
-  .x {
+.product-sup:hover{
+  .dropdown{
     display: block;
   }
-  .loggo {
+}
+  .supMenue{
+    padding-left: 20px;
+    p{
+      font-size: 15px !important;
+    }
+    .iconAwesome{
+      width: 15px !important;
+      height: 15px !important;
+    }
+
+  }
+  .router-link-exact-active {
+    p {
+      color: blue !important;
+    }
+  }
+  .dark-mode-header {
+    border-bottom: 2px solid rgb(26, 26, 26) !important;
+  }
+  .dark-mode-content {
+    background-color: black !important;
+  }
+  .links-div {
+    background-color: black !important;
+  }
+  .moodd {
+    font-size: 13px;
+  }
+  .mood {
+    color: white;
+  }
+  .x {
+    width: 35px;
+    height: 35px;
+    display: none;
+    background-color: rgb(200, 199, 199);
+    margin-left: 70px;
+    text-align: center;
+    line-height: 35px;
+    font-size: 22px;
+    text-transform: capitalize;
+    border-radius: 17.5px;
+  }
+  /* media => ipad */
+  @media (max-width: 821px) {
+    .sidebar {
+      left: -100%;
+      transition: 0.5s;
+      z-index: 4;
+      width: 40vw;
+      top: 0px;
+      &.sidebar-collapsed {
+      width: 80px !important; 
+    }
+    }
+    .x {
+      display: block;
+    }
+    .loggo {
+      display: none;
+    }
+  }
+  // phone
+  @media (max-width: 477px) {
+   
+  .sidebar {
+    width: 60vw !important;
+    
+    &.sidebar-collapsed {
+      width: 20% !important; 
+    }
+  }
+  
+  
+  .sidebar-collapsed .links div .link,
+  .sidebar-collapsed .header div,
+  .sidebar-collapsed .header img:nth-of-type(2) ,
+  .sidebar-collapsed .log-out-word {
     display: none;
   }
-}
-// phone
-@media (max-width: 477px) {
- 
-.sidebar {
-  width: 60vw !important;
-  
-  &.sidebar-collapsed {
-    width: 20% !important; 
+  .sidebar-collapsed .toggle-button{
+    margin-left: 5px;
   }
-}
+  .sidebar-collapsed .x{
+    margin-left: 5px;
+  
+  }
+  }
+  
+  // phone
+  @media (max-width: 367px){
+    .x {
+    width: 25px;
+    height: 25px;
+    border-radius: 12.5px;
+    font-size: 14px;
+    line-height: 25px;
 
 
-.sidebar-collapsed .links div .link,
-.sidebar-collapsed .header div,
-.sidebar-collapsed .header img:nth-of-type(2) ,
-.sidebar-collapsed .log-out-word {
-  display: none;
+
+  }
+  
 }
-.sidebar-collapsed .toggle-button{
-  margin-left: 5px;
-}
-.sidebar-collapsed .x{
-  margin-left: 5px;
+@media print{
+  #sidebar{
+   display: none;
+  }
+
+ 
+  
 
 }
-}
-
-
-</style>
+  </style>
+  

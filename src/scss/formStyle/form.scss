@@ -1,3 +1,4 @@
+//  **Add users and other forms also like units**
 
 %spichial_flex{
     display: flex;
@@ -5,12 +6,12 @@
     align-items: center;
     justify-content: space-evenly;
   }
-  .addUser,.addUser {
+  .add {
     // background-color: blueviolet;
     @extend %spichial_flex;
   
   }
-  .addUser_allContent {
+  .add_allContent {
     width: 370px;
     display: flex;
     flex-wrap: wrap;
@@ -21,7 +22,7 @@
     // background-color: forestgreen;
   }
   // title.....
-  .addUser_allContent > div:first-child {
+  .add_allContent > div:first-child {
     width: 100%;
     height: 70px;
   // background-color: forestgreen;
@@ -34,14 +35,14 @@
   }
 
   // cont-form.....
-  .addUser_allContent_cont-form {
+  .add_allContent_cont-form {
     width: 100%;
     height: 580px;
     //background-color: rgb(60, 82, 69);
     display: flex;
     flex-wrap: wrap;
   }
-  .addUser_allContent_cont-form > div {
+  .add_allContent_cont-form > div {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -59,7 +60,7 @@
     input {
       height: 35px;
     }
-   // background-color: red;
+  // background-color: red;
   }
   .cont-form_field--Password ,
   .cont-form_field--Number,
@@ -153,11 +154,11 @@
   .note::first-letter {
     text-transform: capitalize;
   }
-  .addUser_title {
-    width: 15%;
+  .add_title {
+    width: 130px;
     height: 50px;
     margin-top: -80px;
-    // background-color: red;
+   // background-color: red;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -170,8 +171,14 @@
   }
   // phone
   @media(max-width:477px){
-    .addUser_title {
+    .add_title {
      margin-left: 20px;
+    }
+  }
+  // phone
+  @media(max-width:366px){
+    .add_allContent {
+      width: 345px;
     }
   }
 

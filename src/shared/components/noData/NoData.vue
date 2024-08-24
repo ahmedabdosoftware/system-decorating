@@ -22,6 +22,8 @@ export default {
           return 'user-slash'
         case 'transactions':
           return 'file-invoice'
+        case 'units':
+          return 'balance-scale'
         default:
           return 'exclamation-circle'
       }
@@ -38,6 +40,8 @@ export default {
           return 'لا يوجد مستخدمون'
         case 'transactions':
           return 'لا توجد معاملات' 
+        case 'units': 
+          return 'لا توجد وحدات'
         default:
           return 'لا توجد بيانات'
       }

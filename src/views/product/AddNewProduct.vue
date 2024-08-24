@@ -81,7 +81,14 @@
                   </option>
                 </select>
             </div>
-            <div></div>
+            <div class="cato">
+              <label :class="{ 'dark-mode-title': getDarkMode }">unit</label>
+                <select v-model="selectedUnitId" @change="fetchUnitName">
+                  <option v-for="unit in units" :value="unit.id" :key="unit.id">
+                    {{ unit.name }}
+                  </option>
+                </select>
+            </div>
           </div>
           <div class="contPrice">
             <div class="price">
@@ -112,6 +119,15 @@
                 v-slot="{ errors }"
               >
                 <input v-model="offerPrice" placeholder="type here" type="text" />
+                <span class="error">{{ errors[0] }}</span>
+              </ValidationProvider>
+              <label :class="{ 'dark-mode-title': getDarkMode }">buy price </label>
+              <ValidationProvider
+                name="buy Price"
+                rules="numeric|min_value:0"
+                v-slot="{ errors }"
+              > 
+                <input v-model="buyPrice" placeholder="type here" type="text" />
                 <span class="error">{{ errors[0] }}</span>
               </ValidationProvider>
             </div>
@@ -173,6 +189,7 @@ import CircleLoader from '@/shared/components/loading/CircleLoader.vue';
 //store
 import { useProductsStore } from '@/store/products/products.js'
 import { useCategoriesStore } from '@/store/categories/categories.js';
+import { useUnitsStore } from '@/store/products/units/units.js';
 
 // sweetalert 
 import sweetalert from "sweetalert";
@@ -191,9 +208,13 @@ export default {
       priceMaterial: "",
       priceWithLabor: "",
       offerPrice:"",
+      buyPrice:"",
+      
       showLaborPrice: false,
       displayOnSite: true,
       selectedCategoryId:'',
+      selectedUnitId:'',
+      unitName:'',
       // loading 
       isLoading: false
 
@@ -205,12 +226,16 @@ export default {
     },
 
     ...mapState(useCategoriesStore, ['categories']),
+    ...mapState(useUnitsStore, ['units']),
 
 
   },
   async created() {
     await this.fetchCategories();
     this.selectedCategoryId =  this.categories[0].id
+    await this.fetchUnits();
+    this.selectedUnitId =  this.units[0].id
+    this.unitName =  this.units[0]
    
 
   },
@@ -219,10 +244,20 @@ export default {
 
     ...mapActions( useProductsStore, ['addProduct', 'uploadImage']),
     ...mapActions(useCategoriesStore, ['fetchCategories']),
+    ...mapActions(useUnitsStore, ['fetchUnits']),  
 
 
     // ============ my actions => end ==============================================
    
+
+    fetchUnitName(){
+      const unit = this.units.find(unit => unit.id === this.selectedUnitId);
+        if(unit){
+
+          this.unitName= unit
+        }
+    },
+
     // ============ FileReader  for show the selected image localy before upload => start =============================================
       pushOnArray: function () {
 
@@ -268,8 +303,11 @@ export default {
             priceMaterial: parseInt(this.priceMaterial),
             priceWithLabor: parseInt(this.priceWithLabor),
             offerPrice: parseInt(this.offerPrice),
+            buyPrice: parseInt(this.buyPrice),
             description: this.description,
             categoryId: this.selectedCategoryId,
+            unitId: this.selectedUnitId,
+            unitName: this.unitName,
             imageUrl: downloadURL,
             showLaborPrice: this.showLaborPrice,
             displayOnSite: this.displayOnSite,
@@ -365,6 +403,7 @@ export default {
   }
   > div:nth-child(6) {
     height: 19% !important;
+    //background-color: aqua;
     
     .type {
       height: 50%;
@@ -516,5 +555,16 @@ cursor:not-allowed;
   font-size: 14px;
 }
 }
-
+// phone max-width:365px
+@media(max-width:365px){
+      
+      .allContentt {
+        width: 350px !important;
+        }
+        .title {
+          width: 350px;
+      }    
+      .allContentt form {
+      }                                     
+      }                                     
 </style>

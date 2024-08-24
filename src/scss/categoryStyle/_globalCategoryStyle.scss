@@ -22,12 +22,11 @@
     background-color: white;
     border-radius: 10px;
     border: solid 1px rgb(181, 179, 179);
-    // background-color: forestgreen;
   }
   // title.....
   .allContent__title{
     height: 70px;
-   // background-color: rgb(62, 71, 62);
+   //background-color: rgb(62, 71, 62);
     padding-left: 20px;
   }
   
@@ -146,9 +145,9 @@
   // secont 
   
   .addCategory__title {
-    width: 15%;
+    width:140px;
     height: 50px;
-    margin-top: -80px;
+   // margin-top: -80px;
     // background-color: red;
     display: flex;
     align-items: center;
@@ -166,6 +165,14 @@
     .addCategory__title {
       margin-left: 20px;
     }
+  }
+  // phone
+  @media(max-width:365px){
+      
+  .addCategory__allContent {
+    width: 340px;
+    }
+   
   }
   
   

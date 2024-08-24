@@ -11,6 +11,9 @@ import EditCategory from "../views/category/EditCategory.vue";
 import Product from "../views/product/Product.vue";
 import AddNewProduct from "../views/product/AddNewProduct.vue";
 import EditProduct from "../views/product/EditProduct.vue";
+import Units from "../views/product/units/Units.vue";
+import AddUnit from "../views/product/units/AddUnit.vue";
+import EditUnit from "../views/product/units/EditUnit.vue";
 import Order from "../views/order/Order.vue";
 import AddNewOrder from "../views/order/AddNewOrder.vue";
 import EditOrder from "../views/order/EditOrder.vue";
@@ -35,6 +38,11 @@ import Login from "../views/auth/Login.vue";
 
 Vue.use(VueRouter);
 const routes = [
+
+  {
+    path: "/",
+    redirect: "/dashboard" // توجيه المسار الجذري إلى "/dashboard" 
+  },
   {
     path: "/dashboard",
     component: MainDashboard,
@@ -79,6 +87,24 @@ const routes = [
         path: "EditProduct/:id",
         name: "EditProduct",
         component: EditProduct,
+        meta: { requiresAuth: true, roles: ['admin'] },
+      },
+      {
+        path: "EditUnit/:unitId",
+        name: "EditUnit",
+        component: EditUnit,
+        meta: { requiresAuth: true, roles: ['admin'] },
+      },
+      {
+        path: "Units",
+        name: "Units",
+        component: Units,
+        meta: { requiresAuth: true, roles: ['admin'] },
+      },
+      {
+        path: "AddUnit",
+        name: "AddUnit",
+        component: AddUnit,
         meta: { requiresAuth: true, roles: ['admin'] },
       },
       {
@@ -278,7 +304,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: "history",
+  mode: "hash",
   base: process.env.BASE_URL,
   routes,
 });

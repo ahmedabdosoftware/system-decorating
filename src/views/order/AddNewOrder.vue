@@ -612,9 +612,15 @@
     .allContentt {
       width: 370px !important;
     }
-  
+    
   }
   
-  
+  // phone
+  @media (max-width: 370px){
+    
+    .allContentt {
+      width: 340px !important;
+    }
+   }
   </style>
   

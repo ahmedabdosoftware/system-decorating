@@ -1,15 +1,15 @@
 
 <template>
-    <div class="addUser">
-      <div class="addUser_title">
+    <div class="add">
+      <div class="add_title">
         <p :class="{ 'dark-mode-title': getDarkMode }">Create Clint</p>
       </div>
-      <div :class="{ 'dark-moode': getDarkMode }" class="addUser_allContent">
+      <div :class="{ 'dark-moode': getDarkMode }" class="add_allContent">
         <div>
           <h3 :class="{ 'dark-mode-title': getDarkMode }">Add Clint</h3>
         </div>
       <ValidationObserver class="wraper-form" ref="observer" v-slot="{ invalid }">
-        <form @submit.prevent="createNewTechnical" class="addUser_allContent_cont-form">
+        <form @submit.prevent="createNewTechnical" class="add_allContent_cont-form">
           <div class="cont-form_field Name">
             <ValidationProvider name="الاسم الاول" rules="required" v-slot="{ errors }">
               <label :class="{ 'dark-mode-title': getDarkMode }">Full Name</label>
@@ -131,7 +131,7 @@ import { required,email,numeric,digits  } from 'vee-validate/dist/rules';
 
   
 // global style :-
-//  scss folder => path ( users - AddUser )
+//  scss folder => path ( formStyle - form )
 
     </style>
   

@@ -126,22 +126,7 @@ export default {
 
     // ============ my actions => end==========================================
 
-    // ===========show posts => start========================================
-    // show scroll up
-    showScrollUp: function () {
-      let Buttom = document.getElementById("scrollUp");
-      window.onscroll = function () {
-        if (scrollY >= 500) {
-          Buttom.style.visibility = "visible";
-        } else {
-          Buttom.style.visibility = "hidden";
-        }
-      };
-    },
-  
-    // ===========show posts filter => start================================================
    
-    // ===========show posts filter => end================================================
 
   },
   data() {

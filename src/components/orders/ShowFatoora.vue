@@ -29,8 +29,8 @@
                 </p>
               
                 <p v-if="orderInfo">
-                    {{ orderInfo.customerName }}
-                : اسم العميل     
+                  اسم العميل :    
+                  {{ orderInfo.customerName }}
                 </p>
             </div>
 
@@ -43,7 +43,7 @@
                 <th>قيمة الخصم</th>
                 <th>الكمية</th>
                 <th>السعر</th>
-                <th>كود الصنف</th>
+                <th>كود المنتج</th>
                 <th>اسم الصنف</th>
               </tr>
             </thead>
@@ -430,6 +430,7 @@ $buttom_font: 19px;
   width: 100%;
   height: 120px;
   @extend %center_flex;
+  margin: 15px 0px;
   
 }
 
@@ -451,6 +452,16 @@ $buttom_font: 19px;
   
  
 }
+// ipad
+@media (max-width: 821px){
+  //fatoora
+  .fatoora{
+  width: 86%;
+  
+  }
+
+}
+// phone 450px
 @media (max-width: 450px){
 
 
@@ -483,15 +494,81 @@ $buttom_font: 19px;
 
 
  }
-
-
+.categories{
+  font: {
+    size:18px !important;
+    weight: 500;
+  }
 
 }
 
 
+}
+// phone 366px
+@media (max-width: 366px){
+ 
+  .fatoora__header{
+ 
+ >div:nth-child(3){
 
+ .logoFatora{
+   font-size: 20px;    
+ }
+ .categories{
+   font-size: 17px;
+ }
+
+}
+
+}
+
+.fatoora__title{
+
+>div{
+  p {
+     font-size:17px;
+   }
+ }
+ 
+}
+
+}
+@media print{
+  .fatoora{
+    width: 550px;
+  }
+  .fatoora__btns{
+    display: none;
+  }
+ 
+  
+.fatoora__header{
+ 
+    >div:nth-child(3){
+   
+    .logoFatora{
+      font-size: 20px;    
+    }
+    .categories{
+      font-size: 17px;
+    }
+
+  }
+  
+ }
+
+ .fatoora__title{
+ 
+  >div{
+     p {
+        font-size:17px;
+      }
+    }
+    
+  }
+  
+}
 // **fatora section** => end
-
 
 
 </style>
