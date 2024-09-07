@@ -31,20 +31,18 @@
                 </div>
 
                 <div class="formbold-input-flex">
-                    <div>
-                      <label for="addedOrders" class="formbold-form-label">المنتجات المضافة الآن</label>
-                      <select
-                        class="formbold-form-input"
-                        v-model="selectProductForUpdateProp"
-                        id="addedOrders"
-                        @change="selectProductForUpdate"
-                          placeholder=" اختر من المضافة المنتجات "
-                      >
-                        <option v-for="product in addedOrders" :value="product.id" :key="product.id">
-                          {{ product.name }}
-                        </option>
-                      </select>
+
+                  <div>
+                      <label for="shipping" class="formbold-form-label">  الشحن </label>
+                      <input
+                          type="number"
+                          id="shipping"
+                          placeholder="الشحن "
+                          class="formbold-form-input"
+                          v-model="shipping"
+                      />
                     </div>
+              
 
                     <div>
                       <ValidationProvider name="نوع الفاتورة" rules="required" v-slot="{ errors }">
@@ -57,6 +55,23 @@
                         </select>
                         <span class="error">{{ errors[0] }}</span>
                       </ValidationProvider>
+                    </div>
+                </div>
+                <div class="formbold-input-flex">
+                  <div></div>
+                  <div>
+                      <label for="addedOrders" class="formbold-form-label">المنتجات المضافة الآن</label>
+                      <select
+                        class="formbold-form-input"
+                        v-model="selectProductForUpdateProp"
+                        id="addedOrders"
+                        @change="selectProductForUpdate"
+                          placeholder=" اختر من المضافة المنتجات "
+                      >
+                        <option v-for="product in addedOrders" :value="product.id" :key="product.id">
+                          {{ product.name }}
+                        </option>
+                      </select>
                     </div>
                 </div>
 
@@ -206,7 +221,8 @@
                 </div> 
 
                 <button class="formbold-btn" :class="{ 'disabled-btn': invalid }" :disabled="invalid"  >حفظ و إنشاء الفاتورة</button>
-                   
+                <button @click.prevent="createAndCustomizeInvoice" class="formbold-btn" :class="{ 'disabled-btn': invalid }" :disabled="invalid">حفظ وتخصيص فاتورة</button>
+
                </form>
               </ValidationObserver>
             </div>
@@ -216,6 +232,7 @@
 
     </div>
   </template>
+  
   <script>
   
   import { extend } from 'vee-validate';
@@ -300,6 +317,8 @@
           status:'0', // حالة الطلب معلق 
           number:'',
           laborPrice:'',
+          shipping:'',
+
 
           // selectProductForUpdate
           selectProductForUpdateProp:'',
@@ -319,7 +338,8 @@
           Id:null,
 
             // loading 
-           isLoading: false
+           isLoading: false,
+           customInvoice: false,
 
         };
     },
@@ -378,6 +398,7 @@
         this.status = order.status;
         this.number = order.numberOfOrder;
         this.laborPrice = order.laborPrice;
+        this.shipping = order.shipping;
         this.currentImageUrl = order.imageUrl;
       }
     },
@@ -390,14 +411,13 @@
       },
       // ============ handel file => end ==============================================
 
-
-      // ============ FileReader  for show the selected image localy before upload => start =============================================
-      // ============ FileReader for show the selected image localy before upload => end ==============================================
   
-      click(el) {
-        document.getElementById("inputField").click();
-        el.preventDefault();
-      },
+      // custom invoice
+      createAndCustomizeInvoice() {
+        this.customInvoice= true
+        this.handelUpdateOrder()
+
+        },
   
      
       addProduct() {
@@ -544,6 +564,7 @@
         laborPrice: this.laborPrice,
         notes: this.notes,
         numberOfOrder: this.number,
+        shipping: this.shipping,
         imageUrl,
       };
       console.log('before send');
@@ -552,9 +573,15 @@
 
       console.log('after send');
       this.isLoading = false;
-      sweetalert("تم تعديل الطلب بنجاح!", "سيتم إعادة توجيهك إلى صفحة الفاتورة.", "success");
 
-      this.$router.push({ name: 'Fatora', params: { orderId: this.Id } });
+      if(this.customInvoice){
+        sweetalert("تم تعديل الطلب بنجاح!", "سيتم إعادة توجيهك إلى صفحة تخصيص فاتورة.", "success");
+        this.$router.push({ name: 'CustomInvoice', params: { orderId: this.Id } });
+      }else{
+        sweetalert("تم تعديل الطلب بنجاح!", "سيتم إعادة توجيهك إلى صفحة الفاتورة.", "success");
+        this.$router.push({ name: 'Fatora', params: { orderId: this.Id } });
+      }
+
     } catch (error) {
       console.error('Error creating order:', error);
       this.isLoading = false;
@@ -577,7 +604,7 @@
     //background-color: aqua;
   }
   .title {
-    width: 470px;
+    width: 250px;
     height: 100px;
     display: flex;
     align-items: center;

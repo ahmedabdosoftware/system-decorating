@@ -18,7 +18,8 @@ import Order from "../views/order/Order.vue";
 import AddNewOrder from "../views/order/AddNewOrder.vue";
 import EditOrder from "../views/order/EditOrder.vue";
 import DetailsOrder from "../views/order/DetailsOrder.vue";
-import Fatora from "../views/order/Fatora.vue";
+import Fatora from "../views/order/invoice/Fatora.vue";
+import CustomInvoice from "../views/order/invoice/CustomInvoice.vue";
 import Technical from "../views/users/technicalPages/Technical.vue";
 import AddTechnical from "../views/users/technicalPages/AddTechnical.vue";
 import Clint from "../views/users/clintePages/Clint.vue";
@@ -133,9 +134,15 @@ const routes = [
         meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
       },
        {
-        path: "Fatora/:orderId",
+        path: 'Fatora/:orderId/:isCustom',
         name: "Fatora",
         component: Fatora,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+       {
+        path: "CustomInvoice/:orderId",
+        name: "CustomInvoice",
+        component: CustomInvoice,
         meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
       },
       {
@@ -232,7 +239,7 @@ const routes = [
             meta: { requiresAuth: true, roles: ['admin'] ,layout: 'profileInDashboardLayout' },
           },
           {
-            path: "Fatora/:orderId",
+            path: '/Fatora/:orderId/:isCustom',
             name: "AdminOrderFatora",
             component: Fatora,
             meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout'  },
@@ -294,7 +301,7 @@ const routes = [
         meta: { requiresAuth: true, roles: ['technical', 'clint', 'admin'] ,layout: 'profileOutDashboardLayout'},
       },
       {
-        path: "Fatora/:orderId",
+        path: '/Fatora/:orderId/:isCustom',
         name: "OrderFatora",
         component: Fatora,
         meta: { requiresAuth: true, roles: ['technical', 'clint', 'admin'],layout: 'profileOutDashboardLayout' },

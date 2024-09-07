@@ -11,8 +11,11 @@
       <a v-if="layout === 'DashboardLayout'" href="#" @click.prevent="delette(order)">
         <span>حذف</span> <font-awesome-icon class="icon" :icon="['fas', 'trash']" />
       </a>
-      <a v-if="isAdmin||isClint" href="#" @click.prevent="Fatora(order)">
+      <a v-if="isAdmin || isClint" href="#" @click.prevent="Fatora(order.id, false)">
         <span>فاتورة</span> <font-awesome-icon class="icon" :icon="['fas', 'file-invoice']" />
+      </a>
+      <a v-if="order.hasCustomInvoice && (isAdmin || isClint)" href="#" @click.prevent="Fatora(order.id, true)">
+        <span>  فاتورة (م)</span> <font-awesome-icon class="icon" :icon="['fas', 'file-invoice']" />
       </a>
       <a v-if="order.financialClientTransactionId && (isAdmin || isClint)" href="#" @click.prevent="financial('TransactionDetails',order.financialClientTransactionId)">
       <span>م.العميل </span> <font-awesome-icon class="icon" :icon="['fas', 'file-invoice']" />
@@ -108,26 +111,22 @@ export default {
     editOrder(order) {
     this.$router.push({ name: 'EditOrder', params: { orderId: order.id } });
    },
-    Fatora(order) {
+   
+  Fatora(orderId, isCustom) {
+    const isCustomPath = isCustom ? 'true' : 'false';
+    const layout = this.$route.meta.layout;
+    if (layout === 'DashboardLayout') {
+      this.$router.push(`/dashboard/Fatora/${orderId}/${isCustomPath}`);
+    } else if (layout === 'profileInDashboardLayout') {
+      const profileId = this.$route.params.profileId;
+      this.$router.push(`/dashboard/profile/${profileId}/Fatora/${orderId}/${isCustomPath}`);
+    } else if (layout === 'profileOutDashboardLayout') {
+      const profileId = this.$route.params.profileId;
+      this.$router.push(`/profile/${profileId}/Fatora/${orderId}/${isCustomPath}`);
+    }
+  },
 
-      const layout = this.$route.meta.layout;
-        if (layout === 'DashboardLayout') {
-        
-          this.$router.push({ name: 'Fatora', params: { orderId:order.id } });
-        
-        } else if (layout === 'profileInDashboardLayout') {
-          
-          const profileId = this.$route.params.profileId;
-          this.$router.push(`/dashboard/profile/${profileId}/Fatora/${order.id}`);
-          
-        }else if(layout === 'profileOutDashboardLayout'){
-          
-          const profileId = this.$route.params.profileId;
-          this.$router.push(`/profile/${profileId}/Fatora/${ order.id}`);
-        
-        }
 
-   },
     nothing() {
       console.log("nothing");
     },

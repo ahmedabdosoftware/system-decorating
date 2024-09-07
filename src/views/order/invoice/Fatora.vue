@@ -32,7 +32,7 @@
     <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
 
       <DetailsSkeleton v-if="isLoading" />
-      <ShowFatoora v-else-if="orderInfo" :orderInfo="orderInfo"  ></ShowFatoora>
+      <ShowFatoora v-else-if="orderInfo" :orderInfo="orderInfo" :isCustomized="isCustomized" ></ShowFatoora>
 
     </div>
     
@@ -54,7 +54,7 @@ import { useOrdersStore } from '@/store/order/orders.js';
  
   
 export default {
-  name: "Factora",
+  name: "Fatora",
   components: {
     DetailsSkeleton,
     ShowFatoora,
@@ -68,13 +68,17 @@ export default {
   },
   async created() {
     
+    console.log('before fetched:', this.orders);
     try {
       await this.fetchOrders();
       this.isLoading = false;
 
       console.log('Orders fetched:', this.orders);
       this.orderId = this.$route.params.orderId;
+      this.isCustomized = this.$route.params.isCustom
+
       console.log('Order ID:', this.orderId);
+      console.log('isCustomized Param:', this.isCustomized);
 
       this.orderInfo = this.orders.find(order => order.id === this.orderId);
       console.log('Order Info:', this.orderInfo);
@@ -100,6 +104,8 @@ export default {
       orderId: '',
       orderInfo: null,
       isLoading:true,
+      isCustomized: false, // حالة لتحديد نوع الفاتورة
+
 
     };
   },

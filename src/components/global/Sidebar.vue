@@ -42,7 +42,7 @@
                     units
                   </router-link>
                   <router-link to="/dashboard/notes">
-                    notes
+                    ads poster
                   </router-link>
                   <router-link to="/dashboard/Category">
                     categories
@@ -77,7 +77,7 @@
                 <font-awesome-icon class="iconAwesome" icon="chevron-right" />
                 
                 <router-link v-if="!isCollapsed" to="/dashboard/notes">
-                  <p class="link">notes</p>
+                  <p class="link">ads poster</p>
                 </router-link>
               </div>
               <div  v-show="isProductsOpen && !isCollapsed" :class="[{'different-color': isProductsOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">

@@ -30,19 +30,16 @@
                 </div>
 
                 <div class="formbold-input-flex">
+
                     <div>
-                      <label for="addedOrders" class="formbold-form-label">المنتجات المضافة الآن</label>
-                      <select
-                        class="formbold-form-input"
-                        v-model="selectProductForUpdateProp"
-                        id="addedOrders"
-                        @change="selectProductForUpdate"
-                          placeholder=" اختر من المضافة المنتجات "
-                      >
-                        <option v-for="product in addedOrders" :value="product.id" :key="product.id">
-                          {{ product.name }}
-                        </option>
-                      </select>
+                      <label for="shipping" class="formbold-form-label">  الشحن </label>
+                      <input
+                          type="number"
+                          id="shipping"
+                          placeholder="الشحن "
+                          class="formbold-form-input"
+                          v-model="shipping"
+                      />
                     </div>
 
                     <div>
@@ -58,7 +55,26 @@
                       </ValidationProvider>
                     </div>
                 </div>
+              <div class="formbold-input-flex">
+                  <div></div>
+                  <div>
+                      <label for="addedOrders" class="formbold-form-label">المنتجات المضافة الآن</label>
+                      <select
+                        class="formbold-form-input"
+                        v-model="selectProductForUpdateProp"
+                        id="addedOrders"
+                        @change="selectProductForUpdate"
+                          placeholder=" اختر من المضافة المنتجات "
+                      >
+                        <option v-for="product in addedOrders" :value="product.id" :key="product.id">
+                          {{ product.name }}
+                        </option>
+                      </select>
 
+                  </div>
+          
+
+              </div>
                 <div class="formbold-input-flex">
                     
                     <div>
@@ -205,7 +221,8 @@
                 </div> 
 
                 <button class="formbold-btn" :class="{ 'disabled-btn': invalid }" :disabled="invalid"  >حفظ و إنشاء الفاتورة</button>
-                   
+                <button @click.prevent="createAndCustomizeInvoice" class="formbold-btn" :class="{ 'disabled-btn': invalid }" :disabled="invalid">حفظ وتخصيص فاتورة</button>
+
                </form>
               </ValidationObserver>
 
@@ -303,6 +320,7 @@
           status:'0', // حالة الطلب معلق 
           number:'',
           laborPrice:'',
+          shipping:'',
 
           // selectProductForUpdate
           selectProductForUpdateProp:'',
@@ -317,7 +335,8 @@
           file: null, // for add picture
 
           // loading 
-          isLoading: false
+          isLoading: false,
+          customInvoice: false,
 
 
         };
@@ -365,11 +384,12 @@
       // ============ FileReader  for show the selected image localy before upload => start =============================================
       // ============ FileReader for show the selected image localy before upload => end ==============================================
   
-      click(el) {
-        document.getElementById("inputField").click();
-        el.preventDefault();
+      // custom invoice
+      createAndCustomizeInvoice() {
+
+       this.customInvoice= true
+       this.creatNewOrder()
       },
-  
       addProduct() {
       if (!this.isEditingProduct) {
         this.addedOrders.push({
@@ -508,17 +528,25 @@
         notes: this.notes,
         numberOfOrder: this.number,
         laborPrice: this.laborPrice,
+        shipping: this.shipping,
         imageUrl,
       };
       console.log('before send');
+      console.log(this.shipping);
 
       const orderId = await this.addOrder(newOrder);
 
       console.log('after send');
       this.isLoading = false;
-      sweetalert("تم إنشاء الطلب بنجاح!", "سيتم إعادة توجيهك إلى صفحة الفاتورة.", "success");
 
-      this.$router.push({ name: 'Fatora', params: { orderId: orderId } });
+      if(this.customInvoice){
+        sweetalert("تم إنشاء الطلب بنجاح!", "سيتم إعادة توجيهك إلى صفحة تخصيص فاتورة.", "success");
+        this.$router.push({ name: 'CustomInvoice', params: { orderId: orderId } });
+      }else{
+        sweetalert("تم إنشاء الطلب بنجاح!", "سيتم إعادة توجيهك إلى صفحة الفاتورة.", "success");
+        this.$router.push({ name: 'Fatora', params: { orderId: orderId } });
+      }
+
     } catch (error) {
       console.error('Error creating order:', error);
       this.isLoading = false;
@@ -541,7 +569,7 @@
     //background-color: aqua;
   }
   .title {
-    width: 470px;
+    width: 250px;
     height: 100px;
     display: flex;
     align-items: center;

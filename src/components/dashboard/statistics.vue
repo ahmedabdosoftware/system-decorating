@@ -230,7 +230,7 @@ export default {
 }
 .statistics_result{
      width: 220px;
-     height: 100px;
+     min-height: 100px;
      background-color: rgb(240, 237, 237);
      
      border-radius: 8px;
@@ -309,7 +309,7 @@ export default {
 
     .statistics_result{
         margin: 15px;
-        width: 164px;
+        width: 250px;
         height: 100px;
         background-color: white;
     }
@@ -321,11 +321,6 @@ export default {
         height: 30px;
     }
  }
-@media (max-width: 380px){
-    
-    .statistics_result{
-        width: 250px;
-    }
- }
+
 </style>
   

@@ -10,7 +10,7 @@
             <span>  {{ orderInfo.numberOfOrder }}  :رقم</span>
           </div>
           <div>
-            <p class="logoFatora"> <span>جاما</span> للديكور</p>
+            <p class="logoFatora"> <span>محمد</span> فيوتك</p>
             <p class="categories">  بانوهات كرانيش اسقف معلقة بديل خشب بديل رخام </p>
        
           </div>
@@ -40,7 +40,8 @@
             <thead>
               <tr>
                 <th>الاجمالى</th>
-                <th>قيمة الخصم</th>
+                <th v-if="isCustomized && orderInfo.displaySale ">قيمة الخصم</th>
+                <th v-if="!isCustomized">قيمة الخصم</th>
                 <th>الكمية</th>
                 <th>السعر</th>
                 <th>كود المنتج</th>
@@ -50,17 +51,23 @@
             <tbody v-if="orderInfo">
               <tr v-for="(product, index) in orderInfo.products" :key="index">
                 <td>{{ calculateTotalPrice(product) }}</td>
-                <td>{{ calculateDiscount(product) }}</td>
+                <td v-if="isCustomized && orderInfo.displaySale ">{{ calculateDiscount(product) }}</td>
+                <td v-if="!isCustomized">{{ calculateDiscount(product) }}</td>
                 <td>{{ product.quantity }}</td>
-                <td>{{ product.productInfo.priceMaterial }}</td>
+                <td>{{ product.priceWithIncrease && isCustomized ? product.priceWithIncrease :  product.productInfo.priceMaterial  }}</td>
                 <td>{{ product.productInfo.name }}</td>
                 <td>{{ categoryName(product) }}</td>
+              </tr>
+              <tr  v-if="orderInfo.shipping">
+                <td colspan="3">{{  orderInfo.customShipping && isCustomized ?orderInfo.customShipping : orderInfo.shipping }}</td>
+                <td colspan="3">الشحن</td>
               </tr>
             </tbody>
           </table>
         </div>
         <div  class="fatoora__sales">
-          <p>اجمالى الخصم: <span>{{ calculateTotalDiscount }}</span></p>
+          <p v-if="isCustomized && orderInfo.displaySale ">اجمالى الخصم: <span>{{ calculateTotalDiscount }}</span></p>
+          <p v-if="!isCustomized">اجمالى الخصم: <span>{{ calculateTotalDiscount }}</span></p>
           <p>الاجمالى : <span>{{ calculateGrandTotal }}</span></p>
           <p v-if="orderInfo.invoiceType === 'تركيب وتوريد' || orderInfo.invoiceType === 'تركيب'  "> المصنعية: <span>{{ calculateTotalInstallation }}</span></p>
 
@@ -90,7 +97,7 @@ import { nextTick } from 'vue'
 export default {
   name: "ShowFatoora",
   components: {},
-  props: ["orderInfo"],
+  props: ["orderInfo","isCustomized"],
 
   computed: {
     getDarkMode() {
@@ -110,11 +117,16 @@ export default {
     // حساب الإجمالي الكلي بعد الخصومات
     calculateGrandTotal() {
       const grandTotal = this.orderInfo.products.reduce((total, product) => {
-        const productTotalPrice = product.productInfo.priceMaterial * product.quantity;
+
+        const productPrice = product.priceWithIncrease && this.isCustomized  ? product.priceWithIncrease : product.productInfo.priceMaterial;
+        const productTotalPrice = productPrice * product.quantity;
+
         const discountAmount = productTotalPrice * (product.price_offer / 100);
         return total + (productTotalPrice - discountAmount);
       }, 0);
-      return grandTotal.toFixed(2);
+      const shippingCost = Number(this.orderInfo.shipping) || 0;
+
+      return (grandTotal+shippingCost).toFixed(2);
     },
 
     // حساب اجمالي التركيب
@@ -144,6 +156,7 @@ export default {
   },
   async created() {
     
+      console.log('inside componnent:', this.isCustomized);
     this.fetchCategories();
     try {
       await nextTick(); // انتظر حتى يتم تحميل الـ DOM

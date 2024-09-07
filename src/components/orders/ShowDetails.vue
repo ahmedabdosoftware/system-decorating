@@ -48,6 +48,10 @@
                     <td>{{ product.productInfo.name }}</td>
                     <td>{{ categoryName(product) }}</td>
                     </tr>
+                    <tr  v-if="orderInfo.shipping">
+                      <td colspan="3">{{ orderInfo.shipping }}</td>
+                      <td colspan="3">الشحن</td>
+                    </tr>
                 </tbody>
                 </table>
             </div>
@@ -116,7 +120,8 @@
             const discountAmount = productTotalPrice * (product.price_offer / 100);
             return total + (productTotalPrice - discountAmount);
           }, 0);
-          return grandTotal.toFixed(2);
+          const shippingCost = Number(this.orderInfo.shipping) || 0;
+          return (grandTotal+shippingCost).toFixed(2);
         },
        
       // حساب اجمالي التركيب
