@@ -24,6 +24,10 @@ export default {
           return 'file-invoice'
         case 'units':
           return 'balance-scale'
+        case 'storage':
+          return 'warehouse'
+        case 'purchases':
+          return 'shopping-cart' 
         default:
           return 'exclamation-circle'
       }
@@ -42,6 +46,10 @@ export default {
           return 'لا توجد معاملات' 
         case 'units': 
           return 'لا توجد وحدات'
+        case 'storage':
+          return 'لا توجد مخازن'
+        case 'purchases':
+          return 'لا توجد مشتريات'
         default:
           return 'لا توجد بيانات'
       }

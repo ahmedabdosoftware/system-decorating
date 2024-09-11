@@ -541,10 +541,10 @@
 
       if(this.customInvoice){
         sweetalert("تم إنشاء الطلب بنجاح!", "سيتم إعادة توجيهك إلى صفحة تخصيص فاتورة.", "success");
-        this.$router.push({ name: 'CustomInvoice', params: { orderId: orderId } });
+        this.$router.push({ name: 'CustomInvoice', params: { orderId: orderId , isCustom:"true" } });
       }else{
         sweetalert("تم إنشاء الطلب بنجاح!", "سيتم إعادة توجيهك إلى صفحة الفاتورة.", "success");
-        this.$router.push({ name: 'Fatora', params: { orderId: orderId } });
+        this.$router.push({ name: 'Fatora', params: { orderId: orderId , isCustom:"false" } });
       }
 
     } catch (error) {

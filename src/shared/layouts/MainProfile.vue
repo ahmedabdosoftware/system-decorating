@@ -30,10 +30,7 @@
           :to="generateRoute('projects')">
           Projects
         </router-link>
-        <router-link 
-          :to="generateRoute('settings')">
-          Settings
-        </router-link>
+          <DropdownMenuSetting  />
       </div>
     </div>
     <router-view class="profile-content" :class="{ 'dark-mode': getDarkMode }"/>
@@ -43,9 +40,13 @@
 <script>
 import { mapActions } from 'pinia';
 import { useGetUserStore } from '@/store/users/users.js';
+import DropdownMenuSetting from "@/components/users/setting/DropdownMenuSetting.vue";
 
 export default {
   name: "ProfileLayout",
+  components: {
+    DropdownMenuSetting,
+  },
   computed: {
     getDarkMode() {
       return this.$store.state.darkMode;

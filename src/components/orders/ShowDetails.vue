@@ -82,7 +82,11 @@
         </div>
     </div>
     <div class="details__btns">
-        <button @click.prevent="Fatora">فاتورة</button>
+       <!-- /* 
+        hide it now becase there is more than one
+       <button @click.prevent="Fatora">فاتورة</button>
+        
+        */ -->
         <button @click.prevent="goBack">اغلاق</button>
     </div>
 </div>   

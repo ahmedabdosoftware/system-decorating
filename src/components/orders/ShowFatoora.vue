@@ -40,8 +40,7 @@
             <thead>
               <tr>
                 <th>الاجمالى</th>
-                <th v-if="isCustomized && orderInfo.displaySale ">قيمة الخصم</th>
-                <th v-if="!isCustomized">قيمة الخصم</th>
+                <th v-if="shouldDisplayDiscount">قيمة الخصم</th>
                 <th>الكمية</th>
                 <th>السعر</th>
                 <th>كود المنتج</th>
@@ -51,23 +50,21 @@
             <tbody v-if="orderInfo">
               <tr v-for="(product, index) in orderInfo.products" :key="index">
                 <td>{{ calculateTotalPrice(product) }}</td>
-                <td v-if="isCustomized && orderInfo.displaySale ">{{ calculateDiscount(product) }}</td>
-                <td v-if="!isCustomized">{{ calculateDiscount(product) }}</td>
+                <td v-if="shouldDisplayDiscount" >{{ calculateDiscount(product) }}</td>
                 <td>{{ product.quantity }}</td>
-                <td>{{ product.priceWithIncrease && isCustomized ? product.priceWithIncrease :  product.productInfo.priceMaterial  }}</td>
+                <td>{{ product.priceWithIncrease && isCustomized ==="true" ? product.priceWithIncrease :  product.productInfo.priceMaterial  }}</td>
                 <td>{{ product.productInfo.name }}</td>
                 <td>{{ categoryName(product) }}</td>
               </tr>
               <tr  v-if="orderInfo.shipping">
-                <td colspan="3">{{  orderInfo.customShipping && isCustomized ?orderInfo.customShipping : orderInfo.shipping }}</td>
+                <td colspan="3">{{  orderInfo.customShipping && isCustomized ==="true" ?orderInfo.customShipping : orderInfo.shipping }}</td>
                 <td colspan="3">الشحن</td>
               </tr>
             </tbody>
           </table>
         </div>
         <div  class="fatoora__sales">
-          <p v-if="isCustomized && orderInfo.displaySale ">اجمالى الخصم: <span>{{ calculateTotalDiscount }}</span></p>
-          <p v-if="!isCustomized">اجمالى الخصم: <span>{{ calculateTotalDiscount }}</span></p>
+          <p v-if="shouldDisplayDiscount">اجمالى الخصم: <span>{{ calculateTotalDiscount }}</span></p>
           <p>الاجمالى : <span>{{ calculateGrandTotal }}</span></p>
           <p v-if="orderInfo.invoiceType === 'تركيب وتوريد' || orderInfo.invoiceType === 'تركيب'  "> المصنعية: <span>{{ calculateTotalInstallation }}</span></p>
 
@@ -97,19 +94,45 @@ import { nextTick } from 'vue'
 export default {
   name: "ShowFatoora",
   components: {},
-  props: ["orderInfo","isCustomized"],
-
+  props: {
+    orderInfo: {
+      type: Object,
+      required: true,
+    },
+    isCustomized: {
+      type: String,
+      required: true,
+    },
+  },
   computed: {
     getDarkMode() {
       return this.$store.state.darkMode;
     },
     ...mapState(useCategoriesStore, ['categories']),
 
+    shouldDisplayDiscount() {
+      // لو كان مخصصًا، تحقق من وجود displaySale في orderInfo
+      if (this.isCustomized ==="true" && this.orderInfo.displaySale) {
+        
+        return true;
+      }
+      // إذا لم يكن مخصصًا، اعرض الخصم أيضًا
+      if (this.isCustomized ==="false") {
+        return true;
+      }
+      // في أي حالة أخرى، لا تعرض الخصم
+      return false;
+    },
+
         // حساب إجمالي الخصومات
     calculateTotalDiscount() {
         const totalDiscount = this.orderInfo.products.reduce((total, product) => {
-        const productTotalPrice = product.productInfo.priceMaterial * product.quantity;
+
+        const productPrice = product.priceWithIncrease && this.isCustomized ==="true" ? product.priceWithIncrease : product.productInfo.priceMaterial;
+        const productTotalPrice = productPrice * product.quantity;
+        
         const discountAmount = productTotalPrice * (product.price_offer / 100);
+
         return total + discountAmount;
       }, 0);
       return totalDiscount.toFixed(2)
@@ -118,7 +141,7 @@ export default {
     calculateGrandTotal() {
       const grandTotal = this.orderInfo.products.reduce((total, product) => {
 
-        const productPrice = product.priceWithIncrease && this.isCustomized  ? product.priceWithIncrease : product.productInfo.priceMaterial;
+        const productPrice = product.priceWithIncrease && this.isCustomized ==="true" ? product.priceWithIncrease : product.productInfo.priceMaterial;
         const productTotalPrice = productPrice * product.quantity;
 
         const discountAmount = productTotalPrice * (product.price_offer / 100);
@@ -157,6 +180,7 @@ export default {
   async created() {
     
       console.log('inside componnent:', this.isCustomized);
+      console.log('inside componnent:', this.orderInfo);
     this.fetchCategories();
     try {
       await nextTick(); // انتظر حتى يتم تحميل الـ DOM
@@ -169,15 +193,21 @@ export default {
   methods: {
     ...mapActions(useCategoriesStore, ['fetchCategories']),
 
-     calculateTotalPrice(product) {
-      const productTotalPrice = product.productInfo.priceMaterial * product.quantity;
-      const discountAmount = productTotalPrice * (product.price_offer / 100);
+    calculateTotalPrice(product) {
+
+        const productPrice = product.priceWithIncrease && this.isCustomized ==="true" ? product.priceWithIncrease : product.productInfo.priceMaterial;
+        const productTotalPrice = productPrice * product.quantity;
+        const discountAmount = productTotalPrice * (product.price_offer / 100);
+
       return (productTotalPrice - discountAmount).toFixed(2);
    },
     calculateDiscount(product) {
-      const productTotalPrice = product.productInfo.priceMaterial * product.quantity;
+
+      const productPrice = product.priceWithIncrease && this.isCustomized ==="true" ? product.priceWithIncrease : product.productInfo.priceMaterial;
+      const productTotalPrice = productPrice * product.quantity;
       const discountAmount = productTotalPrice * (product.price_offer / 100);
-      return  discountAmount.toFixed(2);
+
+    return  discountAmount.toFixed(2);
     },
     categoryName(product){
       const categoryProductName = this.categories.find(category => category.id === product.productInfo.categoryId) 
@@ -480,7 +510,7 @@ $buttom_font: 19px;
 
   //fatoora
   .fatoora{
-  width: 100%;
+  width: 94%;
   
  }
 

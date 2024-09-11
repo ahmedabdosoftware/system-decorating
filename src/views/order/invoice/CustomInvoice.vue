@@ -302,7 +302,7 @@ export default {
     this.isLoading = false;
     sweetalert("تم تعديل الطلب بنجاح!", "سيتم إعادة توجيهك إلى صفحة الفاتورة.", "success");
 
-    this.$router.push({ name: 'Fatora', params: { orderId: this.Id } });
+    this.$router.push({ name: 'Fatora', params: { orderId: this.Id , isCustom:"true"} });
   } catch (error) {
     console.error('Error creating order:', error);
     this.isLoading = false;

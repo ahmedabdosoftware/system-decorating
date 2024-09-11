@@ -124,20 +124,13 @@
               <p class="link">projects</p>
             </router-link>
           </div>
-          <div :class="{ 'dark-mode-content': getDarkMode }" class="reviews">
-            <router-link to="/dashboard/Reviews">
-              <font-awesome-icon class="iconAwesome" icon="comments" />
-            </router-link>
-            <router-link v-if="!isCollapsed" to="/dashboard/Reviews">
-              <p class="link">reviews</p>
-            </router-link>
-          </div>
+       
            <!-- Storage Section -->
         <div :class="{ 'dark-mode-content': getDarkMode }">
-          <router-link  to="/dashboard/Storage">
+          <router-link  to="/dashboard/Branches">
             <font-awesome-icon class="iconAwesome" icon="box-open" />
           </router-link>
-          <router-link v-if="!isCollapsed" to="/dashboard/Storage">
+          <router-link v-if="!isCollapsed" to="/dashboard/Branches">
             <p class="link">Storage</p>
           </router-link>
         </div>
@@ -151,6 +144,14 @@
             <p class="link">Purchases</p>
           </router-link>
         </div>
+        <div :class="{ 'dark-mode-content': getDarkMode }" class="reviews">
+            <router-link to="/dashboard/Reviews">
+              <font-awesome-icon class="iconAwesome" icon="comments" />
+            </router-link>
+            <router-link v-if="!isCollapsed" to="/dashboard/Reviews">
+              <p class="link">reviews</p>
+            </router-link>
+          </div>
           <div :class="{ 'dark-mode-content': getDarkMode }" class="themeCont">
               <font-awesome-icon @click="theme()" class="iconAwesome" icon="adjust" />
               <div v-if="!isCollapsed" class="theme" :class="{ 'dark-mode-content': getDarkMode }">

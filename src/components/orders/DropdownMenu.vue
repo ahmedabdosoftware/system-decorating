@@ -11,7 +11,7 @@
       <a v-if="layout === 'DashboardLayout'" href="#" @click.prevent="delette(order)">
         <span>حذف</span> <font-awesome-icon class="icon" :icon="['fas', 'trash']" />
       </a>
-      <a v-if="isAdmin || isClint" href="#" @click.prevent="Fatora(order.id, false)">
+      <a v-if="isAdmin || shouldDisplayDiscount" href="#" @click.prevent="Fatora(order.id, false)">
         <span>فاتورة</span> <font-awesome-icon class="icon" :icon="['fas', 'file-invoice']" />
       </a>
       <a v-if="order.hasCustomInvoice && (isAdmin || isClint)" href="#" @click.prevent="Fatora(order.id, true)">
@@ -58,6 +58,22 @@ export default {
   
   computed:{
     ...mapState(useUserStore, ['isAdmin','isClint','isTechnical']),
+
+    shouldDisplayDiscount() {
+      if (this.isClint && this.order.hasCustomInvoice) {
+
+        if(this.order.displayTowInvoice){
+          return true;
+          }else{
+            return false
+          }
+        
+      }else if(this.isClint &&(this.order.hasCustomInvoice==false || this.order.hasCustomInvoice==""||this.order.hasCustomInvoice==null)){
+        return true;
+      }
+      return false;
+    
+    },
 
     
   },

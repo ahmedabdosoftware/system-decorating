@@ -20,6 +20,11 @@ import EditOrder from "../views/order/EditOrder.vue";
 import DetailsOrder from "../views/order/DetailsOrder.vue";
 import Fatora from "../views/order/invoice/Fatora.vue";
 import CustomInvoice from "../views/order/invoice/CustomInvoice.vue";
+import Branches from "../views/storage/Branches.vue";
+import AddNewBranch from "../views/storage/AddNewBranch.vue";
+import Purchases from "../views/purchase/Purchases.vue";
+
+
 import Technical from "../views/users/technicalPages/Technical.vue";
 import AddTechnical from "../views/users/technicalPages/AddTechnical.vue";
 import Clint from "../views/users/clintePages/Clint.vue";
@@ -145,6 +150,24 @@ const routes = [
         component: CustomInvoice,
         meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
       },
+       {
+        path: "Branches",
+        name: "Branches",
+        component: Branches,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+       {
+        path: "AddNewBranch",
+        name: "AddNewBranch",
+        component: AddNewBranch,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+       {
+        path: "Purchases",
+        name: "Purchases",
+        component: Purchases,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
       {
         path: "TransactionDetails/:transactionId",
         name: "TransactionDetails",
@@ -239,7 +262,7 @@ const routes = [
             meta: { requiresAuth: true, roles: ['admin'] ,layout: 'profileInDashboardLayout' },
           },
           {
-            path: '/Fatora/:orderId/:isCustom',
+            path: 'Fatora/:orderId/:isCustom',
             name: "AdminOrderFatora",
             component: Fatora,
             meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout'  },
@@ -301,7 +324,7 @@ const routes = [
         meta: { requiresAuth: true, roles: ['technical', 'clint', 'admin'] ,layout: 'profileOutDashboardLayout'},
       },
       {
-        path: '/Fatora/:orderId/:isCustom',
+        path: 'Fatora/:orderId/:isCustom',
         name: "OrderFatora",
         component: Fatora,
         meta: { requiresAuth: true, roles: ['technical', 'clint', 'admin'],layout: 'profileOutDashboardLayout' },
