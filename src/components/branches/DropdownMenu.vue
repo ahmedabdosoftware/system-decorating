@@ -2,13 +2,13 @@
     <div class="dropdown">
       <button class="dropbtn" @click="toggle">:</button>
       <div v-if="visible" class="dropdown-content">
-        <a href="#" @click.prevent="viewDetails(order)">
+        <a href="#" @click.prevent="viewDetails(branch)">
           <span>تفاصيل</span> <font-awesome-icon class="icon" :icon="['fas', 'eye']" />
         </a>
-        <a v-if="layout === 'DashboardLayout'" href="#" @click.prevent="editOrder(order)">
+        <a  href="#" @click.prevent="editBranch(branch)">
           <span>تعديل</span> <font-awesome-icon class="icon" :icon="['fas', 'edit']" />
         </a>
-        <a v-if="layout === 'DashboardLayout'" href="#" @click.prevent="delette(order)">
+        <a  href="#" @click.prevent="delette(branch)">
           <span>حذف</span> <font-awesome-icon class="icon" :icon="['fas', 'trash']" />
         </a>
       </div>
@@ -19,11 +19,12 @@
   <script>
   
   
-  // actions , states
-  import { mapActions,mapState } from 'pinia'
+  // actions 
+  import { mapActions } from 'pinia'
+
   //store
-  import { useOrdersStore } from '@/store/order/orders.js';
-  import { useUserStore } from '@/store/auth/auth.js';
+  import { useBranchesStore } from '@/store/branches/branches.js';
+
     
   // sweetalert 
   import sweetalert from "sweetalert";
@@ -42,30 +43,14 @@
     },
     
     computed:{
-      ...mapState(useUserStore, ['isAdmin','isClint','isTechnical']),
   
-      shouldDisplayDiscount() {
-        if (this.isClint && this.order.hasCustomInvoice) {
-  
-          if(this.order.displayTowInvoice){
-            return true;
-            }else{
-              return false
-            }
-          
-        }else if(this.isClint &&(this.order.hasCustomInvoice==false || this.order.hasCustomInvoice==""||this.order.hasCustomInvoice==null)){
-          return true;
-        }
-        return false;
       
-      },
-  
       
     },
     methods: {
   
    // ============ my actions => start =============================================
-   ...mapActions(useOrdersStore, ['deleteOrder', 'deleteImageFromStorage']),
+   ...mapActions(useBranchesStore, ['deleteBranch']),
       // ============ my actions => end ==============================================
   
   
@@ -98,25 +83,20 @@
   
         
       },
-      editOrder(order) {
-      this.$router.push({ name: 'EditOrder', params: { orderId: order.id } });
+      editBranch(branch) {
+      this.$router.push({ name: 'EditBranch', params: { branchId: branch.id } });
      },
      
 
-      async delette(order) {
+      async delette(branch) {
         try {
-          console.log(order.id);
-          await this.deleteOrder(order.id);
-          console.log("order deleted from database");
-          if(order.imageUrl){
-            console.log("before : order image deleted from storage");
-            // delete image from storage
-            await this.deleteImageFromStorage(this.order.imageUrl);
-          console.log("after :order image deleted from storage");
-          }
+          console.log(branch.id);
+          await this.deleteBranch(branch.id);
+          console.log("branch deleted from database");
+         
   
           sweetalert({
-            text: "Product deleted successfully",
+            text: "branch deleted successfully",
             icon: "success",
           });
         } catch (error) {

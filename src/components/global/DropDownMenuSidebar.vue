@@ -1,5 +1,5 @@
 <template>
-    <div class="dropdown">
+    <div :style="dropdownStyle" class="dropdown">
       <div class="dropdown-content">
         <slot></slot> 
         
@@ -13,6 +13,25 @@
   
   export default {
     name: "DropDownMenuSidebar", 
+    props: ["position"],
+    computed: {
+    // بناءً على الـ prop "position" يتم تحديد الموقع
+    dropdownStyle() {
+      if (this.position === "products") {
+        return {
+          left: '65px',
+          top: '170px',
+        };
+      } else if (this.position === "storage") {
+        return {
+          left: '65px',  
+          top: '400px',
+        };
+      }
+      return {}; 
+    },
+  },
+
    
   };
   </script>
@@ -20,12 +39,11 @@
   <style scoped lang="scss">
   .dropdown {
     position: fixed;
-    left:65px;
-    top:170px;
     display: none;
     width: 110px;
     z-index: 1000; 
     height: 180px;
+    background-color: white !important;
 
   }
   .dropdown-content {

@@ -44,9 +44,9 @@
   min-height: 100vh;
   background-color: hsl(0, 100%, 98%);
 // background-color: rgba(139, 69, 19, 0.05); // بني فاتح جدًا مع شفافية 5%
-  margin-left: 17%;
+  margin-left: 20%;
   box-sizing: border-box;
-  width: 83%;
+  width: 80%;
 }
 
 
@@ -58,8 +58,8 @@
   width: 95%;
 }
 .headerCom{
-  width: 83%;
-  margin-left: 17%; 
+  width: 80%;
+  margin-left: 20%; 
 }
 .sidebar-collapsed  .headerCom {
   margin-left: 5% ;

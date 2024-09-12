@@ -22,6 +22,7 @@ import Fatora from "../views/order/invoice/Fatora.vue";
 import CustomInvoice from "../views/order/invoice/CustomInvoice.vue";
 import Branches from "../views/storage/Branches.vue";
 import AddNewBranch from "../views/storage/AddNewBranch.vue";
+import EditBranch from "../views/storage/EditBranch.vue";
 import Purchases from "../views/purchase/Purchases.vue";
 
 
@@ -160,6 +161,12 @@ const routes = [
         path: "AddNewBranch",
         name: "AddNewBranch",
         component: AddNewBranch,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+       {
+        path: "EditBranch/:branchId",
+        name: "EditBranch",
+        component: EditBranch,
         meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
       },
        {

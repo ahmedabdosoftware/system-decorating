@@ -31,7 +31,7 @@
             <font-awesome-icon v-if="!isCollapsed" class="arrow" :icon="isProductsOpen ? 'chevron-up' : 'chevron-down'" />
 
                 <!--slot -->
-                <DropDownMenuSidebar v-show="isCollapsed">
+                <DropDownMenuSidebar position="products" v-show="isCollapsed">
                   <router-link to="/dashboard/Product">
                      products
                   </router-link>
@@ -126,14 +126,55 @@
           </div>
        
            <!-- Storage Section -->
-        <div :class="{ 'dark-mode-content': getDarkMode }">
-          <router-link  to="/dashboard/Branches">
-            <font-awesome-icon class="iconAwesome" icon="box-open" />
-          </router-link>
-          <router-link v-if="!isCollapsed" to="/dashboard/Branches">
-            <p class="link">Storage</p>
-          </router-link>
-        </div>
+           <div @click="toggleSubMenu('storage')" :class="[{'different-color': isStorageOpen, 'dark-mode-content': getDarkMode}, 'storage-sup']">
+            <font-awesome-icon class="iconAwesome" icon="boxes" />
+            <p class="link storage_p">storage</p>
+            <font-awesome-icon v-if="!isCollapsed" class="arrow" :icon="isStorageOpen ? 'chevron-up' : 'chevron-down'" />
+
+            <DropDownMenuSidebar position="storage" v-show="isCollapsed" :getDarkMode="getDarkMode">
+              <router-link to="/dashboard/Branches">
+                storage 
+              </router-link>
+              <router-link to="/dashboard/AddNewBranch">
+                add storage 
+              </router-link>
+              <router-link to="/dashboard/AddNewBranch">
+                alert storage 
+              </router-link>
+              <router-link to="/dashboard/AddNewBranch">
+                transfer  
+              </router-link>
+              <router-link to="/dashboard/AddNewBranch">
+                add  transfer
+              </router-link>
+            
+            </DropDownMenuSidebar>
+          </div>
+          <div v-show="isStorageOpen && !isCollapsed"  :class="[{'different-color': isStorageOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
+            <font-awesome-icon class="iconAwesome" icon="chevron-right" />
+            <router-link v-if="!isCollapsed"  to="/dashboard/Branches">
+              <p class="link">list of storage</p>
+            </router-link>
+          </div>
+          <div v-show="isStorageOpen && !isCollapsed"  :class="[{'different-color': isStorageOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
+            <font-awesome-icon class="iconAwesome" icon="chevron-right" />
+            <router-link v-if="!isCollapsed"  to="/dashboard/AddNewBranch">
+              <p class="link"> add storage</p>
+            </router-link>
+          </div>
+          <div v-show="isStorageOpen && !isCollapsed"  :class="[{'different-color': isStorageOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
+            <font-awesome-icon class="iconAwesome" icon="chevron-right" />
+            <router-link v-if="!isCollapsed"  to="/dashboard/AddNewBranch">
+              <p class="link"> Inventory transfer</p>
+            </router-link>
+          </div>
+          <div v-show="isStorageOpen && !isCollapsed"  :class="[{'different-color': isStorageOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
+            <font-awesome-icon class="iconAwesome" icon="chevron-right" />
+            <router-link v-if="!isCollapsed"  to="/dashboard/AddNewBranch">
+              <p class="link"> add  transfer</p>
+            </router-link>
+          </div>
+
 
         <!-- Purchases Section -->
         <div :class="{ 'dark-mode-content': getDarkMode }">
@@ -144,6 +185,15 @@
             <p class="link">Purchases</p>
           </router-link>
         </div>
+        <div :class="{ 'dark-mode-content': getDarkMode }">
+          <router-link  to="/dashboard/catalog">
+            <font-awesome-icon class="iconAwesome" icon="file-pdf"  />
+          </router-link>
+          <router-link v-if="!isCollapsed" to="/dashboard/catalog">
+            <p class="link">Catalog PDF</p>
+          </router-link>
+        </div>
+
         <div :class="{ 'dark-mode-content': getDarkMode }" class="reviews">
             <router-link to="/dashboard/Reviews">
               <font-awesome-icon class="iconAwesome" icon="comments" />
@@ -196,9 +246,9 @@
       return {
         // discPage: "this is sidbar",
         isCollapsed: false,
-        isProductsOpen: false, // حالة التحكم في ظهور القائمة الفرعية
-  
-      };
+        isProductsOpen: false, // للتحكم في قائمة المنتجات الفرعية
+        isStorageOpen: false,  // للتحكم في قائمة المخزن الفرعية
+    };
     },
     components: {
       DropDownMenuSidebar,
@@ -233,6 +283,8 @@
     toggleSubMenu(menu) {
       if (menu === 'products') {
         this.isProductsOpen = !this.isProductsOpen;
+      } else if (menu === 'storage') {
+        this.isStorageOpen = !this.isStorageOpen;
       }
     }
     },
@@ -241,7 +293,7 @@
   
   <style lang="scss">
   .sidebar {
-    width: 17%;
+    width: 20%;
     height: 100vh;
     background-color: white;
     position: fixed;
@@ -250,8 +302,24 @@
     transition: all 0.3s ease;
     overflow-y: auto;
     //overflow-x: visible;
+
+    &::-webkit-scrollbar {
+    width: 8px; 
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2); 
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.4); 
+  }
+
+
     &.sidebar-collapsed {
-      width: 5% !important; // إضافة !important لتعزيز الأولوية
+      width: 5% !important;
     }
   }
   .sidebar > div {
@@ -320,15 +388,19 @@
       position: relative;
       border-radius: 5px;
       width: 100%;
-      height: 55px;
+      height: 45px;
       margin-bottom: 2px;
       background-color: white;
       display: flex;
       align-items: center;
+      color:rgb(121, 120, 120);
       cursor: pointer;
+        a,p{
+          font-size: 14px;
+        }      
        .iconAwesome {
-        width: 30px;
-        height: 30px;
+        width: 20px;
+        height: 20px;
         margin-left: 20px;
         margin-right: 6px;
         
@@ -343,8 +415,8 @@
         height: 50px;
         // background-color: salmon;
         .contImge {
-          width: 40px;
-          height: 40px;
+          width: 20px;
+          height: 20px;
           border-radius: 20px;
           background-color: white;
           margin-left: 20px;
@@ -362,7 +434,7 @@
         p {
           font-size: 17px;
           text-transform: capitalize;
-          padding-left: 6px;
+          //padding-left: 6px;
           font-weight: 600;
           cursor: pointer;
           // color:rgb(121, 120, 120);
@@ -391,15 +463,17 @@
     background-color: rgb(181, 181, 182);
   }
   .log {
-    width: 35px;
-    height: 35px;
+    width: 20px;
+    height: 20px;
+    margin-right: 50px;
   }
   
   .log-out-word {
-    width: 100px !important;
-    p {
-      padding-left: 5px !important;
+    p{
+      margin-left: 10px;
+      font-size: 15px;
     }
+   
   }
   // collapse=> start
   .toggle-button {
@@ -432,7 +506,7 @@
   // toggle-collapse => end
 
   // supMenue
-.products_p{
+.products_p,.storage_p{
  
   color:rgb(121, 120, 120);
   font-size: 18px;
@@ -443,7 +517,7 @@
 .different-color{
   //background-color:rgb(121, 120, 120) !important;
 }
-.product-sup:hover{
+.product-sup:hover,.storage-sup:hover{
   .dropdown{
     display: block;
   }
@@ -459,6 +533,7 @@
     }
 
   }
+
   .router-link-exact-active {
     p {
       color: blue !important;
