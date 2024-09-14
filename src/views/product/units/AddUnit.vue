@@ -123,6 +123,7 @@
 }
 .add{
     background-color: white;
+    color: black;
 }
     </style>
   
