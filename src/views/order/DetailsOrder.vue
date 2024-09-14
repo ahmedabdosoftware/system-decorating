@@ -1,6 +1,6 @@
 <template>
   <div class="details">
-    <div class="title">
+    <div class="details_title">
       <div>
         <div class="contTitle">
           <div>
@@ -21,7 +21,7 @@
       </div>
     </div>
 
-    <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
+    <div :class="{ 'dark-mode-box': getDarkMode }" class="details_allContent">
       <DetailsSkeleton v-if="isLoading" />
       <ShowDetails v-else-if="orderInfo" :orderInfo="orderInfo"  ></ShowDetails>
 
@@ -91,186 +91,8 @@
   };
   </script>
   <style scoped lang="scss">
-  .details {
-   // background-color: aqua;
-    display: flex;
-    flex-wrap: wrap;
-  }
   
-  .title {
-    width: 100%;
-    height: 80px;
-   // background-color: sandybrown;
-    display: flex;
-    flex-wrap: wrap;
-    > div:first-child {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      //background-color: rgb(21, 97, 107);
-      > div:first-child {
-        height: 40px;
-        background-color: blue;
-        width: 190px;
-        display: flex;
-        align-items: center;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
-        > div {
-          width: 35px;
-          height: 35px;
-          border-radius: 17.5px;
-          margin-left: 10px;
-          background-color: white;
-  
-          img {
-            width: 100%;
-            height: 100%;
-          }
-        }
-        p {
-          text-transform: capitalize;
-          text-align: center;
-          margin-left: 20px;
-          font-size: 18px;
-          font-weight: 600;
-          color: white;
-          margin-right: 10px;
-        }
-      }
-      > div:nth-of-type(2) {
-        width: 340px;
-        height: 80px;
-        // background-color: greenyellow;
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        > div {
-          width: 100px;
-          height: 40px;
-          background-color: white;
-         // background-color: black;
-          border-radius: 4px;
-          display: flex;
-          justify-content: space-evenly;
-          align-items: center;
-          button {
-            width: 60px;
-            background-color: white;
-            // background-color: black;
-            color: black;
-          }
-          img {
-            width: 20px;
-            height: 20px;
-            margin-left: 10px;
-          }
-        }
-      }
-    }
-   
-  }
-  .contTitle {
-    background-color: blue;
-  }
-  .arroow {
-    width: 15px;
-    height: 15px;
-  }
-  
-  .allContent {
-    width: 96%;
-    min-height: 550px;
-    background-color: white;
-    //background-color: rgb(207, 70, 70);
-    margin-bottom: 160px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    align-content: flex-start;
-    margin-left: 4%;
-  }
-  %center_flex{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  .generate {
-      @extend  %center_flex;
-  
-      width: 140px;
-      height: 40px;
-      background-color: blue;
-      cursor: pointer;
-      border-radius: 5px;
-      .printIcon{
-        width: 20px;
-        height: 20px;
-      }
-  
-    p {
-      font-size: 17px;
-      font-weight: 600;
-      font-family: Arial, Helvetica, sans-serif;
-      text-transform: capitalize;
-      color: white;
-      margin-left: 10px;
-    }
-  }
-  .generate p::first-letter {
-    font-weight: 500;
-    font-size: 19px;
-  }
-  
-  
+            // global style in path =>  src/scss/global/_globalStyle.scss
 
-  @media (max-width: 450px){
-  
-  // allContent
-    .allContent{
-      margin-left: 0%;
-      width: 100%;
-  
-    }
-   
-  
-  
-  }
-  
-  
-  
-  
-  @media (max-width: 477px) {
-   
-  
-    .title {
-      height: 210px;
-      // background-color: red;
-      > div:first-child {
-        height: 60%;
-        flex-direction: column;
-        > div:first-child {
-          align-self: flex-start;
-          margin-top: 15px;
-        }
-        > div:nth-of-type(2) {
-          align-self: flex-end;
-        }
-      }
-    }
-   
-
-
-  }
-  
-  @media print{
-    .title,.details__btns {
-      display: none ;
-    }
-  
-  
-  }
   </style>
   

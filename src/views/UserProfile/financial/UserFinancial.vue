@@ -1,7 +1,7 @@
 <template>
     <!-- /* eslint-disable */ -->
-    <div class="transactions">
-      <div class="title">
+    <div class="page transactions">
+      <div class="title--pagesInProfile">
           <div>
             <div>
              <div class="export">
@@ -158,13 +158,9 @@
   };
   </script> 
   <style scoped lang="scss">
-  .oredrs {
-   // background-color: aqua;
-    display: flex;
-    flex-wrap: wrap;
-  }
   
-  .title {
+  
+  .title--pagesInProfile {
     width: 100%;
     height: 180px;
    // background-color: sandybrown;
@@ -281,124 +277,8 @@
       }
     }
   }
-  .contTitle {
-    background-color: blue;
-  }
-  .arroow {
-    width: 15px;
-    height: 15px;
-  }
-  
-  .allContent {
-    width: 96%;
-    min-height: 400px;
-    background-color: white;
-    margin-bottom: 160px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    align-content: flex-start;
-    margin-left: 4%;
-  }
-  .allContent > div {
-    width: 100%;
-    height: 400px;
-    margin-top: 15px;
-    margin-bottom: 15px;
-  }
-  
-  .add {
-    width: 140px;
-    height: 40px;
-    background-color: blue;
-    cursor: pointer;
-    // margin-left: 80%;
-    // margin-top: 60px;
-    border-radius: 5px;
-    font-size: 17px;
-    font-weight: 600;
-    font-family: Arial, Helvetica, sans-serif;
-    text-transform: capitalize;
-    color: white;
-  }
-  .add::first-letter {
-    font-weight: 500;
-    font-size: 19px;
-  }
-
-  
-  /* scrollUp => start */
-  .scrollUp {
-    width: 60px;
-    height: 60px;
-    //   background-color: blue;
-    position: fixed;
-    right: 20px;
-    bottom: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 30px;
-    /* border: 2px solid white; */
-    cursor: pointer;
-    //   visibility: hidden;
-    img {
-      width: 100%;
-      height: 100%;
-    }
-  }
-  
-  // .scrollUp::after {
-  //   content: "^";
-  //   width: 50%;
-  //   height: 50%;
-  // //   background-color: darkorange;
-  //   position: absolute;
-  //   top: 10%;
-  //   font-weight: 500;
-  //   font-size: 40px;
-  //   text-align: center;
-  //   color: white;
-  // }
-  // .scrollUp::before {
-  //   content: "^";
-  //   color: white;
-  //   position: absolute;
-  //   top: 35%;
-  //   width: 50%;
-  //   height: 50%;
-  // //   background-color: darkorange;
-  //   font-weight: 500;
-  //   font-size: 40px;
-  //   text-align: center;
-  // }
-  /* scrollUp => end */
-  
-  @media (max-width: 477px) {
-    .title {
-      > div:nth-of-type(2) {
-        div:first-child{
-          width: 170px;
-          select {
-          width: 60px;
-        }
-        input {
-          width: 100px;
-        }
-        }
-        div:nth-child(2){
-          // background-color: aqua;
-          width: 180px;
-          div {
-          width: 80px;
-        }
-  
-        }
-      }
-    }
-  
-   
-  }
+ 
+ 
   
   
   </style>

@@ -1,7 +1,7 @@
 <template>
    <div :class="{ 'dark-mode': getDarkMode }" id="main-layout">
       <HeaderAdmin class="headerCom"/>
-      <Sidebar />
+      <Sidebar :class="{ 'dark-moode': getDarkMode }"  />
       <router-view class="content-view" :class="{ 'dark-mode': getDarkMode }"/>
   </div>
 

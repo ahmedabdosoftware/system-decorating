@@ -1,7 +1,7 @@
 <template>
   <!-- /* eslint-disable */ -->
-  <div class="clint">
-    <div class="title">
+  <div class="page clint">
+    <div class="title--noFilterSearch">
       <div>
         <div class="contTitle">
           <div>
@@ -119,178 +119,19 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.clint {
-  // background-color: aqua;
-  display: flex;
-  flex-wrap: wrap;
-  // justify-content: flex-end;
-}
-.title {
-  width: 100%;
-  height: 180px;
-  display: flex;
-  // background-color: red;
-  flex-wrap: wrap;
-  // margin-top: 5px;
-  > div:first-child {
-    width: 100%;
-    height: 60%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    div:first-child {
-      background-color: blue;
-      height: 40px;
-      width: 196px;
-      display: flex;
-      align-items: center;
-      border-top-right-radius: 5px;
-      border-bottom-right-radius: 5px;
-      div {
-        width: 35px;
-        height: 35px;
-        border-radius: 17.5px;
-        margin-left: 10px;
-        background-color: white;
 
-        img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-      p {
-        text-transform: capitalize;
-        text-align: center;
-        margin-left: 20px;
-        font-size: 18px;
-        font-weight: 600;
-        color: white;
-        margin-right: 10px;
-      }
-    }
-    > div:nth-of-type(2) {
-      width: 340px;
-      height: 80px;
-      // background-color: greenyellow;
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
-      > div {
-        width: 100px;
-        height: 40px;
-        background-color: white;
-        border-radius: 4px;
-        button {
-          width: 60px;
-          background-color: white;
-          color: black;
-        }
-        img {
-          width: 20px;
-          height: 20px;
-          margin-left: 10px;
-        }
-      }
-    }
-  }
-  > div:nth-of-type(2) {
-    width: 96%;
-    height: 40%;
-    margin-left: 4%;
-    background-color: white;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    input {
-      width: 300px;
-      height: 30px;
-      margin-left: 20px;
-      padding-left: 5px;
-     // color: rgb(233, 230, 230);
-      border: solid 2px rgb(233, 230, 230);
-      border-radius: 5px;
-      // font-size: 18px;
-      // font-weight: 600;
-    }
-    input:focus {
-      outline: none;
-    }
-    > div {
-      width: 250px;
-      height: 40px;
-      // background-color: red;
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
-      div {
-        width: 45%;
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        height: 80%;
-        border-radius: 3px;
-        background-color: white;
-        border: 2px solid rgb(222, 218, 218);
-        button {
-          background-color: white;
-        }
-      }
-    }
-  }
-}
-.arroow {
-  width: 15px;
-  height: 15px;
-}
-.arroow.point {
-  width: 7px;
-  height: 7px;
-}
+
 
 .allContent {
-  width: 96%;
-  min-height: 400px;
-  margin-bottom: 160px;
-  background-color: white;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-content: flex-start;
-  margin-left: 4%;
   margin-top: 2px;
 }
-.allContent > div {
-  width: 100%;
-  height: 400px;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  // background-color: red;
-}
-.add {
-  width: 140px;
-  height: 40px;
-  background-color: blue;
-  cursor: pointer;
-  // margin-left: 80%;
-  // margin-top: 60px;
-  border-radius: 5px;
-  font-size: 17px;
-  font-weight: 600;
-  font-family: Arial, Helvetica, sans-serif;
-  text-transform: capitalize;
-  color: white;
-}
-.add::first-letter {
-  font-weight: 500;
-  font-size: 19px;
-}
+
+
 
 
 // phone
 @media (max-width: 477px) {
-  .title {
+  .title--noFilterSearch {
     > div:nth-of-type(2) {
       input {
         width: 130px;
@@ -298,20 +139,53 @@ export default {
     }
   }
 
-  .title {
-    height: 210px;
-    // background-color: red;
-    > div:first-child {
-      height: 60%;
-      flex-direction: column;
-      > div:first-child {
-        align-self: flex-start;
-        margin-top: 15px;
+  
+  
+.title--noFilterSearch {
+
+> div:first-child {
+   >div:first-child {
+    width: 196px;
+    p {
+      margin-left: 0px;
+      font-size: 16px;
+      margin-right: 0px;
+    }
+  }
+  > div:nth-of-type(2) {
+    a{
+      button {
+        width: 95px;
+        font-size: 15px;
       }
-      > div:nth-of-type(2) {
-        align-self: flex-end;
+      
+    }
+    align-items: flex-end;
+    > div {
+      width: 70px;
+      button {
+        width: 40px;
+      }
+      img {
+        width: 16px;
+        height: 16px;
+        margin-left: 3px;
+        margin-right: 3px;
       }
     }
   }
+}
+> div:nth-of-type(2) {
+  margin-left: 4%;
+
+  input {
+    margin-left: 4px;
+
+  }
+
+}
+}
+
+  
 }
 </style>

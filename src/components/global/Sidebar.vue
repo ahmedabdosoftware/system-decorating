@@ -141,10 +141,10 @@
               <router-link to="/dashboard/AddNewBranch">
                 alert storage 
               </router-link>
-              <router-link to="/dashboard/AddNewBranch">
+              <router-link to="/dashboard/Transfer">
                 transfer  
               </router-link>
-              <router-link to="/dashboard/AddNewBranch">
+              <router-link to="/dashboard/AddTransfer">
                 add  transfer
               </router-link>
             
@@ -164,13 +164,13 @@
           </div>
           <div v-show="isStorageOpen && !isCollapsed"  :class="[{'different-color': isStorageOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
             <font-awesome-icon class="iconAwesome" icon="chevron-right" />
-            <router-link v-if="!isCollapsed"  to="/dashboard/AddNewBranch">
+            <router-link v-if="!isCollapsed"  to="/dashboard/Transfer">
               <p class="link"> Inventory transfer</p>
             </router-link>
           </div>
           <div v-show="isStorageOpen && !isCollapsed"  :class="[{'different-color': isStorageOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
             <font-awesome-icon class="iconAwesome" icon="chevron-right" />
-            <router-link v-if="!isCollapsed"  to="/dashboard/AddNewBranch">
+            <router-link v-if="!isCollapsed"  to="/dashboard/AddTransfer">
               <p class="link"> add  transfer</p>
             </router-link>
           </div>
@@ -280,7 +280,7 @@
       this.isCollapsed = !this.isCollapsed;
       document.querySelector('#main-layout').classList.toggle('sidebar-collapsed', this.isCollapsed);
     },
-    toggleSubMenu(menu) {
+     toggleSubMenu(menu) {
       if (menu === 'products') {
         this.isProductsOpen = !this.isProductsOpen;
       } else if (menu === 'storage') {
@@ -514,9 +514,9 @@
       
      
 }
-.different-color{
+//.different-color{
   //background-color:rgb(121, 120, 120) !important;
-}
+//}
 .product-sup:hover,.storage-sup:hover{
   .dropdown{
     display: block;
@@ -539,21 +539,11 @@
       color: blue !important;
     }
   }
-  .dark-mode-header {
-    border-bottom: 2px solid rgb(26, 26, 26) !important;
-  }
-  .dark-mode-content {
-    background-color: black !important;
-  }
+
   .links-div {
     background-color: black !important;
   }
-  .moodd {
-    font-size: 13px;
-  }
-  .mood {
-    color: white;
-  }
+ 
   .x {
     width: 35px;
     height: 35px;

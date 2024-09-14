@@ -2,13 +2,7 @@
     <div class="dropdown">
       <button class="dropbtn" @click="toggle">:</button>
       <div v-if="visible" class="dropdown-content">
-        <a href="#" @click.prevent="viewDetails(branch)">
-          <span>تفاصيل</span> <font-awesome-icon class="icon" :icon="['fas', 'eye']" />
-        </a>
-        <a  href="#" @click.prevent="editBranch(branch)">
-          <span>تعديل</span> <font-awesome-icon class="icon" :icon="['fas', 'edit']" />
-        </a>
-        <a  href="#" @click.prevent="delette(branch)">
+        <a  href="#" @click.prevent="delette(transfer)">
           <span>حذف</span> <font-awesome-icon class="icon" :icon="['fas', 'trash']" />
         </a>
       </div>
@@ -23,7 +17,7 @@
   import { mapActions } from 'pinia'
 
   //store
-  import { useBranchesStore } from '@/store/branches/branches.js';
+  import { useBranchTransferStore } from '@/store/branches/transfer.js';
 
     
   // sweetalert 
@@ -33,7 +27,7 @@
     emits: ['closeOthers'],
     name: "DropdownMenu",
     props: {
-        branch: Object,
+        transfer: Object,
     },
     data() {
       return {
@@ -50,7 +44,7 @@
     methods: {
   
    // ============ my actions => start =============================================
-   ...mapActions(useBranchesStore, ['deleteBranch']),
+   ...mapActions(useBranchTransferStore, ['deleteTransfer']),
       // ============ my actions => end ==============================================
   
   
@@ -61,25 +55,18 @@
         }
       },
 
-      viewDetails(branch) {
-
-        this.$router.push({ name: 'DetailsBranch', params: { branchId: branch.id } });
-         
-      },
-      editBranch(branch) {
-      this.$router.push({ name: 'EditBranch', params: { branchId: branch.id } });
-     },
+     
      
 
-      async delette(branch) {
+      async delette(transfer) {
         try {
-          console.log(branch.id);
-          await this.deleteBranch(branch.id);
+          console.log(transfer.id);
+          await this.deleteTransfer(transfer.id);
           console.log("branch deleted from database");
          
   
           sweetalert({
-            text: "branch deleted successfully",
+            text: "transfer deleted successfully",
             icon: "success",
           });
         } catch (error) {
@@ -131,7 +118,7 @@
     right: 20px;
     background-color: white;
     min-width: 130px;
-    min-height: 60px;
+    min-height: 30px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     border-radius: 15px;
     z-index: 1;

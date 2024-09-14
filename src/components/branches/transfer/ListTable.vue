@@ -4,21 +4,21 @@
         <table class="table">
           <thead>
             <tr>
-              <th>تاريخ الانشاء</th>
-              <th>اسم المخزن  </th>
-              <th> المكان</th>
+              <th>تاريخ التحويل</th>
+              <th> الفرع *من</th>
+              <th> الفرع *الى</th>
               <th>الحالة</th>
               <th>الخيارات</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(branch, index) in Branches" :key="branch.id">
-              <td>{{ branch.date }}</td>
-              <td>{{ branch.nameBranch }}</td>
-              <td>{{ branch.location }}</td>
-              <td>{{ getStatusText(branch.status) }}</td>
+            <tr v-for="(transfer, index) in transferes" :key="transfer.id">
+              <td>{{ transfer.date }}</td>
+              <td>{{ transfer.selectedBranchFrom }}</td>
+              <td>{{ transfer.selectedBranchTo }}</td>
+              <td>{{ getStatusText(transfer.status) }}</td>
               <td class="actions">
-                <DropdownMenu ref="dropdownMenu" :branch="branch" @closeOthers="openDropdownHandel(index)" />
+                <DropdownMenu ref="dropdownMenu" :transfer="transfer" @closeOthers="openDropdownHandel(index)" />
               </td>
             </tr>
           </tbody>
@@ -28,14 +28,14 @@
   </template>
   
   <script>
-import DropdownMenu from "@/components/branches/DropdownMenu.vue";
+import DropdownMenu from "@/components/branches/transfer/DropdownMenu.vue";
   
   export default {
     name: "ListTable",
     components: {
       DropdownMenu,
     },
-    props: ["Branches"],
+    props: ["transferes"],
     data() {
       return {
         openDropdownProp: null,
@@ -49,12 +49,12 @@ import DropdownMenu from "@/components/branches/DropdownMenu.vue";
     methods: {
       getStatusText(status) {
         switch (status) {
-          case "0":
-            return 'قديم';
-          case "3":
-              return 'مؤقت';
-          case "1":
-              return 'جديد';
+          case 0:
+            return 'فى الانتظار';
+          case 3:
+              return 'منجز';
+          case 1:
+              return 'اثناء النقل';
           default:
             return 'غير معروف';
         }
@@ -71,7 +71,7 @@ import DropdownMenu from "@/components/branches/DropdownMenu.vue";
   
   <style scoped lang="scss">
   
-           // global style in path =>  src/scss/global/_globalStyle.scss
+            // global style in path =>  src/scss/global/_globalStyle.scss
 
   </style>
   

@@ -243,7 +243,7 @@
           nameBranch: '',
           date: '',
           location: '',
-          status: 0,
+          status: "0",
           Id:null,
           
          // data used in handling
@@ -338,7 +338,6 @@
       const index = this.addedInBranch.findIndex(product => product.id === this.productId);
       if (index !== -1) {
         this.addedInBranch[index].name = this.selectedProduct;
-        this.addedInBranch[index].price_offer = this.price_offer;
         this.addedInBranch[index].quantity = this.quantity;
        // this.addedOrders[index].nameCategory = this.itemName;
         this.clearProductForm();
@@ -380,26 +379,27 @@
       
       try {
         if (this.addedInBranch.length === 0) {
-        sweetalert("لا يمكن إنشاء الفرع بدون منتجات.", "يرجى إضافة منتجات قبل إنشاء الفرع.", "error");
-        this.isLoading = false;
-        return;
-      }
-
-      //const totalPrice = this.addedOrders.reduce((total, product) => total + parseFloat(product.price_offer) * parseInt(product.quantity), 0);
-
-
-
-      const updateSingleBranch = {
-        id:this.Id,
-        products: this.addedInBranch,
-        notes: this.notes,
-        nameBranch: this.nameBranch,
-        date: this.date,
-        location: this.location,
-        status: this.status,
-       
-      };
-      console.log('before send');
+          sweetalert("لا يمكن إنشاء الفرع بدون منتجات.", "يرجى إضافة منتجات قبل إنشاء الفرع.", "error");
+          this.isLoading = false;
+          return;
+        }
+        
+        //const totalPrice = this.addedOrders.reduce((total, product) => total + parseFloat(product.price_offer) * parseInt(product.quantity), 0);
+        
+        
+        
+        const updateSingleBranch = {
+          id:this.Id,
+          products: this.addedInBranch,
+          notes: this.notes,
+          nameBranch: this.nameBranch,
+          date: this.date,
+          location: this.location,
+          status: this.status,
+          
+        };
+        console.log('before send');
+        console.log(updateSingleBranch)
 
        await this.updateBranch(updateSingleBranch);
 

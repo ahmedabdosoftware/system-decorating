@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'dark-mode': getDarkMode }" class="ListTable">
-    <div class="order__table">
+    <div class="show__table">
       <table class="table">
         <thead>
           <tr>
@@ -72,50 +72,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.ListTable {
-  width: 100%;
-  min-height: 150px;
-  overflow: scroll;
-}
-.dark-mode {
-  background-color: rgb(19, 19, 19);
-}
-.order__table {
-  width: 100%;
-  min-height: 70px;
-  .table {
-    width: 100%;
-    height: 100%;
-    border-collapse: collapse;
-    tr {
-      height: 30px;
-      td,
-      th {
-        text-align: center;
-        text-transform: capitalize;
-      }
-    }
-  }
-}
-thead {
-  border-radius: 10px;
-  background-color: var(--popularCalar);
-  
-  th {
-    color: white;
-    height: 40px;
-  }
-}
-.actions {
-  position: relative;
-}
-@media (max-width: 477px){
-  thead {
-    
-    th {
-     font-size: 16px;
-    }
-  }
 
-}
+          // global style in path =>  src/scss/global/_globalStyle.scss
+
 </style>

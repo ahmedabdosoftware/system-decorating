@@ -1,7 +1,7 @@
 <template>
   <!-- /* eslint-disable */ -->
-  <div class="oredrs">
-    <div class="title">
+  <div class="page oredrs">
+    <div class="title--pagesInProfile">
       <div :class="{ 'dark-mode-box': getDarkMode }">
         <div class="">
           <input
@@ -144,13 +144,9 @@ export default {
 };
 </script>
 <style scoped lang="scss">
-.oredrs {
- // background-color: aqua;
-  display: flex;
-  flex-wrap: wrap;
-}
 
-.title {
+
+.title--pagesInProfile {
   width: 100%;
   height: 80px;
   margin-top: 25px;
@@ -230,78 +226,15 @@ export default {
     }
   }
 }
-.contTitle {
-  background-color: blue;
-}
-.arroow {
-  width: 15px;
-  height: 15px;
-}
 
-.allContent {
-  width: 96%;
-  min-height: 400px;
-  background-color: white;
-  margin-bottom: 160px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-  align-content: flex-start;
-  margin-left: 4%;
-}
-.allContent > div {
-  width: 100%;
-  height: 400px;
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
 
-.add {
-  width: 140px;
-  height: 40px;
-  background-color: blue;
-  cursor: pointer;
-  // margin-left: 80%;
-  // margin-top: 60px;
-  border-radius: 5px;
-  font-size: 17px;
-  font-weight: 600;
-  font-family: Arial, Helvetica, sans-serif;
-  text-transform: capitalize;
-  color: white;
-}
-.add::first-letter {
-  font-weight: 500;
-  font-size: 19px;
-}
+
 @media (max-width: 477px) {
   .allContent {
     margin-bottom: 250px;
   }
-  .title {
-    > div:first-child {
-        div:first-child{
-         // background-color: aqua;
-          width: 170px;
-          select {
-          width: 60px;
-        }
-        input {
-          width: 100px;
-        }
-        }
-        div:nth-child(2){
-         // background-color: aqua;
-          width: 180px;
-          div {
-          width: 80px;
-        }
-
-      }
-    }
-  }
-
-  
+ 
+ 
 }
 
 

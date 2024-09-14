@@ -1,6 +1,6 @@
 <template>
-    <div :class="{ 'dark-mode': getDarkMode }" class="UsersList">
-      <div class="users__table">
+    <div :class="{ 'dark-mode': getDarkMode }" class="ListTable">
+      <div class="show__table">
         <table class="table">
           <thead>
             <tr>
@@ -60,43 +60,9 @@
   </script>
   
   <style scoped lang="scss">
-  .UsersList {
-    width: 100%;
-    min-height: 150px;
-    overflow: scroll;
-  }
-  .dark-mode {
-    background-color: rgb(19, 19, 19);
-  }
-  .users__table {
-    width: 100%;
-    min-height: 70px;
-    .table {
-      width: 100%;
-      height: 100%;
-      border-collapse: collapse;
-      tr {
-        height: 30px;
-        td,
-        th {
-          text-align: center;
-          text-transform: capitalize;
-        }
-      }
-    }
-  }
-  thead {
-    border-radius: 10px;
-    background-color: var(--popularCalar);
-    
-    th {
-      color: white;
-      height: 40px;
-    }
-  }
-  .actions {
-    position: relative;
-  }
+
+  // global style in path =>  src/scss/global/_globalStyle.scss
+
   .profile {
     width: 30;
     height: 30px;
@@ -105,12 +71,7 @@
 
 }
 @media (max-width: 477px){
-  thead {
-    
-    th {
-      font-size: 16px;
-    }
-  }
+ 
   .email,.phone{
     font-size: 11px;
   }

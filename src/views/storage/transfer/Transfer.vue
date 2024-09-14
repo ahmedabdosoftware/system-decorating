@@ -1,6 +1,6 @@
 <template>
     <!-- /* eslint-disable */ -->
-    <div class="page oredrs">
+    <div class="page transfers">
       <div class="title">
         <div>
           <div class="contTitle">
@@ -9,7 +9,7 @@
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUQUVkx6lAgtb3-3fMuDZnDixihOSrrNSAOg&usqp=CAU"
               />
             </div>
-            <p :class="{ 'dark-mode-title': getDarkMode }">order grid</p>
+            <p :class="{ 'dark-mode-title': getDarkMode }">transfers grid</p>
           </div>
           <div>
             <div class="export">
@@ -18,8 +18,8 @@
               />
               <button>export</button>
             </div>
-            <router-link to="/dashboard/AddNewOrder">
-              <button class="add">+ add order</button>
+            <router-link to="/dashboard/AddTransfer">
+              <button class="add">+ add transfer</button>
             </router-link>
           </div>
         </div>
@@ -34,17 +34,17 @@
           />
           <select placeholder="filter"  class="filter" v-model="selectedFilter">
             <option value="date">date</option>
-            <option value="customerName">customer</option>
-            <option value="numberOfOrder">order number</option>
+            <option value="selectedBranchTo"> Branch To</option>
+            <option value="selectedBranchFrom"> Branch From</option>
           </select>
           </div>
           <div :class="{ 'dark-mode-box': getDarkMode }">
             <div>
               <select placeholder="filter"  class="filter"  v-model="selectStatus">
                 <option  value="all">الكل</option>
-                <option value="0">معلق</option>
-                <option value="1">مؤكد</option>
-                <option value="2">منتهى </option>
+                <option value="0">فى الانتظار</option>
+                <option value="1">اثناء النقل</option>
+                <option value="3">منجز</option>
                
               </select>
             </div>
@@ -61,14 +61,11 @@
       <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
         
         <TableSkeleton v-if="isLoading" :rows="5" :columns="6" />
-        <ListTable v-else-if="getOrders.length > 0" :orders="getOrders"  class="ListTable_cont"></ListTable>
-        <NoData v-else  context="orders"></NoData>
+        <ListTable v-else-if="getTransfers.length > 0" :transferes="getTransfers"  class="ListTable_cont"></ListTable>
+        <NoData v-else  context="storage"></NoData>
      
       </div>
-      <div id="scrollUp" class="scrollUp">
-        <!-- <img
-        /> -->
-      </div>
+      
     </div>
   </template>
   <script>
@@ -76,10 +73,12 @@
   // actions 
   import {  mapState , mapActions } from 'pinia'
   //store
-  import { useOrdersStore } from '@/store/order/orders.js';
+
+  //store
+  import { useBranchTransferStore } from '@/store/branches/transfer.js';
 
   // ListTable
-  import ListTable from "@/components/orders/ListTable.vue";
+  import ListTable from "@/components/branches/transfer/ListTable.vue";
   
   // Skeleton Table
   import TableSkeleton from '@/shared/components/loading/skeletonLoader/TableSkeleton.vue';
@@ -100,37 +99,38 @@
         return this.$store.state.darkMode;
       },
 
-      ...mapState(useOrdersStore, ['orders']),
+      ...mapState(useBranchTransferStore, ['transferes']),
   
     // ============ filter => start=======================================
           
-          getOrders() {
-            let filteredOrders = this.orders;
+       getTransfers() {
+            let filteredTransferes = this.transferes;
             
             // فلترة حسب الحالة
             if (this.selectStatus !== 'all') {
-              filteredOrders = filteredOrders.filter(
-                order => order.status == this.selectStatus
+              filteredTransferes = filteredTransferes.filter(
+                transfer => transfer.status == this.selectStatus
               );
             }
             
               // البحث
           if (this.searchQuery) {
-            filteredOrders = filteredOrders.filter(order => {
-              const valueToSearch = order[this.selectedFilter].toString().toLowerCase();
-              console.log(order[this.selectedFilter].toString().toLowerCase())
+            filteredTransferes = filteredTransferes.filter(transfer => {
+              const valueToSearch = transfer[this.selectedFilter].toString().toLowerCase();
+              console.log(transfer[this.selectedFilter].toString().toLowerCase())
               return valueToSearch.includes(this.searchQuery.toLowerCase());
             });
           }
                        
-            return filteredOrders;
+            return filteredTransferes;
           }
     // ============ filter => end=======================================
      
     },
     async created(){
       
-      await this.fetchOrders()
+      await this.fetchTransferes()
+      console.log(this.transferes)
        this.isLoading = false;
 
 
@@ -140,29 +140,12 @@
       
       // ============ my actions => start=======================================
   
-      ...mapActions(useOrdersStore, ['fetchOrders']),
+      ...mapActions(useBranchTransferStore, ['fetchTransferes']),
 
 
   
       // ============ my actions => end==========================================
 
-  
-      // ===========show posts => start========================================
-      // show scroll up
-      showScrollUp: function () {
-        let Buttom = document.getElementById("scrollUp");
-        window.onscroll = function () {
-          if (scrollY >= 500) {
-            Buttom.style.visibility = "visible";
-          } else {
-            Buttom.style.visibility = "hidden";
-          }
-        };
-      },
-    
-      // ===========show posts filter => start================================================
-     
-      // ===========show posts filter => end================================================
   
     },
     data() {
@@ -180,54 +163,9 @@
   };
   </script>
   <style scoped lang="scss">
+ 
   
-  
-  /* scrollUp => start */
-  .scrollUp {
-    width: 60px;
-    height: 60px;
-    //   background-color: blue;
-    position: fixed;
-    right: 20px;
-    bottom: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 30px;
-    /* border: 2px solid white; */
-    cursor: pointer;
-    //   visibility: hidden;
-    img {
-      width: 100%;
-      height: 100%;
-    }
-  }
-  
-  // .scrollUp::after {
-  //   content: "^";
-  //   width: 50%;
-  //   height: 50%;
-  // //   background-color: darkorange;
-  //   position: absolute;
-  //   top: 10%;
-  //   font-weight: 500;
-  //   font-size: 40px;
-  //   text-align: center;
-  //   color: white;
-  // }
-  // .scrollUp::before {
-  //   content: "^";
-  //   color: white;
-  //   position: absolute;
-  //   top: 35%;
-  //   width: 50%;
-  //   height: 50%;
-  // //   background-color: darkorange;
-  //   font-weight: 500;
-  //   font-size: 40px;
-  //   text-align: center;
-  // }
-  /* scrollUp => end */
+ 
   
   
   </style>

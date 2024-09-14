@@ -23,6 +23,9 @@ import CustomInvoice from "../views/order/invoice/CustomInvoice.vue";
 import Branches from "../views/storage/Branches.vue";
 import AddNewBranch from "../views/storage/AddNewBranch.vue";
 import EditBranch from "../views/storage/EditBranch.vue";
+import DetailsBranch from "../views/storage/DetailsBranch.vue";
+import Transfer from "../views/storage/transfer/Transfer.vue";
+import AddTransfer from "../views/storage/transfer/AddTransfer.vue";
 import Purchases from "../views/purchase/Purchases.vue";
 
 
@@ -167,6 +170,24 @@ const routes = [
         path: "EditBranch/:branchId",
         name: "EditBranch",
         component: EditBranch,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+       {
+        path: "DetailsBranch/:branchId",
+        name: "DetailsBranch",
+        component: DetailsBranch,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+       {
+        path: "Transfer",
+        name: "Transfer",
+        component: Transfer,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+       {
+        path: "AddTransfer",
+        name: "AddTransfer",
+        component: AddTransfer,
         meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
       },
        {

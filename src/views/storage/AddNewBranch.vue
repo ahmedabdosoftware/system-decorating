@@ -233,6 +233,7 @@
           productId: '',
           quantity: 0,
           alert: 0,
+          productInfo:'',
           selectedProduct: '',
           
           // loading 
@@ -243,7 +244,7 @@
           nameBranch: '',
           date: '',
           location: '',
-          status: 0,
+          status: "0",
           
          // data used in handling
           selectProductForUpdateProp: '',
@@ -289,6 +290,8 @@
           name: this.selectedProduct,
           alert: this.alert,
           quantity: this.quantity,
+          productInfo:this.productInfo,
+
         });
         this.clearProductForm();
       }
@@ -334,6 +337,7 @@
     catchProduct() {
       const selectedProductObj = this.myAllProducts.find(product => product.name === this.selectedProduct);
       this.productId = selectedProductObj ? selectedProductObj.id : '';
+      this.productInfo = selectedProductObj ? selectedProductObj : '';
 
     },
    
@@ -438,14 +442,7 @@
     border: solid 1px rgb(181, 179, 179);
   }
 
- .formbold-form-file-flex {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-.formbold-form-file-flex .formbold-form-label {
-  margin-bottom: 0;
-}
+
 
 
 
