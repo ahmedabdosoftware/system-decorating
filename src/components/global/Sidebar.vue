@@ -2,13 +2,9 @@
     <div id="sidebar" :class="['sidebar', { 'sidebar-collapsed': isCollapsed }]">    
       <div :class="{ 'dark-mode-content': getDarkMode }" class="content">
         <div :class="{ 'dark-mode-header': getDarkMode }" class="header">
-          <img
-            src="/src/assets/images/logo.png"
-          />
-          <div v-if="!isCollapsed">
-            <p>admin</p>
-            <p>locascanstyle</p>
-          </div>
+          
+          <img id="logoSystem" :src="require('@/assets/images/logo.svg')" />
+         
           <img
             class="loggo"
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTUgxG9z03WuK9OPQ64aptvJjEyyPz2Cnhcw&usqp=CAU"
@@ -285,6 +281,7 @@
       toggleSidebar() {
       this.isCollapsed = !this.isCollapsed;
       document.querySelector('#main-layout').classList.toggle('sidebar-collapsed', this.isCollapsed);
+      document.querySelector('#logoSystem').classList.toggle('logoSystem', this.isCollapsed);
     },
      toggleSubMenu(menu) {
       if (menu === 'products') {
@@ -370,11 +367,16 @@
       height: 100%;
     }
     img:first-child {
-      margin-left: 5px;
+      width: 80px;
+      margin-left: 25px;
+      //background-color: aquamarine;
     }
     img:nth-child(3) {
       margin-left: 60px;
     }
+  }
+  .logoSystem{
+   // background-color: rgb(192, 169, 169);
   }
   .links {
     width: 100%;
@@ -580,6 +582,7 @@
     .loggo {
       display: none;
     }
+   
   }
   // phone
   @media (max-width: 477px) {
@@ -591,7 +594,10 @@
       width: 20% !important; 
     }
   }
-  
+  .logoSystem{
+    width: 40px !important;
+    margin-left: 5px !important;
+  }
   
   .sidebar-collapsed .links div .link,
   .sidebar-collapsed .header div,
