@@ -9,8 +9,6 @@ export const useBranchesStore = defineStore('useBranchesStore', {
     async fetchBranches() {
       const querySnapshot = await db.collection('branches').get();
       this.branches = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      console.log(this.branches);
-      console.log(this.branches[0]);
     },
 
     async addBranch(branch) {
@@ -27,6 +25,22 @@ export const useBranchesStore = defineStore('useBranchesStore', {
       await db.collection('branches').doc(branchId).delete();
       this.fetchBranches();
     },
+
+
+      async fetchBranchById (branchId) {
+        const branchRef = db.collection('branches').doc(branchId);
+        const branchSnapshot = await branchRef.get();
+
+        if (branchSnapshot.exists) {
+          return { id: branchSnapshot.id, ...branchSnapshot.data() }; 
+        } else {
+          throw new Error('Branch not found');
+        }
+      }
+
+
+
+
     },
    
-});
+})

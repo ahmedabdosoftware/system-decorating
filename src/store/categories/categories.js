@@ -9,8 +9,7 @@ export const useCategoriesStore = defineStore('useCategoriesStore', {
     async fetchCategories() {
       const querySnapshot = await db.collection('catogries').get();
       this.categories = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      console.log(this.categories);
-      console.log(this.categories[0]);
+     
     },
 
     async addCategory(category) {

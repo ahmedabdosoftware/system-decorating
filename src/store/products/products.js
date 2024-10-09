@@ -10,7 +10,6 @@ export const useProductsStore = defineStore('useProductsStore', {
     async fetchProducts() {
       const querySnapshot = await db.collection('products').get();
       this.products = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      console.log(this.products[0]);
     },
     
     async addProduct(product) {

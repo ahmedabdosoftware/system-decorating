@@ -280,6 +280,56 @@
  
  
   
+@media (max-width: 477px) {
+  .allContent {
+    margin-bottom: 250px;
+  }
+ 
+ 
+}
+
+  
+.title--pagesInProfile {
+
+> div:nth-child(2) {
+   >div:first-child {
+    width: 210px;
+  
+    input {
+    margin-left: 4px;
+    width: 100px;
+    
+  }
+  select{
+    width: 70px;
+
+  }
+  }
+  > div:nth-of-type(2) {
+    
+    > div {
+      width: 70px;
+      button {
+        width: 70px;
+        font-size: 11px;
+      }
+      img {
+        width: 16px;
+        height: 16px;
+        margin-left: 3px;
+        margin-right: 3px;
+      }
+    }
+    >div:nth-child(2){
+      width: 90px;
+
+
+    }
+  }
+}
+
+}
+
   
   </style>
   

@@ -14,6 +14,8 @@ export default {
       switch (this.context) {
         case 'orders':
           return 'sticky-note'
+        case 'todayOrders':
+          return 'sticky-note'
         case 'products':
           return 'box-open'
         case 'categories':
@@ -28,6 +30,12 @@ export default {
           return 'warehouse'
         case 'purchases':
           return 'shopping-cart' 
+        case 'unpaidPurchases':
+          return 'shopping-cart' 
+        case 'transfers': 
+        return 'exchange-alt'; 
+        case 'stock-alerts': 
+        return 'bell'
         default:
           return 'exclamation-circle'
       }
@@ -36,6 +44,8 @@ export default {
       switch (this.context) {
         case 'orders':
           return 'لا توجد طلبات'
+        case 'todayOrders':
+          return 'لا توجد طلبات اليوم'
         case 'products':
           return 'لا توجد منتجات'
         case 'categories':
@@ -50,6 +60,12 @@ export default {
           return 'لا توجد مخازن'
         case 'purchases':
           return 'لا توجد مشتريات'
+        case 'unpaidPurchases':
+          return 'لا توجد مشتريات غير مدفوعه (اجل)'
+        case 'transfers': 
+        return 'لا توجد تحويلات';
+        case 'stock-alerts': 
+          return 'لا توجد تنبيهات مخزون'
         default:
           return 'لا توجد بيانات'
       }

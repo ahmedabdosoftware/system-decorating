@@ -22,7 +22,9 @@
     </div>
     <div>
       <div class="icon-noti">
-        <font-awesome-icon icon="store"  class="icon"/>
+        <a href="https://ahmedabdosoftware.github.io/websiteUpdated-DSD/">
+          <font-awesome-icon icon="store"  class="icon"/>
+        </a>
       </div>
       <div class="icon-noti">
         <img

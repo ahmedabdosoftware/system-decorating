@@ -132,7 +132,10 @@ export default {
 // phone
 @media (max-width: 477px) {
   .title--noFilterSearch {
+    height: 220px;
+
     > div:nth-of-type(2) {
+      height: 30%;
       input {
         width: 130px;
       }
@@ -140,22 +143,29 @@ export default {
   }
 
   
-  
 .title--noFilterSearch {
 
 > div:first-child {
-   >div:first-child {
+  height: 70%;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  
+  >div:first-child {
     width: 196px;
     p {
-      margin-left: 0px;
+      margin-left: 10px;
       font-size: 16px;
       margin-right: 0px;
     }
   }
   > div:nth-of-type(2) {
+    display: flex;
+    justify-content: flex-end;
     a{
+      margin-left: 20px;
       button {
-        width: 95px;
+        width: 120px;
         font-size: 15px;
       }
       
@@ -186,6 +196,6 @@ export default {
 }
 }
 
-  
+ 
 }
 </style>

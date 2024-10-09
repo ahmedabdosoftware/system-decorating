@@ -3,7 +3,7 @@
       <div :class="{ 'dark-mode-content': getDarkMode }" class="content">
         <div :class="{ 'dark-mode-header': getDarkMode }" class="header">
           <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeyjanmXwnnw7x5aS6nIg_ssKuT1kC0RgjkA&usqp=CAU"
+            src="/src/assets/images/logo.png"
           />
           <div v-if="!isCollapsed">
             <p>admin</p>
@@ -138,8 +138,8 @@
               <router-link to="/dashboard/AddNewBranch">
                 add storage 
               </router-link>
-              <router-link to="/dashboard/AddNewBranch">
-                alert storage 
+              <router-link to="/dashboard/StockAlerts">
+                alert stock 
               </router-link>
               <router-link to="/dashboard/Transfer">
                 transfer  
@@ -160,6 +160,12 @@
             <font-awesome-icon class="iconAwesome" icon="chevron-right" />
             <router-link v-if="!isCollapsed"  to="/dashboard/AddNewBranch">
               <p class="link"> add storage</p>
+            </router-link>
+          </div>
+          <div v-show="isStorageOpen && !isCollapsed"  :class="[{'different-color': isStorageOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
+            <font-awesome-icon class="iconAwesome" icon="chevron-right" />
+            <router-link v-if="!isCollapsed"  to="/dashboard/StockAlerts">
+              <p class="link"> alert stock </p>
             </router-link>
           </div>
           <div v-show="isStorageOpen && !isCollapsed"  :class="[{'different-color': isStorageOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">

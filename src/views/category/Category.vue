@@ -131,17 +131,74 @@ export default {
   // background-color: red;
 }
 
-
 // phone
 @media (max-width: 477px) {
-  .title {
+  .title--noFilterSearch {
+    height: 220px;
+
     > div:nth-of-type(2) {
+      height: 30%;
       input {
         width: 130px;
       }
     }
   }
 
+  
+.title--noFilterSearch {
+
+> div:first-child {
+  height: 70%;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+
+   >div:first-child {
+    width: 196px;
+    p {
+      margin-left: 0px;
+      font-size: 16px;
+      margin-right: 0px;
+    }
+  }
+  > div:nth-of-type(2) {
+    display: flex;
+    justify-content: flex-end;
+    a{
+      margin-left: 20px;
+      button {
+        width: 120px;
+        font-size: 15px;
+      }
+      
+    }
+    align-items: flex-end;
+    > div {
+      width: 70px;
+      button {
+        width: 40px;
+      }
+      img {
+        width: 16px;
+        height: 16px;
+        margin-left: 3px;
+        margin-right: 3px;
+      }
+    }
+  }
+}
+> div:nth-of-type(2) {
+  margin-left: 4%;
+
+  input {
+    margin-left: 4px;
+
+  }
+
+}
+}
+
  
 }
+
 </style>

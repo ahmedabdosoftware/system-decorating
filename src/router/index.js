@@ -26,7 +26,10 @@ import EditBranch from "../views/storage/EditBranch.vue";
 import DetailsBranch from "../views/storage/DetailsBranch.vue";
 import Transfer from "../views/storage/transfer/Transfer.vue";
 import AddTransfer from "../views/storage/transfer/AddTransfer.vue";
+import StockAlerts from "../views/storage/Stockalerts/StockAlerts.vue";
 import Purchases from "../views/purchase/Purchases.vue";
+import AddPurchase from "../views/purchase/AddPurchase.vue";
+import DetailsPurchase from "../views/purchase/DetailsPurchase.vue";
 
 
 import Technical from "../views/users/technicalPages/Technical.vue";
@@ -191,9 +194,27 @@ const routes = [
         meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
       },
        {
+        path: "StockAlerts",
+        name: "StockAlerts",
+        component: StockAlerts,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+       {
         path: "Purchases",
         name: "Purchases",
         component: Purchases,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+       {
+        path: "AddPurchase",
+        name: "AddPurchase",
+        component: AddPurchase,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+      {
+        path: "DetailsPurchases/:purchasesId",
+        name: "DetailsPurchase",
+        component: DetailsPurchase,
         meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
       },
       {

@@ -39,10 +39,10 @@
           <table class="table">
             <thead>
               <tr>
-                <th>الاجمالى</th>
+                <th>اجمالى </th>
                 <th v-if="shouldDisplayDiscount">قيمة الخصم</th>
                 <th>الكمية</th>
-                <th>السعر</th>
+                <th>سعر الوحده</th>
                 <th>كود المنتج</th>
                 <th>اسم الصنف</th>
               </tr>
@@ -56,17 +56,25 @@
                 <td>{{ product.productInfo.name }}</td>
                 <td>{{ categoryName(product) }}</td>
               </tr>
+              <tr v-if="shouldDisplayInstallation">
+                <td >{{ calculateTotalInstallation }}</td>
+                <td v-if="shouldDisplayDiscount">0</td>
+                <td >{{ calculateTotalQuantity }}</td>
+                <td>{{ orderInfo.fixedInstallation>0 && isCustomized ==="true" ? orderInfo.fixedInstallation : "لا يوجد سعر موحد"  }}</td>
+                <td colspan="2" >المصنعية</td>
+              </tr>
               <tr  v-if="orderInfo.shipping">
                 <td colspan="3">{{  orderInfo.customShipping && isCustomized ==="true" ?orderInfo.customShipping : orderInfo.shipping }}</td>
-                <td colspan="3">الشحن</td>
+                <td colspan="4">الشحن</td>
               </tr>
             </tbody>
           </table>
         </div>
         <div  class="fatoora__sales">
           <p v-if="shouldDisplayDiscount">اجمالى الخصم: <span>{{ calculateTotalDiscount }}</span></p>
-          <p>الاجمالى : <span>{{ calculateGrandTotal }}</span></p>
-          <p v-if="orderInfo.invoiceType === 'تركيب وتوريد' || orderInfo.invoiceType === 'تركيب'  "> المصنعية: <span>{{ calculateTotalInstallation }}</span></p>
+          <p>اجمالى خامات : <span>{{ calculateGrandTotal }}</span></p>
+          <p v-if="orderInfo.invoiceType === 'تركيب وتوريد' || orderInfo.invoiceType === 'تركيب'  "> اجمالى مصنعية: <span>{{ calculateTotalInstallation }}</span></p>
+          <p v-if="orderInfo.invoiceType === 'تركيب وتوريد'"> الكلى: <span>{{ (Number(calculateGrandTotal) + Number(calculateTotalInstallation)).toFixed(2) }}</span></p>
 
         </div>
         <div  class="fatoora__notes">
@@ -123,7 +131,19 @@ export default {
       // في أي حالة أخرى، لا تعرض الخصم
       return false;
     },
-
+    shouldDisplayInstallation() {
+      // لو كان مخصصًا، تحقق من وجود displayInstallation في orderInfo
+      if (this.isCustomized ==="true" && this.orderInfo.displayInstallation) {
+        
+        return true;
+      }
+      // إذا لم يكن مخصصًا، لا تعرض المصنعية فى الحدول
+      if (this.isCustomized ==="false") {
+        return false;
+      }
+      // في أي حالة أخرى، لا تعرض المصنعية فى الجدول
+      return false;
+    },
         // حساب إجمالي الخصومات
     calculateTotalDiscount() {
         const totalDiscount = this.orderInfo.products.reduce((total, product) => {
@@ -151,7 +171,15 @@ export default {
 
       return (grandTotal+shippingCost).toFixed(2);
     },
-
+  // حساب إجمالي الكميات فقط
+  calculateTotalQuantity() {
+        const totalQuantity = this.orderInfo.products.reduce((total, product) => {
+          return total + Number(product.quantity);
+        }, 0);
+        
+        return totalQuantity;
+      }
+      ,
     // حساب اجمالي التركيب
     calculateTotalInstallation() {
 
@@ -161,21 +189,27 @@ export default {
       
     }else{
       
-      const totalInstallation =this.orderInfo.products.reduce((total, product) => {
-        if(product.productInfo.priceWithLabor){
-          const productInstallationPrice = product.productInfo.priceWithLabor * product.quantity;
-          return total + productInstallationPrice;
-        }else{
-          console.log('no labor for that :', product)
-          console.log('total until now :', total)
-          return total 
-        }
-      }, 0);
-      
-      return totalInstallation.toFixed(2);
+      const totalInstallation = this.orderInfo.products.reduce((total, product) => {
+        let productInstallationPrice;
 
-    }
-    },
+         // إذا كان هناك تعديل مخصص لسعر المصنعية (editOfInstallation) والفاتورة مخصصة
+      if (this.isCustomized === "true" && product.editOfInstallation && Number(product.editOfInstallation) > 0) {
+        productInstallationPrice = product.editOfInstallation * product.quantity;
+      } else if (product.productInfo.priceWithLabor) {
+        // إذا لم يكن هناك تعديل مخصص، استخدم السعر الافتراضي للمصنعية
+        productInstallationPrice = product.productInfo.priceWithLabor * product.quantity;
+      } else {
+        // في حال عدم وجود سعر للمصنعية، إرجاع الإجمالي بدون تغيير
+        console.log('no labor for that:', product);
+        return total;
+      }
+
+      return total + productInstallationPrice;
+    }, 0);
+
+    return totalInstallation.toFixed(2);
+  }
+  }
   },
   async created() {
     
@@ -201,6 +235,7 @@ export default {
 
       return (productTotalPrice - discountAmount).toFixed(2);
    },
+   
     calculateDiscount(product) {
 
       const productPrice = product.priceWithIncrease && this.isCustomized ==="true" ? product.priceWithIncrease : product.productInfo.priceMaterial;
@@ -209,6 +244,7 @@ export default {
 
     return  discountAmount.toFixed(2);
     },
+   
     categoryName(product){
       const categoryProductName = this.categories.find(category => category.id === product.productInfo.categoryId) 
       console.log(categoryProductName);
@@ -218,7 +254,7 @@ export default {
     },
     async generateQRCode() {
       try {
-        const qrCodeData = 'https://www.example.com'; 
+        const qrCodeData = 'https://ahmedabdosoftware.github.io/websiteUpdated-DSD/'; 
         const qrCanvas = document.getElementById('qr-code');
         await QRCode.toCanvas(qrCanvas, qrCodeData);
       } catch (error) {
@@ -314,7 +350,7 @@ $buttom_font: 19px;
     justify-content:center;
     width: 60%;
     min-height:100vh;
- //   background-color: red;
+   //background-color: red;
     margin: auto;
     margin-top: 32px;
     border :$border_fatoora;
@@ -432,7 +468,6 @@ $buttom_font: 19px;
 }
 .fatoora__sales{
   width: 95%;
-  height: 90px;
   display: flex;
   flex-direction: column;
   justify-content:space-evenly;
@@ -442,6 +477,7 @@ $buttom_font: 19px;
     //width: 280px;
     text-align: start;
     @extend %font;
+    margin-top:16px ;
     
     span{
       border: 2px solid black;
@@ -510,7 +546,7 @@ $buttom_font: 19px;
 
   //fatoora
   .fatoora{
-  width: 94%;
+  width: 97%;
   
  }
 

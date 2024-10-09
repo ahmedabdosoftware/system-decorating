@@ -62,7 +62,7 @@
         
         <TableSkeleton v-if="isLoading" :rows="5" :columns="6" />
         <ListTable v-else-if="getTransfers.length > 0" :transferes="getTransfers"  class="ListTable_cont"></ListTable>
-        <NoData v-else  context="storage"></NoData>
+        <NoData v-else  context="transfers"></NoData>
      
       </div>
       
@@ -87,7 +87,7 @@
   import NoData from "@/shared/components/noData/NoData.vue";
   
   export default {
-    name: "Order",
+    name: "transfers",
     components: {
       ListTable,
       NoData,

@@ -163,8 +163,7 @@
   </script>
   <style scoped lang="scss">
   
-  
-  
-  
+   // global style
+ 
   </style>
   

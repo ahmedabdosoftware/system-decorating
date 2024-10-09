@@ -18,7 +18,7 @@
               />
               <button>export</button>
             </div>
-            <router-link to="/dashboard/AddNewOrder">
+            <router-link to="/dashboard/AddPurchase">
               <button class="add">+ add Purchas</button>
             </router-link>
           </div>
@@ -34,17 +34,16 @@
           />
           <select placeholder="filter"  class="filter" v-model="selectedFilter">
             <option value="date">date</option>
-            <option value="customerName">customer</option>
-            <option value="numberOfOrder">order number</option>
+            <option value="adress">Supplier</option>
+            <option value="selectedBranch"> branch</option>
           </select>
           </div>
           <div :class="{ 'dark-mode-box': getDarkMode }">
             <div>
               <select placeholder="filter"  class="filter"  v-model="selectStatus">
                 <option  value="all">الكل</option>
-                <option value="0">معلق</option>
-                <option value="1">مؤكد</option>
-                <option value="2">منتهى </option>
+                <option value="0">مدفوع</option>
+                <option value="1">اجل</option>
                
               </select>
             </div>
@@ -61,7 +60,7 @@
       <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
         
         <TableSkeleton v-if="isLoading" :rows="5" :columns="6" />
-        <ListTable v-else-if="false" :orders="getOrders"  class="ListTable_cont"></ListTable>
+        <ListTable v-else-if="getPurchases.length > 0" :purchases="getPurchases"  class="ListTable_cont"></ListTable>
         <NoData v-else  context="purchases"></NoData>
      
       </div>
@@ -76,10 +75,10 @@
   // actions 
   import {  mapState , mapActions } from 'pinia'
   //store
-  import { useOrdersStore } from '@/store/order/orders.js';
+  import { usePurchasesStore } from '@/store/purchases/purchase.js';
 
   // ListTable
-  import ListTable from "@/components/orders/ListTable.vue";
+  import ListTable from "@/components/purchases/ListTable.vue";
   
   // Skeleton Table
   import TableSkeleton from '@/shared/components/loading/skeletonLoader/TableSkeleton.vue';
@@ -88,7 +87,7 @@
   import NoData from "@/shared/components/noData/NoData.vue";
   
   export default {
-    name: "Order",
+    name: "Purchase",
     components: {
       ListTable,
       NoData,
@@ -100,37 +99,37 @@
         return this.$store.state.darkMode;
       },
 
-      ...mapState(useOrdersStore, ['orders']),
+      ...mapState(usePurchasesStore, ['purchases']),
   
     // ============ filter => start=======================================
           
-          getOrders() {
-            let filteredOrders = this.orders;
+    getPurchases() {
+            let filteredPurchases = this.purchases;
             
             // فلترة حسب الحالة
             if (this.selectStatus !== 'all') {
-              filteredOrders = filteredOrders.filter(
-                order => order.status == this.selectStatus
+              filteredPurchases = filteredPurchases.filter(
+                purchase => purchase.status == this.selectStatus
               );
             }
             
               // البحث
           if (this.searchQuery) {
-            filteredOrders = filteredOrders.filter(order => {
-              const valueToSearch = order[this.selectedFilter].toString().toLowerCase();
-              console.log(order[this.selectedFilter].toString().toLowerCase())
+            filteredPurchases = filteredPurchases.filter(purchase => {
+              const valueToSearch = purchase[this.selectedFilter].toString().toLowerCase();
+              console.log(purchase[this.selectedFilter].toString().toLowerCase())
               return valueToSearch.includes(this.searchQuery.toLowerCase());
             });
           }
                        
-            return filteredOrders;
+            return filteredPurchases;
           }
     // ============ filter => end=======================================
      
     },
     async created(){
       
-      await this.fetchOrders()
+      await this.fetchPurchases()
        this.isLoading = false;
 
 
@@ -140,30 +139,14 @@
       
       // ============ my actions => start=======================================
   
-      ...mapActions(useOrdersStore, ['fetchOrders']),
+      ...mapActions(usePurchasesStore, ['fetchPurchases']),
 
 
   
       // ============ my actions => end==========================================
 
   
-      // ===========show posts => start========================================
-      // show scroll up
-      showScrollUp: function () {
-        let Buttom = document.getElementById("scrollUp");
-        window.onscroll = function () {
-          if (scrollY >= 500) {
-            Buttom.style.visibility = "visible";
-          } else {
-            Buttom.style.visibility = "hidden";
-          }
-        };
-      },
-    
-      // ===========show posts filter => start================================================
      
-      // ===========show posts filter => end================================================
-  
     },
     data() {
       return {

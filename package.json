@@ -27,6 +27,7 @@
     "qrcodejs2": "^0.0.2",
     "skeleton-loader-vue": "^1.0.10",
     "sweetalert": "^2.1.2",
+    "swiper": "^6.8.4",
     "uuid": "^10.0.0",
     "vee-validate": "^3.4.15",
     "vue": "^2.6.11",

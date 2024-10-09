@@ -14,9 +14,9 @@
                 <div class="formbold-input-flex">
                   <div></div>
                   <div>
-                      <label for="addedOrders" class="formbold-form-label">المنتجات المضافة الآن</label>
+                      <label for="addedOrders" class="formbold-form-label aline-end">المنتجات المضافة الآن</label>
                       <select
-                        class="formbold-form-input"
+                        class="formbold-form-input aline-end"
                         v-model="selectProductForUpdateProp"
                         id="addedOrders"
                         @change="selectProductForUpdate"
@@ -30,35 +30,55 @@
                 </div>
 
                 <div class="formbold-input-flex">
-                    
-                    <div>
-                        <label for="ampuntOfIncrease" class="formbold-form-label">   مقدار الزيادة او النقصان</label>
-                        <input
-                            type="number"
-                            id="ampuntOfIncrease"
-                            placeholder="ادخل قيمة الزيادة"
-                            class="formbold-form-input"
-                            v-model="amountOfIncrease"
-                        />
-                    </div>
-                    <div>  
-                        <label for="product" class="formbold-form-label">  المنتج  </label>
-                        <ValidationProvider name="المنتج"  :rules="`${addedOrders.length == 0 ? 'required' : ''}`"  v-slot="{ errors }">
-                            <input list="propList"  class="formbold-form-input"  placeholder="المنتج" v-model="selectedProduct" >
-                           
-                            <span class="error">{{ errors[0] }}</span>
-                        </ValidationProvider>
-                    </div>
-                
+                  
+                  <div>
+                    <label for="ampuntOfIncrease" class="formbold-form-label aline-end">   مقدار الزيادة او النقصان</label>
+                    <input
+                    type="number"
+                    id="ampuntOfIncrease"
+                    placeholder="ادخل قيمة الزيادة"
+                    class="formbold-form-input aline-end"
+                    v-model="amountOfIncrease"
+                    />
+                  </div>
+                  <div>  
+                    <label for="product" class="formbold-form-label aline-end">  المنتج  </label>
+                    <ValidationProvider name="المنتج"  :rules="`${addedOrders.length == 0 ? 'required' : ''}`"  v-slot="{ errors }">
+                      <input list="propList"  class="formbold-form-input aline-end"  placeholder="المنتج" v-model="selectedProduct" >
+                      
+                      <span class="error">{{ errors[0] }}</span>
+                    </ValidationProvider>
+                  </div>
+                  
+                </div>
+                <div class="formbold-input-flex">
+
+                  <div></div>
+                  <div>
+                    <label for="editOfInstallation" class="formbold-form-label aline-end">   تعديل المصنعية</label>
+                    <input
+                    type="number"
+                    id="editOfInstallation"
+                    placeholder="ادخل قيمة الجديدة"
+                    class="formbold-form-input aline-end"
+                    v-model="editOfInstallation"
+                    />
+                  </div>
                 </div>
 
                 <div class="formbold-mb-3 cont_add_del_upda">
-                  <button @click.prevent="editProduct" :disabled="!selectedProduct || !amountOfIncrease" class="addProduct-btn">تعديل السعر   </button>
+                  <button 
+                    @click.prevent="editProduct" 
+                    :disabled="!selectedProduct || (editOfInstallation <= 0 && amountOfIncrease <= 0)" 
+                    class="addProduct-btn"
+                  >
+                    تعديل السعر
+                  </button>
                 </div>
 
                 <div class="formbold-input-flex">
                   <div>
-                      <label class="formbold-form-label"  for="readonlyInput">حدد كيف يعرض</label>
+                      <label class="formbold-form-label aline-end"  for="readonlyInput">حدد كيف يعرض</label>
                       <input
                         type="text"
                         id="readonlyInput"
@@ -69,17 +89,17 @@
                       />
                     </div>
                     <div>
-                        <label class="formbold-form-label" for="readonlyInput">الشحن  </label>
+                        <label class="formbold-form-label aline-end" for="readonlyInput">الشحن  </label>
                         <input
                           type="text"
                           id="readonlyInput"
                           v-model="shipping"
                           readonly
-                          class="formbold-form-input"
+                          class="formbold-form-input aline-end"
                         />
                     </div>
-                </div>
-                  
+              </div>
+             
               <div class="display-options">
                 <label >
                  اظهار الخصومات فى الفاتورة 
@@ -92,6 +112,25 @@
                   <input type="checkbox" v-model="displayTowInvoice" />
                 </label>
               </div>              
+              <div class="display-options">
+                <label >
+                  (ان وجدت) اظهار المصنعية فى الجدول  
+                  <input type="checkbox" v-model="displayInstallation" />
+                </label>
+              </div>    
+              <div v-if="displayInstallation" class="formbold-input-flex">
+                <div></div>
+                <div>
+                  <label for="fixedInstallation" class="formbold-form-label aline-end">  سعر مصنعية موحد ؟</label>
+                  <input
+                  type="number"
+                  id="fixedInstallation"
+                  placeholder="ادخل قيمة الجديدة"
+                  class="formbold-form-input aline-end"
+                  v-model="fixedInstallation"
+                  />
+                </div>
+              </div>          
 
                 <button class="formbold-btn" :class="{ 'disabled-btn': invalid }" :disabled="invalid"  >حفظ و إنشاء الفاتورة</button>
                    
@@ -168,6 +207,8 @@ export default {
         productId:'',
         productInfo:'',
         amountOfIncrease: 0,
+        editOfInstallation: 0,
+        fixedInstallation: 0,
       
 
         // selectProductForUpdate
@@ -190,6 +231,7 @@ export default {
 
         displayTowInvoice:false,
         displaySale:true,
+        displayInstallation:false,
       };
   },
   computed: {
@@ -221,6 +263,8 @@ export default {
       this.addedOrders = order.products;
       this.shipping = order.shipping;
       this.displayTowInvoice = order.displayTowInvoice || false;
+      this.displayInstallation = order.displayInstallation || false;
+      this.fixedInstallation = order.fixedInstallation || 0;
       this.displaySale = order.displaySale || true;
       this.customShipping = order.customShipping || '';
       this.selectedProduct =this.addedOrders[0].name
@@ -237,6 +281,8 @@ export default {
     this.productId = '';
     this.productInfo = '';
     this.selectProductForUpdateProp = '';
+    this.editOfInstallation = 0;
+    this.amountOfIncrease = 0;
     this.isEditingProduct = false; 
   },
 
@@ -247,6 +293,8 @@ export default {
       this.selectedProduct = selectedUpdatePro.name;
       this.productId = selectedUpdatePro.id;
       this.productInfo =selectedUpdatePro.productInfo,
+      this.amountOfIncrease =selectedUpdatePro.amountOfIncrease||0,
+      this.editOfInstallation =selectedUpdatePro.editOfInstallation||0,
       this.isEditingProduct = true;
       console.log( this.productId,this.productInfo)
       console.log( selectedUpdatePro)
@@ -255,10 +303,18 @@ export default {
 
   editProduct() {
       const index = this.addedOrders.findIndex(product => product.id === this.productId);
+
       if (index !== -1) {
-        const spichialPrice = this.productInfo.priceMaterial + parseFloat(this.amountOfIncrease);
-        this.addedOrders[index].priceWithIncrease = spichialPrice;
-        console.log('spichialPrice',spichialPrice,'this.productInfo.priceMaterial',this.productInfo.priceMaterial,'this.amountOfIncrease',this.amountOfIncrease)
+
+        if(Number(this.amountOfIncrease) >0 ){
+          var spichialPrice = this.productInfo.priceMaterial + parseFloat(this.amountOfIncrease);
+          this.addedOrders[index].priceWithIncrease = spichialPrice;
+        }
+        if( Number(this.editOfInstallation) >0 ){
+
+          this.addedOrders[index].editOfInstallation = this.editOfInstallation;
+        }
+        console.log('spichialPrice',spichialPrice,'this.productInfo.priceMaterial',this.productInfo.priceMaterial,'this.amountOfIncrease',this.amountOfIncrease, "editOfInstallation", this.editOfInstallation)
         this.clearProductForm();
         console.log(this.addedOrders)
       }
@@ -291,7 +347,9 @@ export default {
           hasCustomInvoice: true,
           customShipping: this.customShipping,
           displaySale: this.displaySale,
-          displayTowInvoice: this.displayTowInvoice
+          displayTowInvoice: this.displayTowInvoice,
+          displayInstallation: this.displayInstallation,
+          fixedInstallation: this.fixedInstallation
     
     };
     console.log('before send');

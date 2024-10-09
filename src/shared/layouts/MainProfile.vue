@@ -7,7 +7,7 @@
         </div>
       </div>
       <div class="shop">
-        <button>Show Shop</button>
+        <button class="shop-btn"><a href="https://ahmedabdosoftware.github.io/websiteUpdated-DSD/">Show Shop</a></button>
       </div>
       <div class="ddetails">
         <p id="nameProfile">{{ userInfo.name }}</p>
@@ -220,6 +220,9 @@ export default {
     width: 100%;
     height: 100%;
     border-radius: 50%;
+}
+.shop-btn a{
+  color: white;
 }
   .dark-mode {
     background-color: rgb(19, 19, 19);
