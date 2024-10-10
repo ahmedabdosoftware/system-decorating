@@ -11,71 +11,66 @@
           </select>
       </div>
       <div class="statistics_ressults">
-          <div class="statistics_result">
-              <div>
-                  <font-awesome-icon class="iconAwesome" icon="file-invoice-dollar" />
-              </div>
-              <div>
-                  <p>مشتريات غير مدفوعة</p>
-                  <span>20000</span>
-              </div>
-          </div>
-          <div class="statistics_result">
-              <div>
-                  <font-awesome-icon class="iconAwesome" icon="shopping-cart" />
-              </div>
-              <div>
-                  <p>اجمالى المشتريات</p>
-                  <span>20000</span>
-              </div>
-          </div>
-          <div class="statistics_result statistics_result--nonPaid">
-              <div>
-                  <font-awesome-icon class="iconAwesome" icon="clipboard-list" />
-              </div>
-              <div>
-                  <p class="supResul supResul--title">طلبات غير مدفوعة (غير منتهى)</p>
-                  <p class="supResult"> <span> خامات :</span> {{ calculateTotalSalesForUnfinishedOrders }} </p>
-                  <p class="supResult supResul--installation"> <span> مصنعية :  </span> {{ calculateTotalInstallationForUnfinishedOrders }} </p>
-              </div>
-          </div>
-          <div class="statistics_result">
-              <div>
-                  <font-awesome-icon class="iconAwesome" icon="dollar-sign" />
-              </div>
-              <div>
-                  <p>الربح (مصنعية)</p>
-                  <span>{{ calculateTotalInstallationForAllOrders }}</span>
-              </div>
-          </div>
-          <div class="statistics_result">
-              <div>
-                  <font-awesome-icon class="iconAwesome" icon="box-open" />
-              </div>
-              <div>
-                  <p>(الخامات) المبيعات</p>
-                  <span>{{ calculateTotalSales }}</span>
-              </div>
-          </div>
-          <div class="statistics_result">
-              <div>
-                  <font-awesome-icon class="iconAwesome" icon="cash-register" />
-              </div>
-              <div>
-                  <p>صافى المبيعات</p>
-                  <span>20000</span>
-              </div>
-          </div>
+        <StatisticsResult
+          icon="file-invoice-dollar"
+          title="مشتريات غير مدفوعة"
+          value="20000"
+        />
+
+        <StatisticsResult
+          icon="shopping-cart"
+          title="اجمالى المشتريات"
+          value="20000"
+        />
+
+        <StatisticsResult
+          icon="clipboard-list"
+          title="طلبات غير مدفوعة (غير منتهى)"
+          :isNonPaid="true"
+        >
+          <p class="supResult"> <span> خامات :</span> {{ calculateTotalSalesForUnfinishedOrders }} </p>
+          <p class="supResult supResul--installation"> <span> مصنعية :  </span> {{ calculateTotalInstallationForUnfinishedOrders }} </p>
+        </StatisticsResult>
+
+        <StatisticsResult
+          icon="dollar-sign"
+          title="الربح (مصنعية)"
+          :value="calculateTotalInstallationForAllOrders"
+        />
+
+        <StatisticsResult
+          icon="box-open"
+          title="(الخامات) المبيعات"
+          :value="calculateTotalSales"
+        />
+
+        <StatisticsResult
+          icon="cash-register"
+          title="صافى المبيعات"
+          value="20000"
+        />
       </div>
   </div>
 </template>
 <script>
+
+// actions , state
 import { mapActions, mapState } from 'pinia';
+
+// store
 import { useOrdersStore } from '@/store/order/orders.js';
+
+// library
 import moment from 'moment';
+
+// StatisticsResult
+import StatisticsResult from '@/components/dashboard/statistics/StatisticsResult.vue';
 
 export default {
 name: "statistics",
+components: {
+    StatisticsResult
+  },
 data() {
   return {
     selectedFilter: 'all',
@@ -199,12 +194,7 @@ async created() {
 
 
 <style scoped lang="scss">
-%center{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
+
 .statistics{
 width: 96%;
 min-height: 300px;
@@ -228,50 +218,8 @@ align-items: flex-end;
   //background-color: hotpink;
   
 }
-.statistics_result{
-   width: 220px;
-   min-height: 100px;
-   background-color: rgb(240, 237, 237);
-   
-   border-radius: 8px;
-   margin: 15px 0px;
-   display: flex;
 
-   >div:first-child{
-      width: 60px;
-      height: 100px;
-     // background-color: red;
-     @extend %center;
-  }
-  >div:nth-child(2){
-      width: 160px;
-      height: 100px;
-     // background-color: blue;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-end;
-      p,span{
-          font: {
-              size: 19px;
-              weight: 600;
-          }
-          color: rgb(49, 48, 48);
-          padding-right: 5px;
-      }
-      p{
-          color: rgb(109, 108, 108);
-          margin-bottom: 10px;
-          font-size: 14px;
-      }
-   }
-   
-}
 
-.iconAwesome{
-  width: 40px;
-  height: 40px;
-}
 .statistics_search{
   width: 200px;
   height: 80px;
@@ -307,19 +255,7 @@ align-items: flex-end;
       
   }
 
-  .statistics_result{
-      margin: 15px;
-      width: 250px;
-      height: 100px;
-      background-color: white;
-  }
-  .statistics_result--nonPaid{
-    width: 250px;
-  }
-  .iconAwesome{
-      width: 30px;
-      height: 30px;
-  }
+  
 }
 
 </style>

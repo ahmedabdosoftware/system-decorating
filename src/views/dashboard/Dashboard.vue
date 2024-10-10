@@ -26,7 +26,7 @@
 // components
 
   // statistics
-  import StatisticsInfo from "@/components/dashboard/StatisticsInfo.vue";
+  import StatisticsInfo from "@/components/dashboard/statistics/StatisticsInfo.vue";
 
   // todayOrder
   import TodayOrder from "@/components/dashboard/TodayOrder.vue";
