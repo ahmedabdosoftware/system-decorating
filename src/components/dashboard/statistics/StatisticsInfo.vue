@@ -11,44 +11,47 @@
           </select>
       </div>
       <div class="statistics_ressults">
-        <StatisticsResult
-          icon="file-invoice-dollar"
-          title="مشتريات غير مدفوعة"
-          value="20000"
-        />
 
         <StatisticsResult
           icon="shopping-cart"
           title="اجمالى المشتريات"
-          value="20000"
+          :value="calculateTotalPurchases"
         />
 
         <StatisticsResult
-          icon="clipboard-list"
-          title="طلبات غير مدفوعة (غير منتهى)"
-          :isNonPaid="true"
-        >
-          <p class="supResult"> <span> خامات :</span> {{ calculateTotalSalesForUnfinishedOrders }} </p>
-          <p class="supResult supResul--installation"> <span> مصنعية :  </span> {{ calculateTotalInstallationForUnfinishedOrders }} </p>
-        </StatisticsResult>
+          icon="file-invoice-dollar"
+          title="مشتريات غير مدفوعة"
+          :value="calculateTotalPurchasesUnPaid"
+        />
+
 
         <StatisticsResult
           icon="dollar-sign"
-          title="الربح (مصنعية)"
+          title="المصنعيه"
           :value="calculateTotalInstallationForAllOrders"
         />
 
         <StatisticsResult
           icon="box-open"
-          title="(الخامات) المبيعات"
+          title="بعت بكام خامات" 
           :value="calculateTotalSales"
         />
 
         <StatisticsResult
           icon="cash-register"
-          title="صافى المبيعات"
-          value="20000"
+          title="صافى ربح الخامات"
+          value="1230"
         />
+
+        <StatisticsResult
+          icon="clipboard-list"
+          title="الشغل الغير مدفوع او غير منتهى"
+          :isNonPaid="true"
+        >
+          <p class="supResult"> <span> خامات :</span> {{ calculateTotalSalesForUnfinishedOrders }} </p>
+          <p class="supResult supResul--installation"> <span> مصنعية :  </span> {{ calculateTotalInstallationForUnfinishedOrders }} </p>
+        </StatisticsResult>
+        
       </div>
   </div>
 </template>
@@ -59,6 +62,7 @@ import { mapActions, mapState } from 'pinia';
 
 // store
 import { useOrdersStore } from '@/store/order/orders.js';
+import { usePurchasesStore } from '@/store/purchases/purchase.js';
 
 // library
 import moment from 'moment';
@@ -80,51 +84,95 @@ computed: {
   ...mapState(useOrdersStore, {
     orders: 'orders',
   }),
+  ...mapState(usePurchasesStore, {
+    purchases: 'purchases',
+  }),
 
-  filteredOrders() {
-    const now = moment();
 
-    return this.orders.filter(order => {
-      const orderDate = moment(order.date);
-      
-      if (!orderDate.isValid()) {
-        console.error('Invalid Date:', order.date);
-        return false;
-      }
-      
-      switch (this.selectedFilter) {
-        case 'today':
-          return orderDate.isSame(now, 'day');
-        case 'yesterday':
-          return orderDate.isSame(now.clone().subtract(1, 'days'), 'day');
-        case 'lastWeak': {
-          const startOfWeek = now.clone().subtract(7, 'days').startOf('day');
-          const endOfWeek = now.clone().endOf('day');
-          return orderDate.isBetween(startOfWeek, endOfWeek, 'day', '[]');
-        }
-        case 'lastMonth': {
-          const startOfThisMonth = now.clone().startOf('month');
-          const startOfLastMonth = now.clone().subtract(1, 'month').startOf('month');
-          return orderDate.isBetween(startOfLastMonth, startOfThisMonth, null, '[]');
-        }
-        case 'lastYear':
-          return orderDate.isBetween(now.clone().subtract(1, 'year'), now, null, '[]');
-        case 'all':
-        default:
-          return true;
-      }
-    });
-  },
 
+//  Purchases  حساب المشتريات لجميع
+  calculateTotalPurchases() {
+
+    const FilteredPurchases =  this.filterByDate(this.purchases, this.selectedFilter)
+
+  const totalPurchases = FilteredPurchases.reduce((total, purchase) => {
+    // حساب إجمالي المنتجات لكل عملية شراء
+    const purchaseTotal = purchase.products.reduce((subTotal, product) => {
+      const productPrice = product.price_buy || 0;
+      const productTotalPrice = productPrice * product.quantity;
+      return subTotal + productTotalPrice;
+    }, 0);
+
+    // حساب الخصم بعد إجمالي المنتجات
+    let discountAmount = 0;
+    if (purchase.discount_type === 'percentage') {
+      discountAmount = purchaseTotal * (purchase.discount_value / 100);
+    } else if (purchase.discount_type === 'fixed') {
+      discountAmount = Number(purchase.discount_value);
+    }
+
+    // إضافة تكلفة الشحن إن وجدت
+    const shippingCost = Number(purchase.shipping) || 0;
+
+    // حساب الإجمالي النهائي بعد الخصم وتكلفة الشحن
+    const finalTotal = purchaseTotal - discountAmount + shippingCost;
+    return total + finalTotal;
+  }, 0);
+
+  return totalPurchases.toFixed(2);
+},
+
+//  Purchases  حساب المشتريات لغير المدفوع الاجل يعنى
+  calculateTotalPurchasesUnPaid() {
+
+    const FilteredPurchases =  this.filterByDate(this.purchases, this.selectedFilter)
+    const unfinishedOrders = FilteredPurchases.filter(purchases => purchases.status == '1' );
+
+  const totalPurchases = unfinishedOrders.reduce((total, purchase) => {
+    // حساب إجمالي المنتجات لكل عملية شراء
+    const purchaseTotal = purchase.products.reduce((subTotal, product) => {
+      const productPrice = product.price_buy || 0;
+      const productTotalPrice = productPrice * product.quantity;
+      return subTotal + productTotalPrice;
+    }, 0);
+
+    // حساب الخصم بعد إجمالي المنتجات
+    let discountAmount = 0;
+    if (purchase.discount_type === 'percentage') {
+      discountAmount = purchaseTotal * (purchase.discount_value / 100);
+    } else if (purchase.discount_type === 'fixed') {
+      discountAmount = Number(purchase.discount_value);
+    }
+
+    // إضافة تكلفة الشحن إن وجدت
+    const shippingCost = Number(purchase.shipping) || 0;
+
+    // حساب الإجمالي النهائي بعد الخصم وتكلفة الشحن
+    const finalTotal = purchaseTotal - discountAmount + shippingCost;
+    return total + finalTotal;
+  }, 0);
+
+  return totalPurchases.toFixed(2);
+},
+
+
+ 
+// orders  حساب التركيب لجميع
   calculateTotalInstallationForAllOrders() {
-    console.log("calculateTotalInstallationForAllOrders",this.filteredOrders)
-    const totalInstallation = this.filteredOrders.reduce((total, order) => {
+    const FilteredOrders =  this.filterByDate(this.orders, this.selectedFilter)
+    const totalInstallation =FilteredOrders.reduce((total, order) => {
       if (order.laborPrice) {
         return total + parseFloat(order.laborPrice);
       } else {
         const orderTotalInstallation = order.products.reduce((subTotal, product) => {
           if (product.productInfo.priceWithLabor) {
-            return subTotal + product.productInfo.priceWithLabor * product.quantity;
+
+            const productInstallationPrice = product.editOfInstallation 
+              ? product.editOfInstallation 
+              : product.productInfo.priceWithLabor;
+
+
+            return subTotal + productInstallationPrice * product.quantity;
           } else {
             return subTotal;
           }
@@ -136,12 +184,19 @@ computed: {
     return totalInstallation.toFixed(2);
   },
 
+// orders حساب الخامات لجميع
   calculateTotalSales() {
-    console.log("calculateTotalSales",this.filteredOrders)
+    
+    const FilteredOrders =  this.filterByDate(this.orders, this.selectedFilter)
 
-    const totalSales = this.filteredOrders.reduce((total, order) => {
-      const orderTotalSales = order.products.reduce((subTotal, product) => {
-        const productTotalPrice = product.productInfo.priceMaterial * product.quantity;
+    const totalSales = FilteredOrders.reduce((total, order) => {
+    const orderTotalSales = order.products.reduce((subTotal, product) => {
+
+        const productPrice = product.priceWithIncrease 
+          ? product.priceWithIncrease 
+          : product.productInfo.priceMaterial;
+
+        const productTotalPrice = productPrice * product.quantity;
         const discountAmount = productTotalPrice * (product.price_offer / 100);
         return subTotal + (productTotalPrice - discountAmount);
       }, 0);
@@ -151,16 +206,26 @@ computed: {
     return totalSales.toFixed(2);
   },
 
+  // Filter out unfinished orders and calculate installation cost
   calculateTotalInstallationForUnfinishedOrders() {
-    // Filter out unfinished orders and calculate installation cost
-    const unfinishedOrders = this.filteredOrders.filter(order => order.status == '1' );
+
+    const FilteredOrders =  this.filterByDate(this.orders, this.selectedFilter)
+
+    const unfinishedOrders = FilteredOrders.filter(order => order.status == '1' );
     return unfinishedOrders.reduce((total, order) => {
       if (order.laborPrice) {
         return total + parseFloat(order.laborPrice);
       } else {
         const orderTotalInstallation = order.products.reduce((subTotal, product) => {
           if (product.productInfo.priceWithLabor) {
-            return subTotal + product.productInfo.priceWithLabor * product.quantity;
+
+            const productInstallationPrice = product.editOfInstallation 
+              ? product.editOfInstallation 
+              : product.productInfo.priceWithLabor;
+
+
+            return subTotal + productInstallationPrice * product.quantity;
+
           } else {
             return subTotal;
           }
@@ -170,12 +235,20 @@ computed: {
     }, 0).toFixed(2);
   },
 
+  // Filter out unfinished orders and calculate sales
   calculateTotalSalesForUnfinishedOrders() {
-    // Filter out unfinished orders and calculate sales
-    const unfinishedOrders = this.filteredOrders.filter(order => order.status == '1' );
+
+    const FilteredOrders =  this.filterByDate(this.orders, this.selectedFilter)
+
+    const unfinishedOrders = FilteredOrders.filter(order => order.status == '1' );
     return unfinishedOrders.reduce((total, order) => {
       const orderTotalSales = order.products.reduce((subTotal, product) => {
-        const productTotalPrice = product.productInfo.priceMaterial * product.quantity;
+
+        const productPrice = product.priceWithIncrease 
+          ? product.priceWithIncrease 
+          : product.productInfo.priceMaterial;
+
+        const productTotalPrice = productPrice * product.quantity;   
         const discountAmount = productTotalPrice * (product.price_offer / 100);
         return subTotal + (productTotalPrice - discountAmount);
       }, 0);
@@ -185,9 +258,48 @@ computed: {
 },
 methods: {
   ...mapActions(useOrdersStore, ['fetchOrders']),
+  ...mapActions(usePurchasesStore, ['fetchPurchases']),
+
+
+  filterByDate(data, selectedFilter) {
+  const now = moment();
+
+  return data.filter(item => {
+    const itemDate = moment(item.date);
+    
+    if (!itemDate.isValid()) {
+      console.error('Invalid Date:', item.date);
+      return false;
+    }
+    
+    switch (selectedFilter) {
+      case 'today':
+        return itemDate.isSame(now, 'day');
+      case 'yesterday':
+        return itemDate.isSame(now.clone().subtract(1, 'days'), 'day');
+      case 'lastWeak': {
+        const startOfWeek = now.clone().subtract(7, 'days').startOf('day');
+        const endOfWeek = now.clone().endOf('day');
+        return itemDate.isBetween(startOfWeek, endOfWeek, 'day', '[]');
+      }
+      case 'lastMonth': {
+        const startOfThisMonth = now.clone().startOf('month');
+        const startOfLastMonth = now.clone().subtract(1, 'month').startOf('month');
+        return itemDate.isBetween(startOfLastMonth, startOfThisMonth, null, '[]');
+      }
+      case 'lastYear':
+        return itemDate.isBetween(now.clone().subtract(1, 'year'), now, null, '[]');
+      case 'all':
+      default:
+        return true;
+    }
+  });
+}
+
 },
 async created() {
   await this.fetchOrders();
+  await this.fetchPurchases();
 },
 };
 </script>

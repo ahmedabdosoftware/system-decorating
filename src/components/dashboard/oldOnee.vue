@@ -87,6 +87,45 @@ computed: {
   }),
 
 
+// anchint way "undynamic way"
+filteredOrders() {
+    const now = moment();
+
+    return this.orders.filter(order => {
+      const orderDate = moment(order.date);
+      
+      if (!orderDate.isValid()) {
+        console.error('Invalid Date:', order.date);
+        return false;
+      }
+      
+      switch (this.selectedFilter) {
+        case 'today':
+          return orderDate.isSame(now, 'day');
+        case 'yesterday':
+          return orderDate.isSame(now.clone().subtract(1, 'days'), 'day');
+        case 'lastWeak': {
+          const startOfWeek = now.clone().subtract(7, 'days').startOf('day');
+          const endOfWeek = now.clone().endOf('day');
+          return orderDate.isBetween(startOfWeek, endOfWeek, 'day', '[]');
+        }
+        case 'lastMonth': {
+          const startOfThisMonth = now.clone().startOf('month');
+          const startOfLastMonth = now.clone().subtract(1, 'month').startOf('month');
+          return orderDate.isBetween(startOfLastMonth, startOfThisMonth, null, '[]');
+        }
+        case 'lastYear':
+          return orderDate.isBetween(now.clone().subtract(1, 'year'), now, null, '[]');
+        case 'all':
+        default:
+          return true;
+      }
+    });
+  },
+
+
+
+
   filteredOrders() {
     return this.filterDataByDate(this.orders, 'order.date'); 
   },

@@ -371,12 +371,15 @@
       margin-left: 25px;
       //background-color: aquamarine;
     }
-    img:nth-child(3) {
+    img:nth-child(2) {
       margin-left: 60px;
     }
   }
   .logoSystem{
-   // background-color: rgb(192, 169, 169);
+    width: 40px !important;
+    margin-left: 5px !important;
+    transition: all 0.3s ease;
+
   }
   .links {
     width: 100%;
@@ -531,6 +534,8 @@
   }
 }
   .supMenue{
+    
+    transition: all 0.3s ease;
     padding-left: 20px;
     p{
       font-size: 15px !important;
@@ -594,10 +599,7 @@
       width: 20% !important; 
     }
   }
-  .logoSystem{
-    width: 40px !important;
-    margin-left: 5px !important;
-  }
+ 
   
   .sidebar-collapsed .links div .link,
   .sidebar-collapsed .header div,
