@@ -63,6 +63,7 @@ import { mapActions, mapState } from 'pinia';
 // store
 import { useOrdersStore } from '@/store/order/orders.js';
 import { usePurchasesStore } from '@/store/purchases/purchase.js';
+import { useReturnsStore } from '@/store/purchaseReturns/returns.js';
 
 // library
 import moment from 'moment';
@@ -87,40 +88,56 @@ computed: {
   ...mapState(usePurchasesStore, {
     purchases: 'purchases',
   }),
+  ...mapState(useReturnsStore, ['returns']),  
 
 
+      //  حساب المشتريات لجميع  Purchases
+      calculateTotalPurchases() {
+        const FilteredPurchases = this.filterByDate(this.purchases, this.selectedFilter);
 
-//  Purchases  حساب المشتريات لجميع
-  calculateTotalPurchases() {
+        const totalPurchases = FilteredPurchases.reduce((total, purchase) => {
+          // حساب إجمالي المنتجات لكل عملية شراء
+          const purchaseTotal = purchase.products.reduce((subTotal, product) => {
+            const productPrice = product.price_buy || 0;
+            const productTotalPrice = productPrice * product.quantity;
+            return subTotal + productTotalPrice;
+          }, 0);
 
-    const FilteredPurchases =  this.filterByDate(this.purchases, this.selectedFilter)
+          // حساب الخصم بعد إجمالي المنتجات
+          let discountAmount = 0;
+          if (purchase.discount_type === 'percentage') {
+            discountAmount = purchaseTotal * (purchase.discount_value / 100);
+          } else if (purchase.discount_type === 'fixed') {
+            discountAmount = Number(purchase.discount_value);
+          }
 
-  const totalPurchases = FilteredPurchases.reduce((total, purchase) => {
-    // حساب إجمالي المنتجات لكل عملية شراء
-    const purchaseTotal = purchase.products.reduce((subTotal, product) => {
-      const productPrice = product.price_buy || 0;
-      const productTotalPrice = productPrice * product.quantity;
-      return subTotal + productTotalPrice;
-    }, 0);
+          // إضافة تكلفة الشحن إن وجدت
+          const shippingCost = Number(purchase.shipping) || 0;
 
-    // حساب الخصم بعد إجمالي المنتجات
-    let discountAmount = 0;
-    if (purchase.discount_type === 'percentage') {
-      discountAmount = purchaseTotal * (purchase.discount_value / 100);
-    } else if (purchase.discount_type === 'fixed') {
-      discountAmount = Number(purchase.discount_value);
-    }
+          // حساب إجمالي المرتجعات المتعلقة بهذه العملية
+          const returnsForThisPurchase = this.returns.filter(returnItem => returnItem.purchaseId === purchase.id);
+          let totalReturns = 0;
+          if (returnsForThisPurchase.length > 0) {
+            totalReturns = returnsForThisPurchase.reduce((total, ret) => {
+              return total + ret.products.reduce((subTotal, product) => {
+                return subTotal + product.quantityReturn * product.price_buy;
+              }, 0);
+            }, 0);
 
-    // إضافة تكلفة الشحن إن وجدت
-    const shippingCost = Number(purchase.shipping) || 0;
+            // حساب الخصم المطبق على المرتجعات
+            const discountOnReturns = this.calculateDiscountOnReturns(totalReturns, purchase);
+            totalReturns -= discountOnReturns;
+          }
 
-    // حساب الإجمالي النهائي بعد الخصم وتكلفة الشحن
-    const finalTotal = purchaseTotal - discountAmount + shippingCost;
-    return total + finalTotal;
-  }, 0);
+          // حساب الإجمالي النهائي بعد الخصم، تكلفة الشحن، والمرتجعات
+          const finalTotal = purchaseTotal - discountAmount + shippingCost - totalReturns;
+          return total + finalTotal;
+        }, 0);
 
-  return totalPurchases.toFixed(2);
-},
+        return totalPurchases.toFixed(2);
+      },
+
+
 
 //  Purchases  حساب المشتريات لغير المدفوع الاجل يعنى
   calculateTotalPurchasesUnPaid() {
@@ -129,30 +146,45 @@ computed: {
     const unfinishedOrders = FilteredPurchases.filter(purchases => purchases.status == '1' );
 
   const totalPurchases = unfinishedOrders.reduce((total, purchase) => {
-    // حساب إجمالي المنتجات لكل عملية شراء
-    const purchaseTotal = purchase.products.reduce((subTotal, product) => {
-      const productPrice = product.price_buy || 0;
-      const productTotalPrice = productPrice * product.quantity;
-      return subTotal + productTotalPrice;
-    }, 0);
+             // حساب إجمالي المنتجات لكل عملية شراء
+             const purchaseTotal = purchase.products.reduce((subTotal, product) => {
+            const productPrice = product.price_buy || 0;
+            const productTotalPrice = productPrice * product.quantity;
+            return subTotal + productTotalPrice;
+          }, 0);
 
-    // حساب الخصم بعد إجمالي المنتجات
-    let discountAmount = 0;
-    if (purchase.discount_type === 'percentage') {
-      discountAmount = purchaseTotal * (purchase.discount_value / 100);
-    } else if (purchase.discount_type === 'fixed') {
-      discountAmount = Number(purchase.discount_value);
-    }
+          // حساب الخصم بعد إجمالي المنتجات
+          let discountAmount = 0;
+          if (purchase.discount_type === 'percentage') {
+            discountAmount = purchaseTotal * (purchase.discount_value / 100);
+          } else if (purchase.discount_type === 'fixed') {
+            discountAmount = Number(purchase.discount_value);
+          }
 
-    // إضافة تكلفة الشحن إن وجدت
-    const shippingCost = Number(purchase.shipping) || 0;
+          // إضافة تكلفة الشحن إن وجدت
+          const shippingCost = Number(purchase.shipping) || 0;
 
-    // حساب الإجمالي النهائي بعد الخصم وتكلفة الشحن
-    const finalTotal = purchaseTotal - discountAmount + shippingCost;
-    return total + finalTotal;
-  }, 0);
+          // حساب إجمالي المرتجعات المتعلقة بهذه العملية
+          const returnsForThisPurchase = this.returns.filter(returnItem => returnItem.purchaseId === purchase.id);
+          let totalReturns = 0;
+          if (returnsForThisPurchase.length > 0) {
+            totalReturns = returnsForThisPurchase.reduce((total, ret) => {
+              return total + ret.products.reduce((subTotal, product) => {
+                return subTotal + product.quantityReturn * product.price_buy;
+              }, 0);
+            }, 0);
 
-  return totalPurchases.toFixed(2);
+            // حساب الخصم المطبق على المرتجعات
+            const discountOnReturns = this.calculateDiscountOnReturns(totalReturns, purchase);
+            totalReturns -= discountOnReturns;
+          }
+
+          // حساب الإجمالي النهائي بعد الخصم، تكلفة الشحن، والمرتجعات
+          const finalTotal = purchaseTotal - discountAmount + shippingCost - totalReturns;
+          return total + finalTotal;
+        }, 0);
+
+        return totalPurchases.toFixed(2);
 },
 
 
@@ -259,6 +291,7 @@ computed: {
 methods: {
   ...mapActions(useOrdersStore, ['fetchOrders']),
   ...mapActions(usePurchasesStore, ['fetchPurchases']),
+  ...mapActions(useReturnsStore, ['fetchAllReturns']), 
 
 
   filterByDate(data, selectedFilter) {
@@ -294,12 +327,28 @@ methods: {
         return true;
     }
   });
-}
+},
+    // دالة لحساب الخصم المطبق على المرتجعات
+   calculateDiscountOnReturns(totalReturns, purchase) {
+      let discountAmount = 0;
+      console.log("purchase",purchase)
+      if (purchase.discount_type === 'percentage') {
+        discountAmount = totalReturns * (purchase.discount_value / 100);
+      } else if (purchase.discount_type === 'fixed') {
+        const totalPurchases = purchase.products.reduce((subTotal, product) => {
+          return subTotal + product.price_buy * product.quantity;
+        }, 0);
+        discountAmount = (purchase.discount_value * totalReturns) / totalPurchases;
+      }
+
+      return discountAmount;
+    },
 
 },
 async created() {
   await this.fetchOrders();
   await this.fetchPurchases();
+  await this.fetchAllReturns();
 },
 };
 </script>

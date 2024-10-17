@@ -95,7 +95,7 @@
               <label :class="{ 'dark-mode-title': getDarkMode }">price Material</label>
               <ValidationProvider
                 name="Price Material"
-                rules="required|numeric|min_value:0"
+                rules="required|double:1|min_value:0"
                 v-slot="{ errors }"
               >
                 <input v-model="priceMaterial" placeholder="type here" type="text" />
@@ -104,7 +104,7 @@
               <label :class="{ 'dark-mode-title': getDarkMode }">price With Labor </label>
               <ValidationProvider
                 name="Price With Labor"
-                rules="required|numeric|min_value:0"
+                rules="required|double:1|min_value:0"
                 v-slot="{ errors }"
               >
                 <input v-model="priceWithLabor" placeholder="type here" type="text" />
@@ -115,7 +115,7 @@
               <label :class="{ 'dark-mode-title': getDarkMode }">offer price (optionally)</label>
               <ValidationProvider
                 name="Offer Price"
-                rules="numeric|min_value:0"
+                rules="double:1|min_value:0"
                 v-slot="{ errors }"
               >
                 <input v-model="offerPrice" placeholder="type here" type="text" />
@@ -124,7 +124,7 @@
               <label :class="{ 'dark-mode-title': getDarkMode }">buy price </label>
               <ValidationProvider
                 name="buy Price"
-                rules="numeric|min_value:0"
+                rules="double:1|min_value:0"
                 v-slot="{ errors }"
               > 
                 <input v-model="buyPrice" placeholder="type here" type="text" />
@@ -159,7 +159,7 @@
 
 <script>
 
-import { required, numeric, min_value, image } from 'vee-validate/dist/rules';
+import { required, double, min_value, image } from 'vee-validate/dist/rules';
 import { extend } from 'vee-validate';
 
 // Register rules with custom messages
@@ -167,8 +167,8 @@ import { extend } from 'vee-validate';
       ...required,
       message: '{_field_} is required to create a product.'
     });
-    extend('numeric', {
-      ...numeric,
+    extend('double', {
+      ...double,
       message: '{_field_} must be a number.'
     });
     extend('min_value', {
@@ -300,10 +300,10 @@ export default {
           console.log(downloadURL)
           let obj = {
             name: this.productTitle,
-            priceMaterial: parseInt(this.priceMaterial),
-            priceWithLabor: parseInt(this.priceWithLabor),
-            offerPrice: parseInt(this.offerPrice),
-            buyPrice: parseInt(this.buyPrice),
+            priceMaterial: parseFloat(this.priceMaterial),
+            priceWithLabor: parseFloat(this.priceWithLabor),
+            offerPrice: parseFloat(this.offerPrice),
+            buyPrice: parseFloat(this.buyPrice),
             description: this.description,
             categoryId: this.selectedCategoryId,
             unitId: this.selectedUnitId,

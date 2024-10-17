@@ -1,6 +1,6 @@
 <template> 
     <div>
-        <div v-if="returns" class="detailsContent">
+        <div class="detailsContent">
 
             <div class="detailsContent__Info">
                 <div class="detailsContent__Info__date">
@@ -109,28 +109,21 @@
             ...mapState(useReturnsStore, ['returns']),  
 // New
             // حساب إجمالي المرتجعات مع الخصم
-            calculateTotalReturns() {
-                console.log(this.returns)
-                if (!this.returns || this.returns.length === 0) {
-                    return 0;
-                }
-
+                calculateTotalReturns() {
                 let totalReturns = 0;
 
                 // حساب إجمالي المرتجعات بدون خصم
                 totalReturns = this.returns.reduce((total, ret) => {
                     return total + ret.products.reduce((subTotal, product) => {
-                        return subTotal + product.quantityReturn * product.price_buy;
+                    return subTotal + product.quantityReturn * product.price_buy;
                     }, 0);
                 }, 0);
-                console.log('totalReturns',totalReturns)
 
                 // حساب إجمالي الخصم المطبق على المرتجعات
                 const discountOnReturns = this.calculateDiscountOnReturns(totalReturns);
 
                 return (totalReturns - discountOnReturns).toFixed(2); // إجمالي المرتجعات مع الخصم
-            },
-
+                },
 
 ///////////////
 
@@ -194,11 +187,8 @@
             ...mapActions(useReturnsStore, ['fetchReturnsByPurchaseId']), 
 
             async fetchReturns() {
-                if (this.purchaseInfo.id) {
-                    await this.fetchReturnsByPurchaseId(this.purchaseInfo.id);
-                }
+            await this.fetchReturnsByPurchaseId(this.purchaseInfo.id);  // جلب المرتجعات حسب الـ purchaseId
             },
-
 
 
 
@@ -211,19 +201,10 @@
         
         if (this.purchaseInfo.discount_type === 'percentage') {
             discountAmount = Number(totalReturns) * (Number(this.purchaseInfo.discount_value) / 100);
-
-            console.log('totalReturns',totalReturns)
-            console.log('discount_value',this.purchaseInfo.discount_value)
-            console.log(discountAmount)
         } else if (this.purchaseInfo.discount_type === 'fixed') {
             // توزيع الخصم الثابت بناءً على النسبة بين إجمالي المرتجعات وإجمالي المشتريات
             const totalPurchases = this.calculateTotalPriceForAll;
             discountAmount = (Number(this.purchaseInfo.discount_value) * totalReturns) / totalPurchases;
-
-            console.log('calculateTotalPriceForAll',this.calculateTotalPriceForAll)
-            console.log('totalReturns',totalReturns)
-            console.log('discount_value',this.purchaseInfo.discount_value)
-            console.log(discountAmount)
         }
         
         return discountAmount.toFixed(2);

@@ -10,7 +10,7 @@
         </div>
         <div class="detailsContent__orderInfo__technichal">
             <p>اسم الفني: {{ orderInfo.TechnicaInfo.name }}</p>
-            <p>رقم التليفون: {{ orderInfo.TechnicaInfo.number }}</p>
+            <p v-if="isAdmin">رقم التليفون: {{ orderInfo.TechnicaInfo.number }}</p>
         </div>
         <div class="detailsContent__orderInfo__clint">
             <p>اسم العميل: {{ orderInfo.customerName }}</p>
@@ -32,7 +32,7 @@
                 <thead>
                     <tr>
                     <th>الاجمالى</th>
-                    <th>قيمة الخصم</th>
+                    <th v-if="isAdmin">قيمة الخصم</th>
                     <th>الكمية</th>
                     <th>السعر</th>
                     <th>كود الصنف</th>
@@ -42,7 +42,7 @@
                 <tbody v-if="orderInfo.products">
                     <tr v-for="(product, index) in orderInfo.products" :key="index">
                     <td>{{ calculateTotalPrice(product) }}</td>
-                    <td>{{ calculateDiscount(product) }}</td>
+                    <td v-if="isAdmin">{{ calculateDiscount(product) }}</td>
                     <td>{{ product.quantity }}</td>
                     <td>{{ product.productInfo.priceMaterial }}</td>
                     <td>{{ product.productInfo.name }}</td>
@@ -93,8 +93,11 @@
 </template>
     <script>
     import { mapState, mapActions } from 'pinia'
+
+    // store
     import { useCategoriesStore } from '@/store/categories/categories.js';
-  
+    import { useUserStore } from '@/store/auth/auth.js';
+
     
     
     export default {
@@ -107,6 +110,8 @@
           return this.$store.state.darkMode;
         },
         ...mapState(useCategoriesStore, ['categories']),
+        ...mapState(useUserStore, ['isAdmin']),
+
   
             // حساب إجمالي الخصومات
         calculateTotalDiscount() {

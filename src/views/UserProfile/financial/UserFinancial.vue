@@ -10,7 +10,7 @@
                 />
                 <button>export</button>
              </div>
-              <router-link 
+              <router-link v-if="isAdmin"
               :to="generateRoute('AddFinancial')">
               <button class="add">+ add financial</button>
               </router-link>
@@ -71,6 +71,7 @@
   
   //store
   import { useTransactionsStore } from '@/store/transactions/transactions.js';
+  import { useUserStore } from '@/store/auth/auth.js';
   
   // componnents
     // ListTable
@@ -79,7 +80,7 @@
   import NoData from "@/shared/components/noData/NoData.vue";
     // Skeleton Table
   import TableSkeleton from '@/shared/components/loading/skeletonLoader/TableSkeleton.vue';
- 
+
   
   export default {
     name: "Transactions",
@@ -94,7 +95,8 @@
       },
       ...mapState(useTransactionsStore, ['userTransactions']),
   
-// ============ filter => start=======================================
+      // ============ filter => start=======================================
+      ...mapState(useUserStore, ['isAdmin']),
 
       getTransactions() {
         let filteredTransactions = this.userTransactions

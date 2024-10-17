@@ -27,6 +27,11 @@
           left: '65px',  
           top: '400px',
         };
+      } else if (this.position === "purchases") {
+        return {
+          left: '65px',  
+          top: '450px',
+        };
       }
       return {}; 
     },

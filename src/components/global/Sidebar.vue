@@ -12,6 +12,8 @@
           <span v-on:click="disappear()" class="x">x</span>
         </div>
         <div class="links">
+          
+          <!-- dashboard Section -->
           <div :class="{ 'dark-mode-content': getDarkMode }">
               <router-link to="/dashboard">
                 <font-awesome-icon class="iconAwesome" icon="house" />
@@ -21,6 +23,8 @@
               </router-link>
               <font-awesome-icon class="arrow" />
           </div>
+          
+          <!-- products Section -->
           <div @click="toggleSubMenu('products')" :class="[{'different-color': isProductsOpen, 'dark-mode-content': getDarkMode}, 'product-sup']">
             <font-awesome-icon class="iconAwesome" icon="store" />
             <p class="link products_p">products</p>
@@ -178,15 +182,52 @@
           </div>
 
 
+          
         <!-- Purchases Section -->
-        <div :class="{ 'dark-mode-content': getDarkMode }">
-          <router-link  to="/dashboard/Purchases">
+        <div @click="toggleSubMenu('Purchases')" :class="[{'different-color': isPurchasesOpen, 'dark-mode-content': getDarkMode}, 'purchase-sup']">
             <font-awesome-icon class="iconAwesome" icon="shopping-cart" />
-          </router-link>
-          <router-link v-if="!isCollapsed" to="/dashboard/Purchases">
-            <p class="link">Purchases</p>
-          </router-link>
-        </div>
+            <p class="link purchases_p">Purchases</p>
+            <font-awesome-icon v-if="!isCollapsed" class="arrow" :icon="isPurchasesOpen ? 'chevron-up' : 'chevron-down'" />
+
+                <!--slot -->
+                <DropDownMenuSidebar position="purchases" v-show="isCollapsed">
+                  <router-link to="/dashboard/Purchases">
+                    Purchases
+                  </router-link>
+                  <router-link to="/dashboard/AddPurchase">
+                    add purchase
+                  </router-link>
+                  <router-link to="/dashboard/Returns">
+                    returns
+                  </router-link>
+                 
+                 
+                </DropDownMenuSidebar>
+
+              </div>
+
+              <div v-show="isPurchasesOpen && !isCollapsed"  :class="[{'different-color': isPurchasesOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
+                <font-awesome-icon class="iconAwesome" icon="chevron-right" />
+                <router-link v-if="!isCollapsed" to="/dashboard/Purchases">
+                  <p class="link">list of purchases</p>
+                </router-link>
+              </div>
+              <div v-show="isPurchasesOpen && !isCollapsed"  :class="[{'different-color': isPurchasesOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
+                <font-awesome-icon class="iconAwesome" icon="chevron-right" />
+                <router-link v-if="!isCollapsed" to="/dashboard/AddPurchase">
+                  <p class="link">add purchase</p>
+                </router-link>
+              </div>
+              <div v-show="isPurchasesOpen && !isCollapsed"  :class="[{'different-color': isPurchasesOpen, 'dark-mode-content': getDarkMode}, 'supMenue']">
+                <font-awesome-icon class="iconAwesome" icon="chevron-right" />
+                <router-link v-if="!isCollapsed" to="/dashboard/Returns">
+                  <p class="link">returns</p>
+                </router-link>
+              </div>
+
+              
+
+        <!-- catalog Section -->
         <div :class="{ 'dark-mode-content': getDarkMode }">
           <router-link  to="/dashboard/catalog">
             <font-awesome-icon class="iconAwesome" icon="file-pdf"  />
@@ -195,7 +236,8 @@
             <p class="link">Catalog PDF</p>
           </router-link>
         </div>
-
+        
+        <!-- reviews Section -->
         <div :class="{ 'dark-mode-content': getDarkMode }" class="reviews">
             <router-link to="/dashboard/Reviews">
               <font-awesome-icon class="iconAwesome" icon="comments" />
@@ -250,6 +292,7 @@
         isCollapsed: false,
         isProductsOpen: false, // للتحكم في قائمة المنتجات الفرعية
         isStorageOpen: false,  // للتحكم في قائمة المخزن الفرعية
+        isPurchasesOpen: false,  // للتحكم في قائمة المشتريات الفرعية
     };
     },
     components: {
@@ -288,6 +331,8 @@
         this.isProductsOpen = !this.isProductsOpen;
       } else if (menu === 'storage') {
         this.isStorageOpen = !this.isStorageOpen;
+      } else if((menu === 'Purchases')){
+        this.isPurchasesOpen = !this.isPurchasesOpen;
       }
     }
     },
@@ -517,7 +562,7 @@
   // toggle-collapse => end
 
   // supMenue
-.products_p,.storage_p{
+.products_p,.storage_p,.purchases_p{
  
   color:rgb(121, 120, 120);
   font-size: 18px;
@@ -528,7 +573,7 @@
 //.different-color{
   //background-color:rgb(121, 120, 120) !important;
 //}
-.product-sup:hover,.storage-sup:hover{
+.product-sup:hover,.storage-sup:hover,.purchase-sup:hover{
   .dropdown{
     display: block;
   }

@@ -2,16 +2,10 @@
     <div class="dropdown">
       <button class="dropbtn" @click="toggle">:</button>
       <div v-if="visible" class="dropdown-content">
-        <a  href="#" @click.prevent="viewPurchase(purchase)">
+        <a  href="#" @click.prevent="viewReturns(ret)">
           <span>التفاصيل</span> <font-awesome-icon class="icon" :icon="['fas', 'eye']" />
         </a>
-        <a  href="#" @click.prevent="returnPurchase(purchase)">
-          <span> اضف مرتجع</span> <font-awesome-icon class="icon" :icon="['fas', 'edit']" />
-        </a>
-        <a  href="#" @click.prevent="listReturnPurchase(purchase.id)">
-          <span>ق. المرتجعات </span> <font-awesome-icon class="icon" :icon="['fas', 'undo']" />
-        </a>
-        <a  href="#" @click.prevent="delette(purchase)">
+        <a  href="#" @click.prevent="delette(ret)">
           <span>حذف</span> <font-awesome-icon class="icon" :icon="['fas', 'trash']" />
         </a>
       </div>
@@ -26,7 +20,7 @@
   import { mapActions } from 'pinia'
 
   //store
-  import { usePurchasesStore } from '@/store/purchases/purchase.js';
+  import { useReturnsStore } from '@/store/purchaseReturns/returns.js';
     
   // sweetalert 
   import sweetalert from "sweetalert";
@@ -35,7 +29,7 @@
     emits: ['closeOthers'],
     name: "DropdownMenu",
     props: {
-        purchase: Object,
+        ret: Object,
     },
     data() {
       return {
@@ -46,7 +40,7 @@
     methods: {
   
    // ============ my actions => start =============================================
-   ...mapActions(usePurchasesStore, [ 'deletePurchase']),
+   ...mapActions(useReturnsStore, [ 'deleteReturn']),
       // ============ my actions => end ==============================================
   
   
@@ -57,26 +51,19 @@
         }
       },
       
-      viewPurchase(purchase) {
-          console.log(purchase);
-          this.$router.push({ name: 'DetailsPurchase', params: { purchasesId: purchase.id } });
+      viewReturns(ret) {
+          console.log(ret);
+          this.$router.push({ name: 'DetailsReturn', params: { returnId: ret.id } });
         },
-      returnPurchase(purchase) {
-          console.log(purchase);
-          this.$router.push({ name: 'PurchaseReturn', params: { purchasesId: purchase.id } });
-     },
-     listReturnPurchase(id) {
-          console.log(id);
-          this.$router.push({ name: 'ReturnsWithId', params: { purchaseId: id } });
-     },
+    
       
-      async delette(purchase) {
+      async delette(ret) {
         try {
-          console.log(purchase.id);
-          await this.deletePurchase(purchase.id);
-          console.log("purchase deleted from database");
+          console.log(ret.id);
+          await this.deleteReturn(ret.id);
+          console.log("return deleted from database");
           sweetalert({
-            text: "purchase deleted successfully",
+            text: "return deleted successfully",
             icon: "success",
           });
         } catch (error) {

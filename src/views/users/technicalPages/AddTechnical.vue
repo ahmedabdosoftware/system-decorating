@@ -133,7 +133,19 @@ export default {
 // global style :-
 //  scss folder => path ( formStyle - form )
 
+.add {
+  color: rgb(13, 12, 12);
+  background-color: white;
+}
 
+.add_title {
+  width: 150px;
+  margin: 25px 0px ;
+  
+  }
+  .note{
+    margin-top: 10px;
+  }
 </style>
  
   

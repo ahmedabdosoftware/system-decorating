@@ -1,39 +1,43 @@
 <template>
     <div class="addOrder">
         <div class="title">
-            <p :class="{ 'dark-mode-title': getDarkMode }">create Purchases</p>
+            <p :class="{ 'dark-mode-title': getDarkMode }">Return Purchases</p>
         </div>
         <div :class="{ 'dark-moode': getDarkMode }" class="allContentt">
         <div class="formbold-main-wrapper">
             <div class="formbold-form-wrapper">
               <FormImage></FormImage>
               <ValidationObserver ref="observer" v-slot="{ invalid }">
-              <form @submit.prevent="creatNewPurchase">
+              <form @submit.prevent="createNewReturn">
                
               <div class="formbold-input-flex">
 
                     <div>     
                       <ValidationProvider name="حالة الشراء" rules="required" v-slot="{ errors }">
                         <label for="status" class="formbold-form-label">حالة الشراء  </label>
-                        <select
+
+                        <input
+                          readonly
+                          type="text"
                           id="status"
-                          placeholder="حالة الشراء"
-                          class="formbold-form-input"
-                          v-model="status">
-                          <option value="0">مدفوع</option>
-                          <option value="1">اجل</option>
-                        </select>
+                          placeholder="الحالة "
+                          class="formbold-form-input readOnlyInput"
+                          v-model="getStatusText"
+                      />
                         <span class="error">{{ errors[0] }}</span>
                       </ValidationProvider>
                     </div>   
 
                     <div>
-                        <label for="branch" class="formbold-form-label">   الفروع  </label>
-                        <ValidationProvider name="الفروع"   v-slot="{ errors }">
-                          <input list="List"  class="formbold-form-input"  placeholder=" ابحث فى الفروع" v-model="selectedBranch" @input="getProductsFromBranch">
-                          <datalist id="List">
-                            <option v-for="branch in branches" :key="branch.id" :value="branch.nameBranch" ></option>
-                          </datalist>
+                        <label for="branch" class="formbold-form-label">   الفرع  </label>
+                        <ValidationProvider name="الفرع"   v-slot="{ errors }">
+                          <input 
+                             readonly
+                             class="formbold-form-input readOnlyInput" 
+                             placeholder="الفرع" 
+                             v-model="selectedBranch"
+                             />
+                         
                           <span class="error">{{ errors[0] }}</span>
                         </ValidationProvider>
                     </div>       
@@ -49,7 +53,7 @@
                           id="shipping"
                           placeholder="الشحن "
                           class="formbold-form-input"
-                          v-model="shipping"
+                          v-model="shippingReturn"
                       />
                     </div>
                     <div>
@@ -72,26 +76,33 @@
                     
                   <div>
                       <ValidationProvider name="الكمية"  :rules="`${addedPurchase.length == 0 ? 'required|numeric|min_value:1' : ''}`"  v-slot="{ errors }">
-                        <label for="quantity" class="formbold-form-label">  الكمية المطلوبة</label>
+                        <label for="quantityReturn" class="formbold-form-label">  الكمية المرتجعه</label>
 
                         <input
                             type="number"
-                            id="quantity"
+                            id="quantityReturn"
                             placeholder="الكمية"
                             class="formbold-form-input"
-                            v-model="quantity"
+                            v-model="quantityReturn"
                         
                         />
+                        <p  class="info-message"> <span class="bold"> {{ quantity ? quantity:0}}</span>  : الكميه  الاصليه  </p>
+
                         <span class="error">{{ errors[0] }}</span>
                       </ValidationProvider>
                   </div>
                   <div>
-                      <label for="product" class="formbold-form-label">  اختر المنتج  </label>
+                      <label for="product" class="formbold-form-label">   المنتج  </label>
                       <ValidationProvider name="المنتج"  :rules="`${addedPurchase.length == 0 ? 'required' : ''}`"  v-slot="{ errors }">
-                        <input list="propList"  class="formbold-form-input"  placeholder=" ابحث فى المنتجات" v-model="selectedProduct" @input="updateProductId">
-                        <datalist id="propList">
-                          <option v-for="product in ProductsInBranch" :key="product.id" :value="product.name" ></option>
-                        </datalist>
+                        <input
+
+                         readonly
+                         class="formbold-form-input readOnlyInput"  
+                         placeholder=" اختر للعرض "
+                          v-model="selectedProduct" 
+                          
+                          />
+                       
                         <span class="error">{{ errors[0] }}</span>
                       </ValidationProvider>
                   </div>
@@ -103,10 +114,11 @@
                           <label for="price_buy" class="formbold-form-label">   سعر الشراء  </label>
   
                           <input
+                              readonly
                               type="number"
                               id="price_buy"
                               placeholder="سعر الشراء"
-                              class="formbold-form-input"
+                              class="formbold-form-input readOnlyInput"
                               v-model="price_buy"
                           
                           />
@@ -119,10 +131,11 @@
                           <label for="price_sell" class="formbold-form-label">  سعر البيع </label>
   
                           <input
+                             readonly
                               type="number"
                               id="price_sell"
                               placeholder="سعر البيع"
-                              class="formbold-form-input"
+                              class="formbold-form-input readOnlyInput"
                               v-model="price_sell"
                           
                           />
@@ -133,60 +146,21 @@
                 </div>
 
                 <div class="formbold-mb-3 cont_add_del_upda">
-                  <button @click.prevent="addProduct" :disabled="!selectedProduct || !quantity" class="addProduct-btn">اضافة لسلة المشتريات</button>
                   <button @click.prevent="updateSingleProduct" :disabled="!selectedProduct || !quantity"  class="updateProduct-btn" > تعديل المنتج </button>
-                  <button @click.prevent="deleteProduct" class="deleteProduct-btn"> حذف </button>
                   <button @click.prevent="cancelChange" class="cancelChangeProduct-btn"> الغاء </button>
 
                 </div>
-
-                <div class="formbold-input-flex">
-
-                  <div>
-                      <label for="discount_value" class="formbold-form-label">  الخصم </label>
-                      <input
-                          type="number"
-                          id="discount_value"
-                          placeholder="الخصم "
-                          class="formbold-form-input"
-                          v-model="discount_value"
-                      />
-                  </div> 
-                  <div>     
-                      <ValidationProvider name="نوع الخصم"  v-slot="{ errors }">
-                        <label for="discount_type" class="formbold-form-label"> نوع الخصم  </label>
-                        <select
-                          id="discount_type"
-                          placeholder=" نوع الخصم"
-                          class="formbold-form-input"
-                          v-model="discount_type">
-                          <option value="percentage">نسبة</option>
-                          <option value="fixed">ثابت</option>
-                        </select>
-                        <span class="error">{{ errors[0] }}</span>
-                      </ValidationProvider>
-                    </div>   
-                </div>
+              
 
                 <div class="formbold-mb-3">
-                  <label for="address" class="formbold-form-label">  عنوان/ اسم المورد </label>
-                  <input
-                  type="text"
-                  id="address"
-                  placeholder="العنوان"
-                  class="formbold-form-input formbold-mb-3"
-                  v-model="adress"
-                  />
-                </div>
-
-                <div class="formbold-mb-3">
-                  <ValidationProvider name="تاريخ  الشراء" rules="date_format:YYYY-MM-DD" v-slot="{ errors }">
-                    <label for="dob" class="formbold-form-label"> تاريخ الشراء  </label>
-                    <input type="date" name="dob" id="dob" class="formbold-form-input"  v-model="date" />
+                  <ValidationProvider name="تاريخ  المرتجع" rules="date_format:YYYY-MM-DD" v-slot="{ errors }">
+                    <label for="dob" class="formbold-form-label"> تاريخ المرتجع  </label>
+                    <input type="date"  name="dob" id="dob" class="formbold-form-input"  v-model="dateReturn" />
                     <span class="error">{{ errors[0] }}</span>
                   </ValidationProvider>
                 </div>
 
+          
                 <div class="formbold-mb-3">
                     <label for="message" class="formbold-form-label">
                     ملاحظات
@@ -260,12 +234,13 @@
   import { useCategoriesStore } from '@/store/categories/categories.js';
   import { useBranchesStore } from '@/store/branches/branches.js';
   import { usePurchasesStore } from '@/store/purchases/purchase.js';
+  import { useReturnsStore } from '@/store/purchaseReturns/returns';  
 
   // sweetalert 
   import sweetalert from "sweetalert";
 
   export default {
-    name: "AddNewPurchase",
+    name: "AddNewReturn",
     components: {
       FormImage,
       CircleLoader,
@@ -281,20 +256,19 @@
           quantity: '',
           price_sell: 0,
           price_buy: 0,
-          //itemName:'',
           productInfo:'',
           
           // rest of order data    
-          discount_type: 'percentage',
-          discount_value: 0,
           status:'0', // حالة الشراء مدفوع 
-          date: '',
+          
+          // return puraches data
+          dateReturn: '',
+          quantityReturn: '',
+          shippingReturn: '',
           notes: '',
-          shipping:'',
-          adress: '',
-
           
-          
+          // puraches
+          Id:'',
 
           // selectProductForUpdate
           selectProductForUpdateProp:'',
@@ -330,8 +304,21 @@
     }),
       ...mapState(useCategoriesStore, ['categories']),
       ...mapState(useBranchesStore, ['branches']),
+      ...mapState(usePurchasesStore, ['purchases']),
+      ...mapState(useReturnsStore, ['returns']),  
 
-      
+
+      getStatusText() {
+        switch (this.status) {
+        case '0':
+            return 'مدفوع';
+        case '1':
+            return 'اجل';
+        default:
+            return 'غير معروف';
+        }
+        },
+     
   
     },
     async created() {
@@ -339,6 +326,10 @@
       this.fetchProducts()
       this.fetchBranches()
   
+
+      await this.fetchPurchases()
+      this.Id = this.$route.params.purchasesId;
+      this.fetchPurchaseDetails();
     },
     methods: {
       // ============ my actions => start =============================================
@@ -346,30 +337,28 @@
       ...mapActions(useProductsStore, ['fetchProducts','updateProduct']),
       ...mapActions(useCategoriesStore, ['fetchCategories']),
       ...mapActions(useBranchesStore, ['fetchBranches','updateBranch','fetchBranchById']),
-      ...mapActions(usePurchasesStore, ['addPurchase']),
+      ...mapActions(usePurchasesStore, ['fetchPurchases']),
+      ...mapActions(useReturnsStore, ['addReturn']),  
 
   
       // ============ my actions => end ==============================================
 
-     addProduct() {
+  // ============ show Purchase data  => start ==============================================
+    async fetchPurchaseDetails() {
+        const purchase = this.purchases.find(purchase => purchase.id === this.Id);
+        if (purchase) {
+        this.addedPurchase = purchase.products;
+        this.status = purchase.status;
+        this.BranchId = purchase.BranchId;
+        this.selectedBranch = purchase.selectedBranch;
+        console.log(this.BranchId)
+       
 
-    if (!this.isEditingProduct) {
 
-    let newProduct = {
-      id: this.productId,
-      name: this.selectedProduct,
-      price_sell: this.price_sell,
-      price_buy: this.price_buy,
-      quantity: this.quantity,
-      productInfo:this.productInfo,
-    };
+      }
+    },
+      // ============ show Purchase data  => end ==============================================
 
-    this.addedPurchase.push(newProduct);
-    console.log(this.addedPurchase)
-
-    this.clearProductForm();
-  }
-},
    
   cancelChange(){
         this.clearProductForm()
@@ -379,6 +368,7 @@
       this.selectedProduct = '';
       this.productId = '';
       this.quantity = '';
+      this.quantityReturn = '';
       this.price_buy=''
       this.price_sell=''
       this.productInfo = '';
@@ -398,6 +388,9 @@
         this.price_buy = selectedUpdatePro.price_buy;
         this.price_sell = selectedUpdatePro.price_sell;
         this.quantity = selectedUpdatePro.quantity;
+        if(selectedUpdatePro.quantityReturn){
+            this.quantityReturn = selectedUpdatePro.quantityReturn;
+        }
 
         this.isEditingProduct = true;
         this.toggleButtons(true); 
@@ -409,182 +402,78 @@
 
       if (index !== -1) {
         this.addedPurchase[index].name = this.selectedProduct;
-        this.addedPurchase[index].price_buy = this.price_buy;
-        this.addedPurchase[index].price_sell = this.price_sell;
-        this.addedPurchase[index].quantity = this.quantity;
+        this.addedPurchase[index].quantityReturn = this.quantityReturn;
 
         console.log(this.addedPurchase)
 
         this.clearProductForm();
       }
     },
-    deleteProduct() {
-      const index = this.addedPurchase.findIndex(product => product.id === this.productId);
-      if (index !== -1) {
-        this.addedPurchase.splice(index, 1);
-        this.clearProductForm();
-      }
-    },
-    updateProductId() {
-
-
-      this.isEditingProduct = false; 
-      this.toggleButtons(false);
-
-      const selectedProductObj = this.myAllProducts.find(product => product.name === this.selectedProduct);
-      this.productId = selectedProductObj ? selectedProductObj.id : '';
-      this.productInfo = selectedProductObj ? selectedProductObj : '';
-      this.price_sell = selectedProductObj ? selectedProductObj.priceMaterial : '';
-      this.price_buy = selectedProductObj ? selectedProductObj.buyPrice : '';
-      console.log(this.productId)
-      console.log('our product',selectedProductObj)
-
-    },
-    getProductsFromBranch() {
-      const getBranch = this.branches.find(branch => branch.nameBranch === this.selectedBranch);
-
-      this.BranchId = getBranch.id
-
-      if(getBranch){
-        this.ProductsInBranch = getBranch.products
-      }
-      console.log("our products",getBranch,getBranch.products)
-
-        
-    },
+    
 
 
     toggleButtons(isEditing) {
-      const addButton = document.querySelector('.addProduct-btn');
-      const updateButton = document.querySelector('.updateProduct-btn');
-      const deleteButton = document.querySelector('.deleteProduct-btn');
       const cancelButton = document.querySelector('.cancelChangeProduct-btn');
 
 
       if (isEditing) {
-        addButton.classList.add('addProduct-btn_hidde');
-        updateButton.classList.add('updateProduct-btn_show');
-        deleteButton.classList.add('deleteProduct-btn_show');
         cancelButton.classList.add('cancelChangeProduct-btn_show');
 
       } else {
-        addButton.classList.remove('addProduct-btn_hidde');
-        updateButton.classList.remove('updateProduct-btn_show');
-        deleteButton.classList.remove('deleteProduct-btn_show');
         cancelButton.classList.remove('cancelChangeProduct-btn_show');
 
       }
     },
 
-    // ==================== عملية  تعديل الاسعار طبقا لعمليه الشراء  ====================
-        async changeProductsInSystem() {
-          for (const product of this.addedPurchase) {
-            const existingProduct = this.myAllProducts.find(p => p.id === product.id);
-            
-            if (existingProduct) {
-              // تحديث السعر في النظام
-              const updatedProduct = {
-                id:existingProduct.id,
-                priceMaterial:Number(product.price_sell) , 
-                buyPrice: Number(product.price_buy), 
-                
-              };
-              
-              // تحديث المنتج في قاعدة البيانات
-              await this.updateProduct(updatedProduct);
-            }
-          }
-    },
+    
 
-    // ==================== عملية ارسال المشتريات / تسميع للمخزن ====================
-    async addProductsToBranches() {
-      
-      const branchId = this.BranchId; 
-
-      try {
-
-          const branchData = await this.fetchBranchById(branchId);
-
-          for (const product of this.addedPurchase) {
-            
-            const existingProduct = branchData.products.find(item => item.id === product.id);
-
-              if (existingProduct) {
-                const newQuantity = Number(existingProduct.quantity) + Number(product.quantity)
-                  existingProduct.quantity = newQuantity; // تحديث الكمية
-
-              } else {
-                    // "إذا لم يكن موجودًا، أضف المنتج الجديد "حاليا لا
-                  //branchData.products.push({
-                    // id: product.id,
-                    // name: product.name,
-                    // quantity: product.quantity,
-                    // productInfo: product // إضافة معلومات المنتج حسب الحاجة
-                // });
-              }
-          }
-
-          // تحديث الفرع في قاعدة البيانات
-          await this.updateBranch({ products: branchData.products,id:branchData.id })
-          console.log('Products updated successfully!');
-      } catch (error) {
-          console.error('Error fetching branch data:', error);
-      }
-},
-
-    // ============ creat New Purchase => start =====================================
-
-    async creatNewPurchase() {
+    // ============ creat New Return => start =====================================
+    async createNewReturn() {
       this.isLoading = true;
-      
+
       try {
         if (this.addedPurchase.length === 0) {
-        sweetalert("لا يمكن إنشاء الطلب بدون منتجات.", "يرجى إضافة منتجات قبل إنشاء الطلب.", "error");
+          sweetalert("لا يمكن إنشاء المرتجع بدون منتجات.", "يرجى إضافة منتجات قبل إنشاء المرتجع.", "error");
+          this.isLoading = false;
+          return;
+        }
+        console.log("BranchId",this.BranchId)
+        // تجهيز بيانات المرتجع
+        const newReturn = {
+          products: this.addedPurchase,
+          date: this.dateReturn,
+          notes: this.notes,
+          shipping: this.shippingReturn,
+          selectedBranch: this.selectedBranch,
+          BranchId: this.BranchId,
+          purchaseId: this.Id,
+        };
+       
+          
+
+        console.log('قبل الإرسال',newReturn);
+
+        // إنشاء المرتجع في قاعدة البيانات
+        const returnId = await this.addReturn(newReturn.purchaseId, newReturn);
+
+        console.log('بعد الإرسال', returnId);
         this.isLoading = false;
-        return;
+
+        sweetalert("تم إنشاء المرتجع بنجاح!", "سيتم إعادة توجيهك إلى صفحة التفاصيل.", "success");
+        this.$router.push({ name: 'DetailsReturn', params: { returnId } });
+
+
+      } catch (error) {
+
+        console.error('Error creating return:', error);
+        this.isLoading = false;
+  
+        const errorMessage = error.message || 'حدث خطأ غير متوقع. حاول مرة أخرى.';
+        sweetalert("خطأ في عملية المرتجع", errorMessage, "error");
       }
-
-
-     
-    // ==================== عملية  تعديل الاسعار طبقا لعمليه الشراء  ====================
-    await this.changeProductsInSystem()
-
-    // ==================== عملية ارسال المشتريات / تسميع للمخزن ====================
-    await this.addProductsToBranches()
-
-      const newPurchase = {
-        products: this.addedPurchase,
-        adress: this.adress,
-        date: this.date,
-        status: this.status,
-        notes: this.notes,
-        shipping: this.shipping,
-        discount_type:this.discount_type,
-        discount_value:this.discount_value,
-        selectedBranch:this.selectedBranch,
-        BranchId:this.BranchId,
-      
-      
-      };
-      console.log('before send');
-
-      const PurchaseId = await this.addPurchase(newPurchase);
-
-      console.log('after send',PurchaseId);
-      this.isLoading = false;
-
-    
-        sweetalert("تم إنشاء الطلب بنجاح!", "سيتم إعادة توجيهك إلى صفحة التفاصيل.", "success");
-        this.$router.push({ name: 'DetailsPurchase', params: { purchasesId: PurchaseId } });
-      
-
-    } catch (error) {
-      console.error('Error creating order:', error);
-      this.isLoading = false;
-      sweetalert("خطأ في عملية الشراء ", "يرجى المحاولة مرة أخرى.", "error");
     }
-  },
-    // ============ creat New Purchase => end =======================================
+  
+    // ============ creat New Return => end =======================================
     
   }
   };
@@ -612,7 +501,9 @@
     }
   }
   
-
+.updateProduct-btn{
+    display: block;
+}
 
 
 .allContentt {

@@ -56,7 +56,7 @@
                 <div class="formbold-input-flex">
                     <div>
                       <label for="currentAmount" class="formbold-form-label">المبلغ</label>
-                      <ValidationProvider name="المبلغ"  :rules="`${payments.length == 0 ? 'required|numeric|min_value:1' : ''}`"  v-slot="{ errors }">
+                      <ValidationProvider name="المبلغ"   v-slot="{ errors }">
                         <input type="number" class="formbold-form-input" placeholder="ادخل القيمة" id="currentAmount" v-model="currentAmount">
                         <span class="error">{{ errors[0] }}</span>
                       </ValidationProvider>
@@ -64,7 +64,7 @@
 
                     <div>
                       <label for="currentTransactionDate" class="formbold-form-label">تاريخ استلام الدفعة</label>
-                      <ValidationProvider name="تاريخ استلام الدفعة" :rules="`${payments.length == 0  ? 'required|date_format:YYYY-MM-DD' : ''}`" v-slot="{ errors }">
+                      <ValidationProvider name="تاريخ استلام الدفعة"  v-slot="{ errors }">
                         <input type="date" class="formbold-form-input" id="currentTransactionDate" v-model="currentTransactionDate">
                         <span class="error">{{ errors[0] }}</span>
                       </ValidationProvider>
@@ -349,7 +349,7 @@ export default {
       notes: this.notes,
       payments: this.payments,
       userId: this.userInfo.id, // bind with user
-      transactionType: this.userInfo.role === 'Technical' ? 'فنى' : 'عميل',
+      transactionType: this.userInfo.role === 'technical' ? 'فنى' : 'عميل',
     };
     
     console.log('New transaction before saving:', newTransaction);
@@ -364,7 +364,7 @@ export default {
         if (this.orderId) {
         const updatePayload = {
         id: this.orderId,
-        ...(this.userInfo.role === 'Technical'
+        ...(this.userInfo.role === 'technical'
           ? { financialTechnicalTransactionId: transactionId }
           : { financialClientTransactionId: transactionId }),
       };

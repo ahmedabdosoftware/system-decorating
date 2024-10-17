@@ -3,14 +3,13 @@
       <div class="fatoora">
         <div  class="fatoora__header">
           <div>
-          
+          <img class="invoiceLogo" :src="require('@/assets/images/invoice/logo.jpg')">
           </div>
           <div>
             <button>بيان اسعار</button>
             <span>  {{ orderInfo.numberOfOrder }}  :رقم</span>
           </div>
           <div>
-            <p class="logoFatora"> <span>محمد</span> فيوتك</p>
             <p class="categories">  بانوهات كرانيش اسقف معلقة بديل خشب بديل رخام </p>
        
           </div>
@@ -174,7 +173,16 @@ export default {
   // حساب إجمالي الكميات فقط
   calculateTotalQuantity() {
         const totalQuantity = this.orderInfo.products.reduce((total, product) => {
-          return total + Number(product.quantity);
+
+          if (product.productInfo.priceWithLabor){
+
+            return total + Number(product.quantity);
+          }else {
+            
+            return total ;
+          }
+
+
         }, 0);
         
         return totalQuantity;
@@ -369,6 +377,17 @@ $buttom_font: 19px;
      width: 30%;
      height: 100%;
     // background-color: antiquewhite;
+    }
+    >div:first-child{
+      
+      .invoiceLogo{
+        width: 90px;
+        height: 90px;
+        margin-top: 20px;
+        border-radius: 45px;
+        
+      }
+
     }
     >div:nth-child(3){
     @extend %use_flex;

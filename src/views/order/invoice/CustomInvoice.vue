@@ -69,7 +69,7 @@
                 <div class="formbold-mb-3 cont_add_del_upda">
                   <button 
                     @click.prevent="editProduct" 
-                    :disabled="!selectedProduct || (editOfInstallation <= 0 && amountOfIncrease <= 0)" 
+                    :disabled="!selectedProduct || (editOfInstallation <= 0 && amountOfIncrease == 0)" 
                     class="addProduct-btn"
                   >
                     تعديل السعر
@@ -149,7 +149,7 @@
 <script>
   
 import { extend } from 'vee-validate';
-import { required , numeric , min_value  } from 'vee-validate/dist/rules';
+import { required , double , min_value  } from 'vee-validate/dist/rules';
 
 // Register rules with custom messages
 
@@ -159,8 +159,8 @@ message: '{_field_} مطلوب'
 
 });
 
-extend('numeric', {
-...numeric,
+extend('double', {
+...double,
 message: '{_field_} يجب أن يكون رقمًا'
 });
 
@@ -306,8 +306,10 @@ export default {
 
       if (index !== -1) {
 
-        if(Number(this.amountOfIncrease) >0 ){
+        if(Number(this.amountOfIncrease) !== 0 ){
+          console.log("inside")
           var spichialPrice = this.productInfo.priceMaterial + parseFloat(this.amountOfIncrease);
+          this.addedOrders[index].amountOfIncrease = this.amountOfIncrease;
           this.addedOrders[index].priceWithIncrease = spichialPrice;
         }
         if( Number(this.editOfInstallation) >0 ){

@@ -23,7 +23,7 @@
   
       <div :class="{ 'dark-mode-box': getDarkMode }" class="details_allContent">
         <DetailsSkeleton v-if="isLoading" />
-        <ShowDetails v-else-if="purchaseInfo" :purchaseInfo="purchaseInfo"  ></ShowDetails>
+        <ShowDetails v-else-if="returnsInfo" :returnsInfo="returnsInfo"  ></ShowDetails>
   
       </div>
      
@@ -32,18 +32,18 @@
     <script>
   
     import { mapState, mapActions } from 'pinia'
-    import { usePurchasesStore } from '@/store/purchases/purchase.js';
+    import { useReturnsStore } from '@/store/purchaseReturns/returns.js';
   
     
     // ShowDetails
-    import ShowDetails from "@/components/purchases/ShowDetails.vue";
+    import ShowDetails from "@/components/returns/ShowDetails.vue";
     
     // Skeleton Details 
     import DetailsSkeleton from '@/shared/components/loading/skeletonLoader/DetailsSkeleton.vue';
    
     
     export default {
-      name: "DetailsPurchase",
+      name: "DetailsReturn",
       components: {
         DetailsSkeleton,
         ShowDetails,
@@ -52,29 +52,29 @@
         getDarkMode() {
           return this.$store.state.darkMode;
         },
-        ...mapState(usePurchasesStore, ['purchases']),
+        ...mapState(useReturnsStore, ['returns']),
       },
       async created() {
         try {
-          await this.fetchPurchases();
+          await this.fetchAllReturns();
           this.isLoading = false;
-          console.log('purchases fetched:', this.purchases);
-          this.purchaseId = this.$route.params.purchasesId;
-          console.log('purchase ID:', this.purchaseId);
+          console.log('returns fetched:', this.returns);
+          this.returnId = this.$route.params.returnId;
+          console.log('returnId ID:', this.returnId);
     
-          this.purchaseInfo = this.purchases.find(purchase => purchase.id === this.purchaseId);
-          console.log('purchase Info:', this.purchaseInfo);
+          this.returnsInfo = this.returns.find(ret => ret.id === this.returnId);
+          console.log('returns Info:', this.returnsInfo);
           
           
           
         } catch (error) {
           this.isLoading = false;
-          console.error('Error fetching purchase:', error);
+          console.error('Error fetching returns:', error);
         }
       },
       
       methods: {
-        ...mapActions(usePurchasesStore, ['fetchPurchases']),
+        ...mapActions(useReturnsStore, ['fetchAllReturns']),
         print() {
           window.print();
         },
@@ -82,8 +82,8 @@
       },
       data() {
         return {
-            purchaseId: '',
-            purchaseInfo: null,
+            returnId: '',
+            returnsInfo: null,
             isLoading:true,
         };
       },

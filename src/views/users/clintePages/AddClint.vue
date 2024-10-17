@@ -132,6 +132,18 @@ import { required,email,numeric,digits  } from 'vee-validate/dist/rules';
   
 // global style :-
 //  scss folder => path ( formStyle - form )
+.add {
+  color: rgb(13, 12, 12);
+  background-color: white;
+}
+
+.add_title {
+  margin: 25px 0px ;
+  
+  }
+  .note{
+    margin-top: 10px;
+  }
 
     </style>
   

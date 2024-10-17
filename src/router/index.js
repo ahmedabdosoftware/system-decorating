@@ -30,6 +30,9 @@ import StockAlerts from "../views/storage/Stockalerts/StockAlerts.vue";
 import Purchases from "../views/purchase/Purchases.vue";
 import AddPurchase from "../views/purchase/AddPurchase.vue";
 import DetailsPurchase from "../views/purchase/DetailsPurchase.vue";
+import Returns from "../views/returns/Returns.vue";
+import AddPurchaseReturn from "../views/returns/AddPurchaseReturn.vue";
+import DetailsReturn from "../views/returns/DetailsReturn.vue";
 
 
 import Technical from "../views/users/technicalPages/Technical.vue";
@@ -215,6 +218,30 @@ const routes = [
         path: "DetailsPurchases/:purchasesId",
         name: "DetailsPurchase",
         component: DetailsPurchase,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+      {
+        path: "Returns",
+        name: "Returns",
+        component: Returns,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+      {
+        path: "Returns/:purchaseId",
+        name: "ReturnsWithId",
+        component: Returns,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+      {
+        path: "PurchaseReturn/:purchasesId",
+        name: "PurchaseReturn",
+        component: AddPurchaseReturn,
+        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      },
+      {
+        path: "DetailsReturn/:returnId",
+        name: "DetailsReturn",
+        component: DetailsReturn,
         meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
       },
       {

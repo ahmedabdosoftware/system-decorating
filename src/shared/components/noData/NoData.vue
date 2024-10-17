@@ -30,6 +30,8 @@ export default {
           return 'warehouse'
         case 'purchases':
           return 'shopping-cart' 
+        case 'returns':
+          return 'undo' 
         case 'unpaidPurchases':
           return 'shopping-cart' 
         case 'transfers': 
@@ -64,6 +66,8 @@ export default {
           return 'لا توجد مشتريات غير مدفوعه (اجل)'
         case 'transfers': 
         return 'لا توجد تحويلات';
+        case 'returns': 
+        return 'لا توجد مرتجعات';
         case 'stock-alerts': 
           return 'لا توجد تنبيهات مخزون'
         default:
