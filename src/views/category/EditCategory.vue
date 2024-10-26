@@ -39,8 +39,27 @@
           <label> imge</label>
           <input id="fileImage" class="filee" type="file" @change="handleFileUpload">
         </div>
-
+        
         <div class="allContent__cont-form__Availability">
+          <label id="IsService" :class="{ 'dark-mode-title': getDarkMode }">is service?</label>
+          <div>
+            <ValidationProvider name="التصنيف" rules="required" v-slot="{ errors }">
+              <input type="radio" id="service" value=1 v-model="service">
+              <label for="service">yes</label>
+              <span class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
+          </div>
+          <div>
+            <ValidationProvider name="التصنيف" rules="required" v-slot="{ errors }">
+              <input type="radio" id="noService" value=0 v-model="service">
+              <label for="noService">No</label>
+              <span class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
+          </div>
+         
+        </div>
+
+        <div v-if="service==1" class="allContent__cont-form__Availability">
           <label id="Availability" :class="{ 'dark-mode-title': getDarkMode }">Availability</label>
           <div>
             <ValidationProvider name="تركيب" rules="required" v-slot="{ errors }">
@@ -113,6 +132,7 @@ export default {
       imageUrl: "",
       id:null,
       file: null,
+      service:null,
       availability: null, // Add availability here
       // loading 
       isLoading: false
@@ -159,6 +179,7 @@ export default {
           desc: this.description,
           id :this.id,
           availability: this.availability,
+          service: this.service,
 
         };
         if (this.file) {
@@ -193,10 +214,10 @@ export default {
       this.categoryName = category.name;
       this.description = category.desc;
       this.imageUrl = category.imgUrl;
-      console.log(this.imageUrl)
-      if( category.availability){
+      this.service = category.service| null;
       this.availability = category.availability;
-    }
+      console.log(this.service)
+      console.log(category.availability)
     
     }
 

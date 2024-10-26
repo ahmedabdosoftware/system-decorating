@@ -9,7 +9,7 @@
           <h3 :class="{ 'dark-mode-title': getDarkMode }">Add Clint</h3>
         </div>
       <ValidationObserver class="wraper-form" ref="observer" v-slot="{ invalid }">
-        <form @submit.prevent="createNewTechnical" class="add_allContent_cont-form">
+        <form @submit.prevent="createNewClint" class="add_allContent_cont-form">
           <div class="cont-form_field Name">
             <ValidationProvider name="الاسم الاول" rules="required" v-slot="{ errors }">
               <label :class="{ 'dark-mode-title': getDarkMode }">Full Name</label>
@@ -50,10 +50,15 @@
         </form>
       </ValidationObserver>
       </div>
+      <CircleLoader :show="isLoading" />
+
     </div>
   </template>
   
   <script>
+
+// CircleLoader
+import CircleLoader from '@/shared/components/loading/CircleLoader.vue';
 
 import { extend } from 'vee-validate';
 import { required,email,numeric,digits  } from 'vee-validate/dist/rules';
@@ -95,7 +100,13 @@ import { required,email,numeric,digits  } from 'vee-validate/dist/rules';
         number:null,
         file: null, // for add picture
         profileImageURL:'',
+
+        // loading 
+        isLoading: false,
       };
+    },
+    components: {
+      CircleLoader,
     },
     computed: {
       ...mapState(useUserStore, ['user', 'role']),
@@ -108,15 +119,21 @@ import { required,email,numeric,digits  } from 'vee-validate/dist/rules';
       handleFileUpload(event) {
         this.file = event.target.files[0];
       },
-      async createNewTechnical() {
+      async createNewClint() {
+        this.isLoading = true;
+
         try {
           const userCredential = await this.registerUser({ email: this.email, password: this.password, name: this.name, number: this.number, role: 'clint', profileImageURL:this.profileImageURL });
           const userId= userCredential.user.uid
           if (this.file) {
             await this.uploadImage({ uid: userId, file: this.file });
           }
+          
+          this.isLoading = false;
           alert('User created successfully!');
         } catch (error) {
+          
+          this.isLoading = false;
           alert('Error creating user: ' + error.message);
         }
       },

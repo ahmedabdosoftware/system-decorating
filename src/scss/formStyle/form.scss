@@ -21,6 +21,10 @@
     border: solid 1px rgb(181, 179, 179);
     // background-color: forestgreen;
   }
+  .add_allContent--edit{
+   //return it in editing// height: 940px;
+
+  }
   // title.....
   .add_allContent > div:first-child {
     width: 100%;
@@ -42,6 +46,11 @@
     display: flex;
     flex-wrap: wrap;
   }
+  .add_allContent_cont-form--edit{
+    //return it in editing// height: 780px;
+
+  }
+  
   .add_allContent_cont-form > div {
     display: flex;
     flex-direction: column;
@@ -157,7 +166,7 @@
     text-transform: capitalize;
   }
   .add_title {
-    width: 130px;
+    width: 180px;
     height: 50px;
     margin-top: -80px;
    // background-color: red;

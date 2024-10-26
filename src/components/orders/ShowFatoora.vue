@@ -20,16 +20,23 @@
                   نوع الفاتورة :
                    {{ orderInfo.invoiceType }} 
               </p>
+              <p v-if="orderInfo && orderInfo.adress">
+                  العنوان:
+                   {{ orderInfo.adress }} 
+              </p>
             </div>
             <div>
-                <p  v-if="orderInfo">  
-                  {{ orderInfo.date }}  
+                <p  v-if="orderInfo && orderInfo.date">  
+                  {{  orderInfo.date }}  
                   : تحرير فى 
+                </p>
+                <p  v-if="orderInfo && !orderInfo.date">  
+                  تحرير فى : غير محدد
                 </p>
               
                 <p v-if="orderInfo">
                   اسم العميل :    
-                  {{ orderInfo.customerName }}
+                  {{ orderInfo.customerName || "غير محدد" }}
                 </p>
             </div>
 

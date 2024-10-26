@@ -132,12 +132,10 @@
               </ValidationProvider>
             </div>
           </div>
+
           <div class="puplish-allCont">
             <div class="price-options">
-              <label>
-                <input type="checkbox" v-model="showLaborPrice" />
-                Show Labor Price on Site
-              </label>
+             
             </div>
             <div class="display-options">
               <label>
@@ -146,6 +144,22 @@
               </label>
             </div>
           </div>
+
+          <div v-if="displayOnSite" class="puplish-allCont" style="margin-left: 10px;" >
+            <div class="price-options">
+              <label>
+                <input type="checkbox" v-model="showLaborPrice" />
+                Show Labor Price 
+              </label>
+            </div>
+            <div class="display-options">
+              <label>
+                <input type="checkbox" v-model="showMatrialPrice" />
+                Show Material price 
+              </label>
+            </div>
+          </div>
+         
           <div class="submit_cont">
             <button class="submit" :class="{ 'disabled-btn': invalid }" :disabled="invalid" @click="creatNewProduct">submit item</button>
           </div>
@@ -211,7 +225,8 @@ export default {
       buyPrice:"",
       
       showLaborPrice: false,
-      displayOnSite: true,
+      showMatrialPrice: true,
+      displayOnSite: false,
       selectedCategoryId:'',
       selectedUnitId:'',
       unitName:'',
@@ -310,6 +325,7 @@ export default {
             unitName: this.unitName,
             imageUrl: downloadURL,
             showLaborPrice: this.showLaborPrice,
+            showMatrialPrice: this.showMatrialPrice,
             displayOnSite: this.displayOnSite,
           };
           await this.addProduct(obj);
@@ -364,7 +380,7 @@ export default {
   width: 470px;
   display: flex;
   flex-wrap: wrap;
-  height: 740px;
+  height: 880px;
   background-color: white;
   border-radius: 10px;
   border: solid 1px rgb(181, 179, 179);
@@ -383,6 +399,7 @@ export default {
     margin-top: 20px;
   }
   > div:nth-child(7),
+  div:nth-child(8),
   
  .submit_cont {
     display: flex;
@@ -466,6 +483,7 @@ export default {
 .puplish-allCont{
   width: 100% !important;
   padding-left: 10px;
+  height: 40px;
   >div{
   margin-left: 10px;
 

@@ -75,9 +75,11 @@ export const useUserStore = defineStore('user', {
     },
     async login(email, password) {
 
-
+      console.log("before signInWithEmailAndPassword", email,password )
+      
       const userCredential = await auth.signInWithEmailAndPassword(email, password);
       this.user = userCredential.user;
+      console.log("after signInWithEmailAndPassword", email,password )
 
       
 // this  *2* insted way for roles
@@ -152,6 +154,120 @@ export const useUserStore = defineStore('user', {
         }
       });
     },
+
+    
+    // this 2  *2* insted way for update user by admin SDK
+          //   ...........
+          
+// that 2  *2* insted way for update user
+    async updateUser({ uid, oldEmail, oldPassword, newEmail, newPassword, name, number, profileImageURL }) {
+      try {
+
+        console.log("Run Fun")
+
+           //get email 
+           const adminUser = auth.currentUser;
+           const adminEmail = adminUser.email;
+           
+           //get pass 
+          const adminDoc = await db.collection('users').doc(adminUser.uid).get();
+          const adminPasswordEncrypted = adminDoc.data().password;
+          const adminPassword = decrypt(adminPasswordEncrypted);
+
+          console.log("get admin data", adminEmail , adminPassword)
+          
+          await auth.signOut();
+          await this.login(oldEmail, oldPassword);
+          
+          console.log("sign out and in user")
+          
+          const user = auth.currentUser;
+          
+          console.log("user data ", user)
+          
+          if (user) {
+            if (newEmail && newEmail !== oldEmail) {
+              console.log("before change email", user.updateEmail)
+              await user.updateEmail(newEmail);
+              console.log('تم تعديل البريد الإلكتروني في Firebase Authentication');
+            }
+      
+            if (newPassword && newPassword !== oldPassword) {
+              await user.updatePassword(newPassword);
+              console.log('تم تعديل كلمة المرور في Firebase Authentication');
+            }
+      
+            await db.collection('users').doc(uid).update({
+              name,
+              email: newEmail || oldEmail, 
+              number,
+              profileImageURL,
+            });
+            console.log('تم تعديل بيانات المستخدم في Firestore');
+          }
+          console.log("updated done ")
+
+          await auth.signOut();
+      
+          await auth.signInWithEmailAndPassword(adminEmail, adminPassword);
+          console.log('تم إعادة تسجيل الدخول بحساب الأدمن');
+
+      
+
+      } catch (error) {
+        console.error('حدث خطأ أثناء تعديل بيانات المستخدم:', error.code, error.message);
+      }
+    },    
+    // this 2  *2* insted way for delete user by admin SDK
+          //   ...........
+          
+// that 2  *2* insted way for delete user
+async deleteUser({ uid, oldEmail, oldPassword }) {
+  try {
+
+      const adminUser = auth.currentUser;
+      const adminEmail = adminUser.email;
+  
+      const adminDoc = await db.collection('users').doc(adminUser.uid).get();
+      const adminPasswordEncrypted = adminDoc.data().password;
+      const adminPassword = decrypt(adminPasswordEncrypted);
+  
+      console.log('قبل تسجيل الخروج من حساب الأدمن');
+      await this.logout(); 
+      console.log('تم تسجيل الخروج من الأدمن');
+
+      // محاولة تسجيل الدخول بالحساب الذي سيتم حذفه
+      let user = null;
+      try {
+          console.log('محاولة تسجيل الدخول بالحساب الذي سيتم حذفه:', oldEmail, oldPassword);
+          await this.login(oldEmail, oldPassword);
+          console.log('تم تسجيل الدخول بالحساب الذي سيتم حذفه');
+
+          user = auth.currentUser; 
+      } catch (loginError) {
+
+          console.error('فشلت محاولة تسجيل الدخول بالحساب القديم:', loginError.code, loginError.message);
+      }
+
+      // إذا تم تسجيل الدخول بنجاح والحصول على المستخدم
+      if (user) {
+
+          await user.delete();
+
+          await this.login(adminEmail, adminPassword);
+
+          await db.collection('users').doc(uid).delete();
+           alert('User updated successfully!');
+
+      } else {
+          await this.login(adminEmail, adminPassword);
+          alert('Error deleting user: ');
+      }
+      
+  } catch (error) {
+      console.error('حدث خطأ أثناء حذف المستخدم أو تسجيل الدخول مرة أخرى:', error.code, error.message);
+  }
+},
     async uploadImage({ uid, file }) {
       const storageRef =  storage.ref();
       const fileRef = storageRef.child(`users/${uid}/profile.jpg`);

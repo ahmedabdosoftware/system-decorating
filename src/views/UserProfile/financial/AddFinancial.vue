@@ -73,11 +73,34 @@
 
 
                 <div class="formbold-mb-3 cont_add_del_upda">
-                <button type="button"  class="addProduct-btn" @click="addPayment">إضافة الدفعة</button>
-                <button type="button" class="updateProduct-btn" @click="updatePayment">تحديث الدفعة</button>
-                <button class="deleteProduct-btn" type="button" @click="deletePayment">حذف الدفعة</button>
-
+                  <button type="button"  class="addProduct-btn" @click="addPayment">إضافة الدفعة</button>
+                  <button type="button" class="updateProduct-btn" @click="updatePayment">تحديث الدفعة</button>
+                  <button class="deleteProduct-btn" type="button" @click="deletePayment">حذف الدفعة</button>
                 </div>
+
+
+                <div class="formbold-input-flex">
+                  <div>
+                  
+                  </div>
+                  <div class="display-options">
+                      <label>
+                      الصنايعى بيتعامل باليوميه ؟
+                        <input type="checkbox" v-model="DailyIndustrial" />
+                      </label>
+                  </div>   
+               </div>
+                <div class="formbold-input-flex">
+                  <div>
+                  
+                  </div>
+                  <div class="display-options">
+                      <label>
+                      المساعد بيتعامل باليوميه ؟
+                        <input type="checkbox" v-model="DailyAssistantIndustrial" />
+                      </label>
+                  </div>   
+               </div>
 
                 <div class="formbold-mb-3">
                   <label for="dob" class="formbold-form-label"><span>(فى حالة عدم ربطه بطلب )</span> حدد تاريخ للمعاملة</label>
@@ -207,6 +230,15 @@ export default {
       selectedPaymentId: null,
       unregisteredOrderMessage: '',
       userInfo: null,
+      
+      // Daily info
+      DailyIndustrial: false,
+      DailyAssistantIndustrial: false,
+
+
+
+
+
       // loading 
       isLoading: false
     };

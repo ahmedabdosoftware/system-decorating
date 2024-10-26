@@ -41,6 +41,24 @@
         </div>
 
         <div class="allContent__cont-form__Availability">
+          <label id="IsService" :class="{ 'dark-mode-title': getDarkMode }">is service?</label>
+          <div>
+            <ValidationProvider name="التصنيف" rules="required" v-slot="{ errors }">
+              <input type="radio" id="service" value=1 v-model="service">
+              <label for="service">yes</label>
+              <span class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
+          </div>
+          <div>
+            <ValidationProvider name="التصنيف" rules="required" v-slot="{ errors }">
+              <input type="radio" id="noService" value=0 v-model="service">
+              <label for="noService">No</label>
+              <span class="error">{{ errors[0] }}</span>
+            </ValidationProvider>
+          </div>
+         
+        </div>
+        <div v-if="service==1" class="allContent__cont-form__Availability">
           <label id="Availability" :class="{ 'dark-mode-title': getDarkMode }">Availability</label>
           <div>
             <ValidationProvider name="تركيب" rules="required" v-slot="{ errors }">
@@ -110,6 +128,7 @@ export default {
       categoryName: "",
       description: "",
       imageUrl: "",
+      service:null,
       file: null,
       availability: "تركيب وتوريد" , // Add availability here
       // loading 
@@ -149,6 +168,7 @@ export default {
           name: this.categoryName,
           desc: this.description,
           imgUrl: imageUrl,
+          service: this.service, // Add service to the object
           availability: this.availability, // Add availability to the object
 
         };
