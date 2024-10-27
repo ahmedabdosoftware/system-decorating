@@ -97,6 +97,9 @@ $buttom_font: 19px;
 .formbold-input-flex > div {
   width: 50%;
 }
+.three-input-inLine{
+  width: 80px !important;
+}
 .formbold-form-input {
   width: 100%;
   padding: 13px 22px;
@@ -192,7 +195,12 @@ color:  #6a64f1;
 .formbold-btn:hover {
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
 }
-
+.space-top-down{
+  margin: 50px 0px;
+}
+.space-down{
+  margin-bottom: 70px;
+}
 @media (max-width: 477px) {
 
  .formbold-main-wrapper {

@@ -9,51 +9,57 @@
             <FormImage></FormImage>                
             <ValidationObserver ref="observer" v-slot="{ invalid }">
               <form @submit.prevent="HandelupdateTransaction">
-              <div class="formbold-input-flex">
-                <div>
-                  <label for="order" class="formbold-form-label">ربط بطلب</label>
-                  <ValidationProvider name="ربط بطلب" rules="numeric|min_value:1" v-slot="{ errors }">
-                    <input list="orderList" class="formbold-form-input" placeholder="ابحث عن طلب" v-model="selectedOrder" @input="updateOrderId">
-                    <datalist id="orderList">
-                      <option v-for="order in getUserOrders" :key="order.id" :value="order.numberOfOrder"></option>
-                    </datalist>
+
+              <div v-if="!isTechnicalRole" class="formbold-input-flex space-top-down">
+                  <div class="display-options">
+                    <label>
+                      بالنسبه  للمصنعيه ؟
+                      <input type="radio" v-model="selection" value="industrial"  />
+                    </label>
+                  </div>   
+                  <div class="display-options">
+                      <label>
+                        بالنسبه للخامات ؟
+                        <input type="radio" v-model="selection" value="material" />
+                      </label>
+                  </div>  
+                </div>
+                <div class="formbold-input-flex">
+                 
+                 <div>
+                   <label for="addedPayments" class="formbold-form-label">المبالغ المضافة الآن</label>
+                   <select class="formbold-form-input" v-model="selectedPaymentId" id="addedPayments" @change="selectPaymentForUpdate" placeholder="اختر من الدفعات المضافة">
+                     <option v-for="payment in filteredPayments" :value="payment.id" :key="payment.id">
+                       {{ payment.amount }} 
+                     </option>
+                   </select>
+                 </div>
+                 <div v-if="(userInfo.role !== 'technical' && selection == 'material') || userInfo.role == 'technical' ">
+                   <ValidationProvider name="القيمة المستحقة" rules="numeric|min_value:1" v-slot="{ errors }">
+                   <label for="amount" class="formbold-form-label">القيمة المستحقة</label>
+                   <input type="number" class="formbold-form-input" placeholder="ادخل القيمة" v-model="amount">
+                   <span class="error">{{ errors[0] }}</span>
+                   </ValidationProvider>
+                 </div>
+                 <div v-if="userInfo.role !== 'technical' && selection == 'industrial'">
+                    <ValidationProvider name="القيمة المستحقة" rules="numeric|min_value:1" v-slot="{ errors }">
+                    <label for="manufacturingAmount" class="formbold-form-label">القيمة المستحقة</label>
+                    <input type="number" class="formbold-form-input" placeholder="ادخل القيمة" v-model="manufacturingAmount">
                     <span class="error">{{ errors[0] }}</span>
-                  </ValidationProvider>
-                </div>
-                  
-                <div>
-                  <ValidationProvider name="القيمة المستحقة" rules="numeric|min_value:1" v-slot="{ errors }">
-                  <label for="amount" class="formbold-form-label">القيمة المستحقة</label>
-                  <input type="number" class="formbold-form-input" placeholder="ادخل القيمة" v-model="amount">
-                  <span class="error">{{ errors[0] }}</span>
-                  </ValidationProvider>
-                </div>
-
-              </div>
-
-              <div class="formbold-input-flex">
-                  <div>
-                    <label for="addedPayments" class="formbold-form-label">المبالغ المضافة الآن</label>
-                    <select class="formbold-form-input" v-model="selectedPaymentId" id="addedPayments" @change="selectPaymentForUpdate" placeholder="اختر من الدفعات المضافة">
-                      <option v-for="payment in payments" :value="payment.id" :key="payment.id">
-                        {{ payment.amount }} 
-                      </option>
-                    </select>
+                    </ValidationProvider>
                   </div>
 
+               </div>
+
+               <div class="formbold-input-flex">
+                  
                   <div>
-                    <label for="status" class="formbold-form-label">حالة المعاملة</label>
-                    <ValidationProvider name="حالة المعاملة" rules="required" v-slot="{ errors }">
-                      <select class="formbold-form-input" v-model="status">
-                        <option value="مفتوح">مفتوح</option>
-                        <option value="منتهي">منتهي</option>
-                      </select>
+                    <label for="currentTransactionDate" class="formbold-form-label">تاريخ استلام الدفعة</label>
+                    <ValidationProvider name="تاريخ استلام الدفعة"  v-slot="{ errors }">
+                      <input type="date" class="formbold-form-input" id="currentTransactionDate" v-model="currentTransactionDate">
                       <span class="error">{{ errors[0] }}</span>
                     </ValidationProvider>
                   </div>
-              </div>
-
-              <div class="formbold-input-flex">
                   <div>
                     <label for="currentAmount" class="formbold-form-label">المبلغ</label>
                     <ValidationProvider name="المبلغ"   v-slot="{ errors }">
@@ -62,22 +68,97 @@
                     </ValidationProvider>
                   </div>
 
-                  <div>
-                    <label for="currentTransactionDate" class="formbold-form-label">تاريخ استلام الدفعة</label>
-                    <ValidationProvider name="تاريخ استلام الدفعة"  v-slot="{ errors }">
-                      <input type="date" class="formbold-form-input" id="currentTransactionDate" v-model="currentTransactionDate">
-                      <span class="error">{{ errors[0] }}</span>
-                    </ValidationProvider>
-                  </div>
-              </div>
+                </div>
 
 
               <div class="formbold-mb-3 cont_add_del_upda">
+
               <button type="button"  class="addProduct-btn" @click="addPayment">إضافة الدفعة</button>
               <button type="button" class="updateProduct-btn" @click="updatePayment">تحديث الدفعة</button>
               <button class="deleteProduct-btn" type="button" @click="deletePayment">حذف الدفعة</button>
 
               </div>
+
+
+              <div v-if="isTechnicalRole" class="formbold-input-flex space-top-down">
+                  <div class="display-options">
+                      <label>
+                     المساعد  باليوميه ؟
+                        <input disabled type="checkbox" v-model="DailyAssistantIndustrial" />
+                      </label>
+                  </div>  
+                  <div class="display-options">
+                      <label>
+                      صنايعى  باليوميه ؟
+                        <input disabled  type="checkbox" v-model="DailyIndustrial" />
+                      </label>
+                  </div>   
+               </div>
+
+               <div v-if="DailyIndustrial" class="formbold-input-flex space-down">
+                 
+                 <div class="three-input-inLine">
+                   <label for="numberOfDayesPaid" class="formbold-form-label">  خد منهم كام </label>
+                   <input type="number" class="formbold-form-input" placeholder="ادخل القيمة" id="numberOfDayesPaid" v-model="numberOfDayesPaid">
+                  </div>
+                  <div class="three-input-inLine">
+                    <label for="numberOfDayes" class="formbold-form-label"> لكام يوم </label>
+                      <input type="number" class="formbold-form-input" placeholder="ادخل القيمة" id="numberOfDayes" v-model="numberOfDayes">
+                   </div>
+                  <div  class="three-input-inLine">
+                    <label for="DailyIndustrialPrice" class="formbold-form-label"> يوميه الصنايعى </label>
+                    <input type="number" class="formbold-form-input" placeholder="ادخل القيمة" id="DailyIndustrialPrice" v-model="DailyIndustrialPrice">
+                  </div>
+
+                </div>
+               <div v-if="DailyAssistantIndustrial" class="formbold-input-flex space-down">
+                 
+                 <div class="three-input-inLine">
+                   <label for="numberOfDayesPaid" class="formbold-form-label">  خد منهم كام </label>
+                   <input type="number" class="formbold-form-input" placeholder="ادخل القيمة" id="numberOfDayesPaid" v-model="numberOfDayesPaidAssistant">
+                  </div>
+                  <div class="three-input-inLine">
+                    <label for="numberOfDayes" class="formbold-form-label"> لكام يوم </label>
+                      <input type="number" class="formbold-form-input" placeholder="ادخل القيمة" id="numberOfDayes" v-model="numberOfDayesAssistant">
+                   </div>
+                  <div  class="three-input-inLine">
+                    <label for="DailyIndustrialPrice" class="formbold-form-label"> يوميه المساعد </label>
+                    <input type="number" class="formbold-form-input" placeholder="ادخل القيمة" id="DailyIndustrialPrice" v-model="DailyIndustrialPriceAssistant">
+                  </div>
+
+                </div>
+                <div v-if="DailyAssistantIndustrial" class="formbold-mb-3 space-down">
+                  <label for="nameOfAssistant" class="formbold-form-label"> اسم المساعد  </label>
+                  <ValidationProvider name=" اسم المساعد" :rules="`${DailyAssistantIndustrial ? 'required' : ''}`"  v-slot="{ errors }">
+                    <input type="text" id="nameOfAssistant" placeholder="العنوان" class="formbold-form-input formbold-mb-3" v-model="nameOfAssistant">
+                    <span class="error">{{ errors[0] }}</span>
+                  </ValidationProvider>
+                </div>
+
+                <div class="formbold-input-flex">
+
+                  <div>
+                    <label for="order" class="formbold-form-label">ربط بطلب</label>
+                    <ValidationProvider name="ربط بطلب" rules="numeric|min_value:1" v-slot="{ errors }">
+                      <input list="orderList" class="formbold-form-input" placeholder="ابحث عن طلب" v-model="selectedOrder" @input="updateOrderId">
+                      <datalist id="orderList">
+                        <option v-for="order in getUserOrders" :key="order.id" :value="order.numberOfOrder"></option>
+                      </datalist>
+                      <span class="error">{{ errors[0] }}</span>
+                    </ValidationProvider>
+                  </div>
+                  <div>
+                      <label for="status" class="formbold-form-label">حالة المعاملة</label>
+                      <ValidationProvider name="حالة المعاملة" rules="required" v-slot="{ errors }">
+                        <select class="formbold-form-input" v-model="status">
+                          <option value="مفتوح">مفتوح</option>
+                          <option value="منتهي">منتهي</option>
+                        </select>
+                        <span class="error">{{ errors[0] }}</span>
+                      </ValidationProvider>
+                    </div>
+                    
+                  </div>
 
               <div class="formbold-mb-3">
                 <label for="dob" class="formbold-form-label"><span>(فى حالة عدم ربطه بطلب )</span> حدد تاريخ للمعاملة</label>
@@ -193,6 +274,7 @@ export default {
       orderId: null,
       numberOfOrder: '',
       amount: null,
+      manufacturingAmount: null,
       status: 'مفتوح',
       notes: '',
 
@@ -200,12 +282,31 @@ export default {
       payments: [],
       currentAmount: '',
       currentTransactionDate: '',
+       // help info 
+       selection:'material',
 
       // need for handeling
       isEditing: false,
       selectedPaymentId: null,
       unregisteredOrderMessage: '',
-      userInfo: null,
+      userInfo: {
+      role: null // قيمة افتراضية
+    },
+    
+      // Daily info
+      DailyIndustrial: false,
+      DailyAssistantIndustrial: false,
+
+          // assistant
+          DailyIndustrialPriceAssistant:'',
+          numberOfDayesAssistant:'',
+          numberOfDayesPaidAssistant:'',
+          nameOfAssistant:'',
+          
+          // Industrial
+          DailyIndustrialPrice:'',
+          numberOfDayes:'',
+          numberOfDayesPaid:'',
 
       // transaction Id
       transactionId:'', 
@@ -216,9 +317,11 @@ export default {
   },
   computed: {
     ...mapState(useOrdersStore, ['orders']),
+
      getDarkMode() {
       return this.$store.state.darkMode;
     },
+
     getUserOrders() {
           let filteredOrders = this.orders.filter(order => order.status !== '0');
           if (this.$route.params.profileId ) {
@@ -228,13 +331,24 @@ export default {
           } 
      return filteredOrders;
 
-    } 
+    } ,
+
+    filteredPayments() {
+    if (this.userInfo.role === 'technical') {
+      return this.payments;
+    }
+
+    return this.payments.filter(payment => payment.type === this.selection);
   },
-  created() {      
+  isTechnicalRole() {
+    return this.userInfo.role === 'technical';
+  }
+  },
+  async created() {      
       
       this.fetchOrders();
       const userId = this.$route.params.profileId;
-      this.userInfo = this.fetchSingleUser(userId);
+      this.userInfo = await this.fetchSingleUser(userId);
       
       this.transactionId = this.$route.params.transactionId
       this.loadTransaction(this.transactionId);
@@ -258,9 +372,23 @@ export default {
         this.adress = transaction.adress;
         this.date = transaction.date;
         this.amount = transaction.amount;
+        this.manufacturingAmount = transaction.manufacturingAmount || '';
         this.status = transaction.status;
         this.notes = transaction.notes;
         this.payments = transaction.payments;
+        // daily info
+        this.DailyIndustrial = transaction.DailyIndustrial || false;
+        this.DailyAssistantIndustrial = transaction.DailyAssistantIndustrial || false;
+        // assistant
+        this.DailyIndustrialPriceAssistant = transaction.DailyIndustrialPriceAssistant || '';
+        this.numberOfDayesAssistant = transaction.numberOfDayesAssistant || '';
+        this.numberOfDayesPaidAssistant = transaction.numberOfDayesPaidAssistant || '';
+        this.nameOfAssistant = transaction.nameOfAssistant || '';
+        // Industrial
+        this.DailyIndustrialPrice = transaction.DailyIndustrialPrice || '';
+        this.numberOfDayes = transaction.numberOfDayes || '';
+        this.numberOfDayesPaid = transaction.numberOfDayesPaid || '';
+
       }
       console.log(this.selectedOrder , this.numberOfOrder)
     },
@@ -285,10 +413,15 @@ export default {
       console.log("before payment",this.currentAmount , this.currentTransactionDate)
       console.log(" all payment",this.payments )
       if (this.currentAmount && this.currentTransactionDate) {
+
+        const paymentType = this.userInfo.role !== 'technical' ? this.selection : null;
+
         this.payments.push({
           id: uuidv4(),
           amount: this.currentAmount,
           transactionDate: this.currentTransactionDate,
+          type: paymentType
+
         });
         this.clearPaymentForm();
         console.log("added payment")
@@ -366,8 +499,21 @@ export default {
         adress: this.adress,
         date: this.date,
         amount: this.amount,
+        manufacturingAmount: this.manufacturingAmount,
         notes: this.notes,
         payments: this.payments,
+        // Daily info
+        DailyIndustrial:  this.DailyIndustrial,
+        DailyAssistantIndustrial:  this.DailyAssistantIndustrial,
+          // assistant
+          DailyIndustrialPriceAssistant: this.DailyIndustrialPriceAssistant,
+          numberOfDayesAssistant: this.numberOfDayesAssistant,
+          numberOfDayesPaidAssistant: this.numberOfDayesPaidAssistant,
+          nameOfAssistant: this.nameOfAssistant,
+          // Industrial
+          DailyIndustrialPrice: this.DailyIndustrialPrice,
+          numberOfDayes: this.numberOfDayes,
+          numberOfDayesPaid: this.numberOfDayesPaid,
         userId: this.userInfo.id,
         transactionType: this.userInfo.role === 'technical' ? 'فنى' : 'عميل',
       };
@@ -431,7 +577,13 @@ export default {
     border: solid 1px rgb(181, 179, 179);
   }
 
-
+  .display-options{
+  //background-color: rgb(207, 83, 83);
+  display: flex;
+  justify-content: flex-end;
+  align-items: end;
+  padding-bottom: 10px;
+}
   // phone
   @media (max-width: 477px) {
     .title {
