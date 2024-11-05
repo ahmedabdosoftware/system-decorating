@@ -26,6 +26,18 @@
   @extend  %end_flex;
   p{
     @extend  %local_paragraph;
+    // font-family: "Aref Ruqaa", serif;
+    // font-weight: 400;
+    // font-style: normal;
+    // font-family: "Rakkas", serif;
+    // font-weight: 400;
+    // font-style: normal;
+    // font-family: "Rakkas", serif;
+    // font-weight: 400;
+    // font-style: normal;
+    font-family: "Lateef", serif;
+    font-weight: 700;
+    font-style: normal;
   }
 
 }

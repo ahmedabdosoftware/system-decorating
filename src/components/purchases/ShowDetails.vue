@@ -9,7 +9,7 @@
             
                 <div class="detailsContent__Info__general">
                     <p>اسم الفرع: {{ purchaseInfo.selectedBranch }}</p>
-                    <p>العنوان/ اسم المورد: {{ purchaseInfo.adress }}</p>
+                    <p>العنوان/ اسم المورد: {{ purchaseInfo.adress || "غير محدد"}} </p>
                     <p>الحالة: {{ getStatusText(purchaseInfo.status) }}</p>
 
                 </div>

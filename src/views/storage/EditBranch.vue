@@ -57,7 +57,7 @@
               </div>
               <div class="formbold-input-flex">
                     <div>
-                      <ValidationProvider name="الكمية"  :rules="`${addedInBranch.length == 0 ? 'required|numeric|min_value:1' : ''}`"  v-slot="{ errors }">
+                      <ValidationProvider name="الكمية"  :rules="`${addedInBranch.length == 0 ? 'required|numeric|min_value:0' : ''}`"  v-slot="{ errors }">
                         <label for="quantity" class="formbold-form-label">  (افتتاحية) الكمية </label>
       
                         <input

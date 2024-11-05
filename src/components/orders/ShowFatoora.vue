@@ -71,7 +71,7 @@
               </tr>
               <tr  v-if="orderInfo.shipping">
                 <td colspan="3">{{  orderInfo.customShipping && isCustomized ==="true" ?orderInfo.customShipping : orderInfo.shipping }}</td>
-                <td colspan="4">الشحن</td>
+                <td colspan="4">شحن وتشوين</td>
               </tr>
             </tbody>
           </table>

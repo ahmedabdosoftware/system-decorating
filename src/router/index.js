@@ -46,6 +46,10 @@ import MainProfile from "@/shared/layouts/MainProfile.vue";
 import UserOrder from "../views/UserProfile/UserOrder.vue";
 import UserFinancial from "../views/UserProfile/financial/UserFinancial.vue";
 import AddFinancial from "../views/UserProfile/financial/AddFinancial.vue";
+
+import GroupOfFinancial from "../views/UserProfile/financial/setlling/GroupOfFinancial.vue";
+
+
 import TransactionDetails from "../views/UserProfile/financial/TransactionDetails.vue";
 import EditTransaction from "../views/UserProfile/financial/EditTransaction.vue";
 import UserProjects from "../views/UserProfile/UserProjects.vue";
@@ -324,6 +328,12 @@ const routes = [
             path: "EditTransaction/:transactionId",
             name: "AdminEditTransaction",
             component: EditTransaction,
+            meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
+          },
+          {
+            path: "GroupOfFinancial",
+            name: "GroupOfFinancial",
+            component: GroupOfFinancial,
             meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
           },
           {

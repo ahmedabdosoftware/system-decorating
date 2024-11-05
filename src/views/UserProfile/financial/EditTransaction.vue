@@ -394,9 +394,10 @@ export default {
     },
     submit(){
     console.log('Fetched user info id:', this.userInfo.id);   
-    },
-    updateOrderId() {
-      const selectedOrderObj = this.orders.find(order => order.id === this.selectedOrder);
+  },
+  updateOrderId() {
+      console.log('updateOrderId :', this.selectedOrder);   
+      const selectedOrderObj = this.orders.find(order => order.numberOfOrder === this.selectedOrder);
       if (selectedOrderObj) {
         this.orderId = selectedOrderObj.id;
         this.adress = selectedOrderObj.adress;
@@ -527,7 +528,7 @@ export default {
             ? { financialTechnicalTransactionId: this.transactionId }
             : { financialClientTransactionId: this.transactionId }),
         };
-
+        console.log(updatePayload)
         await this.updateOrder(updatePayload);
       }
       this.isLoading = false;

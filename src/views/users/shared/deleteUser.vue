@@ -174,6 +174,7 @@ import { required,email,numeric,digits  } from 'vee-validate/dist/rules';
             //await this.uploadImage({ uid: this.userId , file: this.file });
             //}
             
+            this.$router.push({ name: 'Clint' });
             this.isLoading = false;
             // alert('User updated successfully!');
         } catch (error) {

@@ -5,14 +5,16 @@
           <div>
             <div>
              <div class="export">
-                <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmvEXj1Sr-tzeKuEP9PgzajIUDvR_-L-zfkg&usqp=CAU"
-                />
-                <button>export</button>
+               
+                <font-awesome-icon class="icon" :icon="['fas', 'file-invoice-dollar']" />
+                <router-link v-if="isAdmin"
+                  :to="generateRoute('GroupOfFinancial')">
+                  <button > Settling</button>
+              </router-link>
              </div>
               <router-link v-if="isAdmin"
-              :to="generateRoute('AddFinancial')">
-              <button class="add">+ add financial</button>
+                :to="generateRoute('AddFinancial')">
+                <button class="add">+ add financial</button>
               </router-link>
             </div>
           </div>

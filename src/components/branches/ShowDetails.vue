@@ -87,11 +87,17 @@
             ...mapActions(useCategoriesStore, ['fetchCategories']),
       
             categoryName(product){
-            const categoryProductName = this.categories.find(category => category.id === product.productInfo.categoryId) 
-            console.log(categoryProductName);
-            if(categoryProductName){
-              return categoryProductName.name
-            }
+                
+                if(this.categories){
+                    const categoryProductName = this.categories.find(category => category.id === product?.productInfo?.categoryId) 
+                    console.log(categoryProductName);
+                    if(categoryProductName){
+                      return categoryProductName.name
+                    } else{
+                        return "غير محدد"
+        
+                    }
+                }
           },
          
           goBack() {

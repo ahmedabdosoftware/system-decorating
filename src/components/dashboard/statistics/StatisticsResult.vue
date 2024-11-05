@@ -78,6 +78,15 @@
           }
           color: rgb(49, 48, 48);
           padding-right: 5px;
+          // font-family: "Aref Ruqaa", serif;
+          // font-weight: 400;
+          // font-style: normal;
+          // font-family: "Rakkas", serif;
+          // font-weight: 400;
+          // font-style: normal;
+          font-family: "Lateef", serif;
+          font-weight: 700;
+          font-style: normal;
       }
       p{
           color: rgb(109, 108, 108);
