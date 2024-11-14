@@ -2,33 +2,19 @@
     <!-- /* eslint-disable */ -->
     <div class="page transactions">
       <div class="title--pagesInProfile">
-        <div>
-            <div class="random-cont">
-              <div class="export">
-               
-               <font-awesome-icon class="icon" :icon="['fas', 'file-invoice-dollar']" />
-               <router-link v-if="isAdmin"
-                 :to="generateRoute('RandomFinancial')">
-                 <button > Random</button>
-               </router-link>
-              </div>
-            </div>
+          <div>
             <div>
-              <div class="export">
-                
-                  <font-awesome-icon class="icon" :icon="['fas', 'file-invoice-dollar']" />
-                  <router-link v-if="isAdmin"
-                    :to="generateRoute('GroupOfFinancial')">
-                    <button > Settling</button>
-                  </router-link>
+                <div class="export">
+                    <img
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmvEXj1Sr-tzeKuEP9PgzajIUDvR_-L-zfkg&usqp=CAU"
+                    />
+                    <button>export</button>
                 </div>
-                <router-link v-if="isAdmin"
-                :to="generateRoute('AddFinancial')">
-                <button class="add">+ add financial</button>
-                </router-link>
+              <router-link v-if="isAdmin">
+                <button class="add">+ add project</button>
+              </router-link>
+            </div>
           </div>
-         
-        </div>
   
         <div :class="{ 'dark-mode-box': getDarkMode }">
           <div class="">
@@ -65,8 +51,8 @@
       <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
             <!-- /* eslint-disable */ -->
             <TableSkeleton v-if="isLoading" :rows="5" :columns="6" />
-            <ListTable v-else-if="getTransactions.length > 0" :transactions="getTransactions" class="ListTable_cont"></ListTable>
-            <NoData v-else context="transactions"></NoData>
+            <ListTable v-else-if="false" :transactions="getTransactions" class="ListTable_cont"></ListTable>
+            <NoData v-else context="projects"></NoData>
      
       </div>
      
@@ -178,22 +164,22 @@
   .title--pagesInProfile {
     width: 100%;
     height: 180px;
-  //  background-color: sandybrown;
+   // background-color: sandybrown;
     display: flex;
     flex-wrap: wrap;
     > div:first-child {
-      // background-color: rgb(17, 141, 120);
+      //background-color: rgb(17, 141, 120);
       width: 100%;
       height: 60%;
       display: flex;
       flex-direction: row ;
-      justify-content:space-between;
+      justify-content: flex-end ;
       align-items: center ;
 
-      > div {
+      > div:first-child {
         width: 340px;
         height: 80px;
-        // background-color: greenyellow;
+      //  background-color: greenyellow;
         display: flex;
         justify-content: space-evenly;
         align-items: center;
@@ -201,7 +187,7 @@
           width: 100px;
           height: 40px;
           background-color: white;
-          //  background-color: black;
+           //background-color: black;
           border-radius: 4px;
           display: flex;
           justify-content: space-evenly;
@@ -219,20 +205,13 @@
           }
         }
       }
-      > div:first-child{
-        // background-color: red;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-      }
-    
     }
     > div:nth-of-type(2) {
       width: 96%;
       height: 40%;
       margin-left: 4%;
       background-color: white;
-      // background-color: rgb(129, 76, 19);
+      //background-color: rgb(129, 76, 19);
       border-top-left-radius: 3px;
       border-bottom-left-radius: 3px;
       display: flex;
@@ -307,51 +286,9 @@
     margin-bottom: 250px;
   }
  
- .random-cont{
-  justify-content: center !important;
-  // background-color: rebeccapurple !important;
-  width: 200px !important;
- }
- .add{
-  width: 120px;
-  font-size: 14px;
- }
-
-
- .title--pagesInProfile {
-
-  > div:first-child {
-      > div:nth-child(2){
-        position: relative;
-      }
-      > div:nth-child(2)::after{
-        content: "";
-        position: absolute;
-        left: 0px;
-        top: 0px;
-        background-color: rgb(121, 120, 120);
-        transform: translateY(50%);
-        width: 2px;
-        height: 50%;
-        border-radius: 4px;
-
-      }
-      }
-      }
-
+ 
 }
-@media (max-width: 370px) {
- .random-cont{
-  justify-content: center !important;
-  // background-color: rebeccapurple !important;
-  width: 170px !important;
- }
- .add{
-  width: 110px;
-  height: 35px;
-  font-size: 13px;
- }
- }
+
   
 .title--pagesInProfile {
 

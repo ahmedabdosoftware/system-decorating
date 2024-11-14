@@ -1,19 +1,19 @@
 <template>
     <div class="toggle-switch" @click="toggle">
-      <div class="toggle-circle" :class="{ 'active': isMaterialActiveOrTechnical }"></div>
+      <div class="toggle-circle" :class="{ 'active': isHidden }"></div>
     </div>
   </template>
   
   <script>
   export default {
     props: {
-        isMaterialActiveOrTechnical: Boolean, // for parent pass intial value
+      isHidden: Boolean, // for parent pass intial value
     },
 
     methods: {
       toggle() {
-        const newState = !this.isMaterialActiveOrTechnical;
-        this.$emit('update:isMaterialActive', newState); 
+        const newState = !this.isHidden;
+        this.$emit('update:isHiddenActive', newState); 
       },
     },
   };

@@ -48,7 +48,7 @@
                 <th>اجمالى </th>
                 <th v-if="shouldDisplayDiscount">قيمة الخصم</th>
                 <th>الكمية</th>
-                <th>سعر الوحده</th>
+                <th v-if="orderInfo.invoiceType !== 'تركيب'">سعر الوحده</th>
                 <th>كود المنتج</th>
                 <th>اسم الصنف</th>
               </tr>
@@ -58,7 +58,7 @@
                 <td>{{ calculateTotalPrice(product) }}</td>
                 <td v-if="shouldDisplayDiscount" >{{ calculateDiscount(product) }}</td>
                 <td>{{ product.quantity }}</td>
-                <td>{{ product.priceWithIncrease && isCustomized ==="true" ? product.priceWithIncrease :  product.productInfo.priceMaterial  }}</td>
+                <td v-if="orderInfo.invoiceType !== 'تركيب'">{{ product.priceWithIncrease && isCustomized ==="true" ? product.priceWithIncrease :  product.productInfo.priceMaterial  }}</td>
                 <td>{{ product.productInfo.name }}</td>
                 <td>{{ categoryName(product) }}</td>
               </tr>
@@ -78,7 +78,7 @@
         </div>
         <div  class="fatoora__sales">
           <p v-if="shouldDisplayDiscount">اجمالى الخصم: <span>{{ calculateTotalDiscount }}</span></p>
-          <p>اجمالى خامات : <span>{{ calculateGrandTotal }}</span></p>
+          <p v-if="orderInfo.invoiceType === 'تركيب وتوريد' || orderInfo.invoiceType === 'توريد'  ">اجمالى خامات : <span>{{ calculateGrandTotal }}</span></p>
           <p v-if="orderInfo.invoiceType === 'تركيب وتوريد' || orderInfo.invoiceType === 'تركيب'  "> اجمالى مصنعية: <span>{{ calculateTotalInstallation }}</span></p>
           <p v-if="orderInfo.invoiceType === 'تركيب وتوريد'"> الكلى: <span>{{ (Number(calculateGrandTotal) + Number(calculateTotalInstallation)).toFixed(2) }}</span></p>
 
@@ -244,11 +244,16 @@ export default {
 
     calculateTotalPrice(product) {
 
-        const productPrice = product.priceWithIncrease && this.isCustomized ==="true" ? product.priceWithIncrease : product.productInfo.priceMaterial;
-        const productTotalPrice = productPrice * product.quantity;
-        const discountAmount = productTotalPrice * (product.price_offer / 100);
+      if(this.orderInfo.invoiceType !== 'تركيب'){
 
-      return (productTotalPrice - discountAmount).toFixed(2);
+          const productPrice = product.priceWithIncrease && this.isCustomized ==="true" ? product.priceWithIncrease : product.productInfo.priceMaterial;
+          const productTotalPrice = productPrice * product.quantity;
+          const discountAmount = productTotalPrice * (product.price_offer / 100);
+
+          return (productTotalPrice - discountAmount).toFixed(2);
+      }else{
+        return "-------"
+      }
    },
    
     calculateDiscount(product) {

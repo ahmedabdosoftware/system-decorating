@@ -48,11 +48,12 @@ import UserFinancial from "../views/UserProfile/financial/UserFinancial.vue";
 import AddFinancial from "../views/UserProfile/financial/AddFinancial.vue";
 
 import GroupOfFinancial from "../views/UserProfile/financial/setlling/GroupOfFinancial.vue";
+import RandomFinancial from "../views/UserProfile/financial/randomFinancial/RandomFinancial.vue";
 
 
 import TransactionDetails from "../views/UserProfile/financial/TransactionDetails.vue";
 import EditTransaction from "../views/UserProfile/financial/EditTransaction.vue";
-import UserProjects from "../views/UserProfile/UserProjects.vue";
+import UserProject from "../views/UserProfile/projects/UserProject.vue";
 import UserSetting from "../views/UserProfile/UserSetting.vue";
 
 import Login from "../views/auth/Login.vue";
@@ -337,9 +338,15 @@ const routes = [
             meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
           },
           {
+            path: "RandomFinancial",
+            name: "RandomFinancial",
+            component: RandomFinancial,
+            meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
+          },
+          {
             path: "projects",
             name: "AdminUserProjects",
-            component: UserProjects,
+            component: UserProject,
             meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
           },
           {
@@ -401,7 +408,7 @@ const routes = [
       {
         path: "projects",
         name: "UserProjects",
-        component: UserProjects,
+        component: UserProject,
         meta: { requiresAuth: true, roles: ['technical', 'clint', 'admin'] ,layout: 'profileOutDashboardLayout'},
       },
       {

@@ -11,7 +11,7 @@
   
 <script>
 
-//  BoxCatogery
+//  BoxFinancial
 import BoxFinancial from "@/components/users/financial/settling/BoxFinancial.vue";
  
 

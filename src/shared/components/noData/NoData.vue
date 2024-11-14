@@ -38,6 +38,8 @@ export default {
         return 'exchange-alt'; 
         case 'stock-alerts': 
         return 'bell'
+        case 'projects': 
+        return 'tasks'
         default:
           return 'exclamation-circle'
       }
@@ -70,6 +72,8 @@ export default {
         return 'لا توجد مرتجعات';
         case 'stock-alerts': 
           return 'لا توجد تنبيهات مخزون'
+        case 'projects': 
+          return 'لا يوجد مشاريع'
         default:
           return 'لا توجد بيانات'
       }

@@ -1,34 +1,75 @@
 <template>
     <div class="contBox">
       <div :class=" { 'dark-mode': getDarkMode }">
-        <span class="title">مدينتى</span>
+        <span class="title">{{ Financial.adress }}</span>
        <div class="contBox__toggle">
-            <div class="contBox__toggle__chosse" >
-                <span v-if="isMaterialActiveOrTechnical">فنى</span>
-                <span v-else>مساعد</span>
-            </div>
-            <ToggleSwitch
-                :isMaterialActiveOrTechnical="isMaterialActiveOrTechnical"
-                @update:isMaterialActive="updateMaterialStatus"
-            />
+
+          <div class="contBox__toggle__chosse" >
+              <span v-if="isMaterialActiveOrTechnical">{{  Financial.transactionType ==="عميل" ? "خامات" :"فنى"  }}</span>
+              <span v-else>{{  Financial.transactionType ==="عميل" ? "مصنعيه" :"مساعد"  }}</span>
+          </div>
+
+          <ToggleSwitch
+              :isMaterialActiveOrTechnical="isMaterialActiveOrTechnical"
+              @update:isMaterialActive="updateMaterialStatus"
+          />     
         </div>
         <div class="contBox__data">
-            
-            <FinancialListPayments
-                :transactionInfo="Financial"
-            />
+        <!-- حالة الفني أو المواد الخام -->
+        <FinancialListPayments
+            v-if="isMaterialActiveOrTechnical && Financial.payments.length > 0"
+            :transactionInfo="Financial"
+            :isMaterialActiveOrTechnical="isMaterialActiveOrTechnical"
+        />
 
-         </div>
-         <div class="contBox__action"></div>
+        <!-- حالة المصنعية عند العميل -->
+        <FinancialListPayments
+            v-if="!isMaterialActiveOrTechnical && isClient && Financial.payments.length > 0"
+            :transactionInfo="Financial"
+            :isMaterialActiveOrTechnical="isMaterialActiveOrTechnical"
+
+        />
+
+        <!-- عرض يومي للفني -->
+        <FinancialDaily
+            v-if="isMaterialActiveOrTechnical && Financial.DailyIndustrial"
+            :transactionInfo="Financial"
+            kind="Technical"
+        />
+
+        <!-- عرض يومي للمساعد -->
+        <FinancialDaily
+            v-if="!isMaterialActiveOrTechnical && Financial.DailyAssistantIndustrial"
+            :transactionInfo="Financial"
+            kind="Assistant"
+        />
+      </div>
+
+
+      <div class="contBox__action">
+        <ActionPayments
+            v-if="(isTechnicalTransaction) ||
+                  (isMaterialTransaction  && hasMaterialPayments) ||
+                  (isManufacturingTransaction && hasManufacturingPayments)"
+            :transactionInfo="Financial"
+            :isMaterialActiveOrTechnical="isMaterialActiveOrTechnical"
+        />
+      </div>
+
       </div>
     </div>
   </template>
   
   <script>
 
-   // ListTable
-   import FinancialListPayments from "@/components/users/financial/settling/FinancialListPayments.vue";
-   // ToggleSwitch
+// components
+  // FinancialListPayments
+  import FinancialListPayments from "@/components/users/financial/settling/payments/FinancialListPayments.vue";
+  //FinancialDaily
+  import FinancialDaily from "@/components/users/financial/settling/daily/FinancialDaily.vue";
+  //ActionPayments
+  import ActionPayments from "@/components/users/financial/settling/payments/ActionPayments.vue";
+  // ToggleSwitch
   import ToggleSwitch from './ToggleSwitch.vue';
 
   export default {
@@ -37,20 +78,49 @@
     components: {
         ToggleSwitch,
         FinancialListPayments,
+        ActionPayments,
+        FinancialDaily,
    },
     computed: {
       getDarkMode() {
         return this.$store.state.darkMode;
       },
+        // تحقق من حالة العميل
+      isClient() {
+        return this.Financial.transactionType === "عميل";
+      },
+      // تحقق من حالة الفني
+      isTechnical() {
+        return this.Financial.transactionType === "فنى";
+      },
+
+      isTechnicalTransaction() {
+        return this.Financial.transactionType === "فنى" && this.isMaterialActiveOrTechnical && this.Financial.payments.length > 0;
+      },
+      isMaterialTransaction() {
+        return this.Financial.transactionType === "عميل" && this.isMaterialActiveOrTechnical;
+      },
+      isManufacturingTransaction() {
+        return this.Financial.transactionType === "عميل" && !this.isMaterialActiveOrTechnical;
+      },
+      hasMaterialPayments() {
+        return this.Financial.payments.some(payment => payment.type === "material");
+      },
+      hasManufacturingPayments() {
+        return this.Financial.payments.some(payment => payment.type === "industrial");
+      },
+
+
+
     },
     created(){
-      console.log(this.category)
+      // console.log(this.category)
   
     },
     
     data() {
     return {
-        isMaterialActiveOrTechnical: false, 
+        isMaterialActiveOrTechnical: true, 
     };
    },
 
@@ -68,7 +138,7 @@
 
   .contBox {
     width: 300px;
-    height: 380px;
+    min-height: 380px;
     margin-top: 15px;
     margin-bottom: 15px;
   }
@@ -94,10 +164,7 @@
     align-items: center;
     justify-content: center;
   }
-  %add_flex{
-    display: flex;
-    align-items: center;
-  }
+ 
   .title{
     position: absolute;
     top: 0px;
@@ -108,45 +175,26 @@
     height: 30px;
     border-radius: 7px;
     @extend %center_flex;
+    font-size: 13px
   }
-  .contBox__toggle{
-    width: 100%;
-    height: 70px;
-    // background-color: red;
-    @extend %add_flex;
-    align-items: flex-end;
-    flex-direction: column;
-    justify-content: space-evenly;
-    margin-right: 13px
-    
-    
-}
-.contBox__toggle__chosse{
-    @extend %add_flex;
-    justify-content: flex-end;
-    width: 30%;
-    height: 30px;
-    // background-color: rgb(149, 126, 126);
-    span{
-       
-        font-family: "Lateef", serif;
-        font-weight: 600;
-        font-style: normal;
-
-    }
-
-  }
+  
   .contBox__data{
     width: 100%;
     height: 160px;
     // background-color: rgb(108, 91, 91);
   }
   .contBox__action{
-    width: 100%;
-    height: 60px;
-    background-color: rgb(139, 61, 61);
+    width: 90%;
+    min-height: 150px;
+    //  background-color: rgb(139, 61, 61);
   }
-  
-  
+  .spichial-cont-btns{
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .spichialAdd-btn{
+    width: 100px;
+
+  }
   </style>
   
