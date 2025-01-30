@@ -14,12 +14,19 @@ import EditProduct from "../views/product/EditProduct.vue";
 import Units from "../views/product/units/Units.vue";
 import AddUnit from "../views/product/units/AddUnit.vue";
 import EditUnit from "../views/product/units/EditUnit.vue";
-import Order from "../views/order/Order.vue";
-import AddNewOrder from "../views/order/AddNewOrder.vue";
-import EditOrder from "../views/order/EditOrder.vue";
-import DetailsOrder from "../views/order/DetailsOrder.vue";
-import Fatora from "../views/order/invoice/Fatora.vue";
-import CustomInvoice from "../views/order/invoice/CustomInvoice.vue";
+
+// Old Design
+import AddNewOrder from "../views/order/oldDesign/AddNewOrder.vue";
+import EditOrder from "../views/order/oldDesign/EditOrder.vue";
+import Fatora from "../views/order/oldDesign/invoice/Fatora.vue";
+import CustomInvoice from "../views/order/oldDesign/invoice/CustomInvoice.vue";
+import DetailsOrder from "../views/order/oldDesign/DetailsOrder.vue";
+import Order from "../views/order/oldDesign/Order.vue";
+
+// New Design => what is New Components?
+import AddNewOrderNewDesign from "../views/order/newDesign/AddNewOrder.vue";
+import EditOrderNewDesign from "../views/order/newDesign/EditOrder.vue";
+
 import Branches from "../views/storage/Branches.vue";
 import AddNewBranch from "../views/storage/AddNewBranch.vue";
 import EditBranch from "../views/storage/EditBranch.vue";
@@ -142,10 +149,23 @@ const routes = [
         component: AddNewOrder,
         meta: { requiresAuth: true, roles: ['admin'] },
       },
+      // new design
+      {
+        path: "v1/AddNewOrder",
+        name: "AddNewOrder",
+        component: AddNewOrderNewDesign,
+        meta: { requiresAuth: true, roles: ['admin'] },
+      },
       {
         path: "EditOrder/:orderId",
         name: "EditOrder",
         component: EditOrder,
+        meta: { requiresAuth: true, roles: ['admin'] },
+      },
+      {
+        path: "v1/EditOrder/:orderId",
+        name: "EditOrderNewDesign",
+        component: EditOrderNewDesign,
         meta: { requiresAuth: true, roles: ['admin'] },
       },
       {

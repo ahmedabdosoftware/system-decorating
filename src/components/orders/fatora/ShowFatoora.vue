@@ -43,39 +43,58 @@
         </div>
         <div  class="fatoora__table" >
           <table class="table">
-            <thead>
-              <tr>
-                <th>اجمالى </th>
-                <th v-if="shouldDisplayDiscount">قيمة الخصم</th>
-                <th>الكمية</th>
-                <th v-if="orderInfo.invoiceType !== 'تركيب'">سعر الوحده</th>
-                <th>كود المنتج</th>
-                <th>اسم الصنف</th>
-              </tr>
-            </thead>
-            <tbody v-if="orderInfo">
-              <tr v-for="(product, index) in orderInfo.products" :key="index">
-                <td>{{ calculateTotalPrice(product) }}</td>
-                <td v-if="shouldDisplayDiscount" >{{ calculateDiscount(product) }}</td>
-                <td>{{ product.quantity }}</td>
-                <td v-if="orderInfo.invoiceType !== 'تركيب'">{{ product.priceWithIncrease && isCustomized ==="true" ? product.priceWithIncrease :  product.productInfo.priceMaterial  }}</td>
-                <td>{{ product.productInfo.name }}</td>
-                <td>{{ categoryName(product) }}</td>
-              </tr>
-              <tr v-if="shouldDisplayInstallation">
-                <td >{{ calculateTotalInstallation }}</td>
-                <td v-if="shouldDisplayDiscount">0</td>
-                <td >{{ calculateTotalQuantity }}</td>
-                <td>{{ orderInfo.fixedInstallation>0 && isCustomized ==="true" ? orderInfo.fixedInstallation : "لا يوجد سعر موحد"  }}</td>
-                <td colspan="2" >المصنعية</td>
-              </tr>
-              <tr  v-if="orderInfo.shipping">
-                <td colspan="3">{{  orderInfo.customShipping && isCustomized ==="true" ?orderInfo.customShipping : orderInfo.shipping }}</td>
-                <td colspan="4">شحن وتشوين</td>
-              </tr>
+              <!-- Header -->
+              <thead>
+                <tr>
+                  <th>اجمالى </th>
+                  <th v-if="shouldDisplayDiscount">قيمة الخصم</th>
+                  <th>الكمية</th>
+                  <th v-if="orderInfo.invoiceType !== 'تركيب'">سعر الوحده</th>
+                  <th>كود المنتج</th>
+                  <th>اسم الصنف</th>
+                </tr>
+              </thead>
+              <!-- Products -->
+              <tbody v-if="orderInfo">
+                <tr v-for="(product, index) in orderInfo.products" :key="index">
+                  <td>{{ calculateTotalPrice(product) }}</td>
+                  <td v-if="shouldDisplayDiscount" >{{ calculateDiscount(product) }}</td>
+                  <td>{{ product.quantity }}</td>
+                  <td v-if="orderInfo.invoiceType !== 'تركيب'">{{ product.priceWithIncrease && isCustomized ==="true" ? product.priceWithIncrease :  product.productInfo.priceMaterial  }}</td>
+                  <td>{{ product.productInfo.name }}</td>
+                  <td>{{ categoryName(product) }}</td>
+                </tr>
+
+              <!-- installition -->
+                <!-- Not Fixed -->
+                <tr 
+                  v-for="(product, index) in filteredProductsForInstallation" 
+                  :key="'installation-' + index">
+                  <td>{{ (product.editOfInstallation && isCustomized === "true" ? product.editOfInstallation : product.productInfo.priceWithLabor) * product.quantity }}</td>
+                  <td v-if="shouldDisplayDiscount">0</td>
+                  <td>{{ product.quantity }}</td>
+                  <td>{{ product.editOfInstallation && isCustomized === "true" ? product.editOfInstallation : product.productInfo.priceWithLabor }}</td>
+                  <td>{{ product.productInfo.name }}</td>
+                  <td>المصنعية</td>
+                </tr>
+
+                <!-- Fixed -->
+                <tr v-if="shouldDisplayInstallation && orderInfo.fixedInstallation>0">
+                  <td>{{ calculateTotalInstallation }}</td>
+                  <td v-if="shouldDisplayDiscount">0</td>
+                  <td>{{ calculateTotalQuantity }}</td>
+                  <td>{{ orderInfo.fixedInstallation }}</td>
+                  <td colspan="2">المصنعية</td>
+                </tr>
+                <!-- shipping -->
+                <tr  v-if="orderInfo.shipping">
+                  <td colspan="3">{{  orderInfo.customShipping ?orderInfo.customShipping : orderInfo.shipping }}</td>
+                  <td colspan="4">شحن وتشوين</td>
+                </tr>
             </tbody>
           </table>
         </div>
+        <!-- Total -->
         <div  class="fatoora__sales">
           <p v-if="shouldDisplayDiscount">اجمالى الخصم: <span>{{ calculateTotalDiscount }}</span></p>
           <p v-if="orderInfo.invoiceType === 'تركيب وتوريد' || orderInfo.invoiceType === 'توريد'  ">اجمالى خامات : <span>{{ calculateGrandTotal }}</span></p>
@@ -123,30 +142,57 @@ export default {
       return this.$store.state.darkMode;
     },
     ...mapState(useCategoriesStore, ['categories']),
+    filteredProductsForInstallation() {
+      if (!this.orderInfo || !this.orderInfo.products) return [];
+      return this.orderInfo.products.filter(
+          (product) =>
+                  this.shouldDisplayInstallation &&
+                  this.orderInfo.fixedInstallation==0 &&
+                  product.productInfo.priceWithLabor
+          );
+    },
 
     shouldDisplayDiscount() {
       // لو كان مخصصًا، تحقق من وجود displaySale في orderInfo
-      if (this.isCustomized ==="true" && this.orderInfo.displaySale) {
+      // if (this.isCustomized ==="true" && this.orderInfo.displaySale) {
+        
+      //   return true;
+      // }
+
+      // that changing in logic (like u see i commented codes) bc i changed the meaning of Customized
+      // it became mean just changing in price of products or installtion but option display Sale not related to customiz invoice
+      if (this.orderInfo.displaySale) {
         
         return true;
       }
+
       // إذا لم يكن مخصصًا، اعرض الخصم أيضًا
-      if (this.isCustomized ==="false") {
-        return true;
-      }
+      // if (this.isCustomized ==="false") {
+      //   return true;
+      // }
+
       // في أي حالة أخرى، لا تعرض الخصم
       return false;
     },
     shouldDisplayInstallation() {
       // لو كان مخصصًا، تحقق من وجود displayInstallation في orderInfo
-      if (this.isCustomized ==="true" && this.orderInfo.displayInstallation) {
+      // if (this.isCustomized ==="true" && this.orderInfo.displayInstallation) {
+        
+      //   return true;
+      // }
+
+      // that changing in logic (like u see i commented codes) bc i changed the meaning of Customized
+      // it became mean just changing in price of products or installtion but option display Installation not related to customiz invoice
+      if (this.orderInfo.displayInstallation) {
         
         return true;
       }
+
       // إذا لم يكن مخصصًا، لا تعرض المصنعية فى الحدول
-      if (this.isCustomized ==="false") {
-        return false;
-      }
+      // if (this.isCustomized ==="false") {
+      //   return false;
+      // }
+
       // في أي حالة أخرى، لا تعرض المصنعية فى الجدول
       return false;
     },

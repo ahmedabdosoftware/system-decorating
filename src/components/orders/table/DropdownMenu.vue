@@ -125,7 +125,7 @@ export default {
       
     },
     editOrder(order) {
-    this.$router.push({ name: 'EditOrder', params: { orderId: order.id } });
+    this.$router.push({ name: 'EditOrderNewDesign', params: { orderId: order.id } });
    },
    
   Fatora(orderId, isCustom) {

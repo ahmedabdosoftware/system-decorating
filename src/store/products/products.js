@@ -13,13 +13,16 @@ export const useProductsStore = defineStore('useProductsStore', {
     },
     
     async addProduct(product) {
-      await db.collection('products').add(product);
+      const orderRef = await db.collection('products').add(product);
       this.fetchProducts();
+      return orderRef.id;
+
     },
     
     async updateProduct(product) {
       await db.collection('products').doc(product.id).update(product);
       this.fetchProducts();
+
 
     },
     

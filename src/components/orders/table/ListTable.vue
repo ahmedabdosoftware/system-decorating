@@ -32,7 +32,7 @@
 </template>
 
 <script>
-  import DropdownMenu from "@/components/orders/DropdownMenu.vue";
+  import DropdownMenu from "@/components/orders/table/DropdownMenu.vue";
 
 export default {
   name: "ListTable",

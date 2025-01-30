@@ -1,14 +1,34 @@
 <template>
   <div class="statistics">
       <div class="statistics_search">
-          <select placeholder="filter"  class="filter" v-model="selectedFilter">
+          <!-- <select placeholder="filter"  class="filter" v-model="selectedFilter">
               <option value="all">منذ ان بدات </option>
               <option value="today">االيوم </option>
               <option value="yesterday" > امس</option>
               <option value="lastWeak"> اخر اسبوع</option>
               <option value="lastMonth">  الشهر الماضى</option>
               <option value="lastYear"> اخر سنة</option>
-          </select>
+          </select> -->
+          <div class="date-range">
+            <div>
+              <input 
+              type="date" 
+              id="to-date" 
+              v-model="toDate" 
+              placeholder="إلى" 
+              />
+              <label for="to-date">:الى</label>
+            </div>
+            <div>
+              <input 
+              type="date" 
+              id="from-date" 
+              v-model="fromDate" 
+              placeholder="من" 
+              />
+              <label for="from-date">:من</label>
+            </div>
+          </div>
       </div>
       <div class="statistics_ressults">
 
@@ -16,6 +36,8 @@
           icon="shopping-cart"
           title="اجمالى المشتريات"
           :value="calculateTotalPurchases"
+          :isLoading="true"
+
         />
 
         <StatisticsResult
@@ -29,24 +51,32 @@
           icon="dollar-sign"
           title="المصنعيه"
           :value="calculateTotalInstallationForAllOrders"
+          :isLoading="true"
+
         />
 
         <StatisticsResult
           icon="dollar-sign"
           title="صافى المصنعيه "
           :value="calculateTotalPureInstallationForAllOrders"
+          :isLoading="true"
+
         />
 
         <StatisticsResult
           icon="box-open"
           title="بعت بكام خامات" 
           :value="calculateTotalSales"
+          :isLoading="true"
+
         />
 
-        <StatisticsResult v-if="false"
+        <StatisticsResult 
           icon="cash-register"
           title="صافى ربح الخامات"
-          value="1230"
+          :value="calculateNetProfit"
+          :isLoading="true"
+
         />
 
         
@@ -77,6 +107,9 @@
 </template>
 <script>
 
+// moment
+import moment from 'moment';
+
 // actions , state
 import { mapActions, mapState } from 'pinia';
 
@@ -85,6 +118,8 @@ import { useOrdersStore } from '@/store/order/orders.js';
 import { usePurchasesStore } from '@/store/purchases/purchase.js';
 import { useReturnsStore } from '@/store/purchaseReturns/returns.js';
 import { useTransactionsStore } from '@/store/transactions/transactions.js';
+import { useRandomTransactionsStore } from '@/store/transactions/randomTransactions.js';
+
 
 // library
 // import moment from 'moment';
@@ -104,6 +139,8 @@ components: {
 data() {
   return {
     selectedFilter: 'all',
+    fromDate: moment().startOf('month').format('YYYY-MM-DD'),
+    toDate: moment().format('YYYY-MM-DD'),
   };
 },
 computed: {
@@ -117,60 +154,126 @@ computed: {
     transactions: 'transactions',
   }),
   ...mapState(useReturnsStore, ['returns']),  
+  ...mapState(useRandomTransactionsStore, ['allAddTransactions']),  
 
 
-      //  حساب المشتريات لجميع  Purchases
+      // حساب المشتريات لجميع Purchases
       calculateTotalPurchases() {
-        const FilteredPurchases = this.filterByDate(this.purchases, this.selectedFilter);
+          // فلترة العمليات بناءً على التاريخ المحدد
+          const FilteredPurchases = this.filterByDateRange(this.purchases, this.fromDate, this.toDate);
 
-        const totalPurchases = FilteredPurchases.reduce((total, purchase) => {
-          // حساب إجمالي المنتجات لكل عملية شراء
-          const purchaseTotal = purchase.products.reduce((subTotal, product) => {
-            const productPrice = product.price_buy || 0;
-            const productTotalPrice = productPrice * product.quantity;
-            return subTotal + productTotalPrice;
+          const totalPurchases = FilteredPurchases.reduce((total, purchase) => {
+              // حساب إجمالي المنتجات لكل عملية شراء
+              const purchaseTotal = purchase.products.reduce((subTotal, product) => {
+                  const productPrice = product.price_buy || 0;
+                  const productQuantity = product.quantity || 0;
+                  const productTotalPrice = productPrice * productQuantity;
+
+                  // حساب الخصم لكل منتج بناءً على النوع
+                  let discountAmount = 0;
+                  if (product.kindDiscount === 'percentage') {
+                      discountAmount = productTotalPrice * (Number(product.valueDiscountOnBuy) / 100);
+                  } else if (product.kindDiscount === 'fixed') {
+                      discountAmount = Number(product.valueDiscountOnBuy) * productQuantity;
+                  }
+
+                  // إجمالي المنتج بعد الخصم
+                  const productTotalAfterDiscount = productTotalPrice - discountAmount;
+                  return subTotal + productTotalAfterDiscount;
+              }, 0);
+
+              // إضافة تكلفة الشحن إن وجدت
+              const shippingCost = Number(purchase.shipping) || 0;
+
+              // حساب إجمالي المرتجعات المتعلقة بهذه العملية
+              const returnsForThisPurchase = this.returns.filter(returnItem => returnItem.purchaseId === purchase.id);
+              let totalReturns = 0;
+
+              if (returnsForThisPurchase.length > 0) {
+                  totalReturns = returnsForThisPurchase.reduce((total, ret) => {
+                      return total + ret.products.reduce((subTotal, product) => {
+                          const productReturnPrice = product.price_buy || 0;
+                          const productReturnQuantity = product.quantityReturn || 0;
+                          const productReturnTotal = productReturnPrice * productReturnQuantity;
+
+                          // حساب الخصم على المرتجعات
+                          let returnDiscount = 0;
+                          if (product.kindDiscount === 'percentage') {
+                              returnDiscount = productReturnTotal * (Number(product.valueDiscountOnBuy) / 100);
+                          } else if (product.kindDiscount === 'fixed') {
+                              returnDiscount = Number(product.valueDiscountOnBuy) * productReturnQuantity;
+                          }
+
+                          const productReturnTotalAfterDiscount = productReturnTotal - returnDiscount;
+                          return subTotal + productReturnTotalAfterDiscount;
+                      }, 0);
+                  }, 0);
+              }
+
+              // حساب الإجمالي النهائي بعد الشحن والمرتجعات
+              const finalTotal = purchaseTotal + shippingCost - totalReturns;
+              return total + finalTotal;
           }, 0);
 
-          // حساب الخصم بعد إجمالي المنتجات
-          let discountAmount = 0;
-          if (purchase.discount_type === 'percentage') {
-            discountAmount = purchaseTotal * (purchase.discount_value / 100);
-          } else if (purchase.discount_type === 'fixed') {
-            discountAmount = Number(purchase.discount_value);
-          }
-
-          // إضافة تكلفة الشحن إن وجدت
-          const shippingCost = Number(purchase.shipping) || 0;
-
-          // حساب إجمالي المرتجعات المتعلقة بهذه العملية
-          const returnsForThisPurchase = this.returns.filter(returnItem => returnItem.purchaseId === purchase.id);
-          let totalReturns = 0;
-          if (returnsForThisPurchase.length > 0) {
-            totalReturns = returnsForThisPurchase.reduce((total, ret) => {
-              return total + ret.products.reduce((subTotal, product) => {
-                return subTotal + product.quantityReturn * product.price_buy;
-              }, 0);
-            }, 0);
-
-            // حساب الخصم المطبق على المرتجعات
-            const discountOnReturns = this.calculateDiscountOnReturns(totalReturns, purchase);
-            totalReturns -= discountOnReturns;
-          }
-
-          // حساب الإجمالي النهائي بعد الخصم، تكلفة الشحن، والمرتجعات
-          const finalTotal = purchaseTotal - discountAmount + shippingCost - totalReturns;
-          return total + finalTotal;
-        }, 0);
-
-        return totalPurchases.toFixed(2);
+          return totalPurchases.toFixed(2);
       },
+
+
+      // //  حساب المشتريات لجميع  Purchases
+      //  calculateTotalPurchases() {
+      //   // const FilteredPurchases = this.filterByDate(this.purchases, this.selectedFilter);
+      //   const FilteredPurchases = this.filterByDateRange(this.purchases, this.fromDate, this.toDate);
+
+      //   const totalPurchases = FilteredPurchases.reduce((total, purchase) => {
+      //     // حساب إجمالي المنتجات لكل عملية شراء
+      //     const purchaseTotal = purchase.products.reduce((subTotal, product) => {
+      //       const productPrice = product.price_buy || 0;
+      //       const productTotalPrice = productPrice * product.quantity;
+      //       return subTotal + productTotalPrice;
+      //     }, 0);
+
+      //     // حساب الخصم بعد إجمالي المنتجات
+      //     let discountAmount = 0;
+      //     if (purchase.discount_type === 'percentage') {
+      //       discountAmount = purchaseTotal * (purchase.discount_value / 100);
+      //     } else if (purchase.discount_type === 'fixed') {
+      //       discountAmount = Number(purchase.discount_value);
+      //     }
+
+      //     // إضافة تكلفة الشحن إن وجدت
+      //     const shippingCost = Number(purchase.shipping) || 0;
+
+      //     // حساب إجمالي المرتجعات المتعلقة بهذه العملية
+      //     const returnsForThisPurchase = this.returns.filter(returnItem => returnItem.purchaseId === purchase.id);
+      //     let totalReturns = 0;
+      //     if (returnsForThisPurchase.length > 0) {
+      //       totalReturns = returnsForThisPurchase.reduce((total, ret) => {
+      //         return total + ret.products.reduce((subTotal, product) => {
+      //           return subTotal + product.quantityReturn * product.price_buy;
+      //         }, 0);
+      //       }, 0);
+
+      //       // حساب الخصم المطبق على المرتجعات
+      //       const discountOnReturns = this.calculateDiscountOnReturns(totalReturns, purchase);
+      //       totalReturns -= discountOnReturns;
+      //     }
+
+      //     // حساب الإجمالي النهائي بعد الخصم، تكلفة الشحن، والمرتجعات
+      //     const finalTotal = purchaseTotal - discountAmount + shippingCost - totalReturns;
+      //     return total + finalTotal;
+      //   }, 0);
+
+      //   return totalPurchases.toFixed(2);
+      // },
 
 
 
 //  Purchases  حساب المشتريات لغير المدفوع الاجل يعنى
   calculateTotalPurchasesUnPaid() {
 
-    const FilteredPurchases =  this.filterByDate(this.purchases, this.selectedFilter)
+    // const FilteredPurchases =  this.filterByDate(this.purchases, this.selectedFilter)
+    const FilteredPurchases =  this.filterByDateRange(this.purchases, this.fromDate, this.toDate);
+
     const unfinishedOrders = FilteredPurchases.filter(purchases => purchases.status == '1' );
 
   const totalPurchases = unfinishedOrders.reduce((total, purchase) => {
@@ -219,8 +322,14 @@ computed: {
  
 // orders  حساب التركيب لجميع
   calculateTotalInstallationForAllOrders() {
-    const FilteredOrders =  this.filterByDate(this.orders, this.selectedFilter)
-    const totalInstallation =FilteredOrders.reduce((total, order) => {
+
+    // const FilteredOrders =  this.filterByDate(this.orders, this.selectedFilter)
+    const FilteredOrders =  this.filterByDateRange(this.orders, this.fromDate, this.toDate);
+    const getOrderWithInstalitionProducts = FilteredOrders?.filter(order => order.invoiceType === 'تركيب' || order.invoiceType === 'تركيب وتوريد');
+
+
+    const totalInstallation =getOrderWithInstalitionProducts.reduce((total, order) => {
+
       if (order.laborPrice) {
         return total + parseFloat(order.laborPrice);
       } else {
@@ -239,6 +348,7 @@ computed: {
         }, 0);
         return total + orderTotalInstallation;
       }
+    
     }, 0);
   
     return totalInstallation.toFixed(2);
@@ -247,8 +357,27 @@ computed: {
 // orders  حساب صافى ربح المصنعيه لجميع
 
 calculateTotalPureInstallationForAllOrders() {
-  const filteredOrders = this.filterByDate(this.orders, this.selectedFilter);
-  const totalInstallation = filteredOrders.reduce((total, order) => {
+
+  // const filteredOrders = this.filterByDate(this.orders, this.selectedFilter);
+  const filteredOrders =  this.filterByDateRange(this.orders, this.fromDate, this.toDate);
+  const getOrderWithInstalitionProducts = filteredOrders?.filter(order => order.invoiceType === 'تركيب' || order.invoiceType === 'تركيب وتوريد');
+
+  const filteredAddTransactions =  this.filterByDateRange(this.allAddTransactions, this.fromDate, this.toDate);
+
+
+  // حساب إجمالي المعاملات العشوائية
+  const randomTransactions = filteredAddTransactions.filter(
+    (transaction) => transaction.reduce === true
+  );
+  const totalRandomTransactions = randomTransactions.reduce(
+    (sum, transaction) => sum + (Number(transaction.amount)  || 0),
+    0
+  );
+
+
+
+  const totalInstallation = getOrderWithInstalitionProducts.reduce((total, order) => {
+
     const orderTotalInstallation = order.laborPrice
       ? parseFloat(order.laborPrice)
       : order.products.reduce((subTotal, product) => {
@@ -261,6 +390,7 @@ calculateTotalPureInstallationForAllOrders() {
           } else {
             return subTotal;
           }
+        
         }, 0);
 
         
@@ -290,11 +420,17 @@ calculateTotalPureInstallationForAllOrders() {
 
       return total + (orderTotalInstallation - (technicianCost + assistantCost));
     }
+    
 
     return total + orderTotalInstallation;
+  
   }, 0);
 
-  return totalInstallation.toFixed(2);
+  // خصم المعاملات العشوائية من الإجمالي
+  const netInstallation = totalInstallation - totalRandomTransactions;
+
+  return netInstallation.toFixed(2);
+
 },
 
 
@@ -302,29 +438,90 @@ calculateTotalPureInstallationForAllOrders() {
 // orders حساب الخامات لجميع
   calculateTotalSales() {
     
-    const FilteredOrders =  this.filterByDate(this.orders, this.selectedFilter)
+    // const FilteredOrders =  this.filterByDate(this.orders, this.selectedFilter)
+    const FilteredOrders =  this.filterByDateRange(this.orders, this.fromDate, this.toDate);
+    const getOrderWithSellProducts = FilteredOrders?.filter(order => order.invoiceType === 'توريد' || order.invoiceType === 'تركيب وتوريد');
 
-    const totalSales = FilteredOrders.reduce((total, order) => {
+
+    const totalSales = getOrderWithSellProducts.reduce((total, order) => {
+      
+    console.log(order)
     const orderTotalSales = order.products.reduce((subTotal, product) => {
+        const productPrice =Number(product.priceWithIncrease)  
+          ? Number(product.priceWithIncrease) 
+          :Number(product.productInfo.priceMaterial);
 
-        const productPrice = product.priceWithIncrease 
-          ? product.priceWithIncrease 
-          : product.productInfo.priceMaterial;
-
-        const productTotalPrice = productPrice * product.quantity;
-        const discountAmount = productTotalPrice * (product.price_offer / 100);
+        const productTotalPrice = Number(productPrice) * Number(product.quantity) ;
+        const discountAmount = Number(productTotalPrice)  * (Number(product.price_offer) / 100);
         return subTotal + (productTotalPrice - discountAmount);
       }, 0);
       return total + orderTotalSales;
+  
     }, 0);
   
     return totalSales.toFixed(2);
   },
 
+
+
+  // حساب صافي الربح لجميع الطلبات
+calculateNetProfit() {
+    // فلترة الطلبات حسب النطاق الزمني المحدد
+    const FilteredOrders = this.filterByDateRange(this.orders, this.fromDate, this.toDate);
+    const getOrderWithSellProducts = FilteredOrders?.filter(order => order.invoiceType === 'توريد' || order.invoiceType === 'تركيب وتوريد');
+
+    const netProfit = getOrderWithSellProducts.reduce((totalProfit, order) => {
+        const orderNetProfit = order.products.reduce((subTotal, product) => {
+            // التحقق من وجود البيانات المطلوبة
+            if (
+                !product.productInfo?.buyPrice ||
+                typeof product.productInfo.valueDiscountOnBuy === 'undefined' ||
+                typeof product.productInfo.kindDiscount === 'undefined' ||
+                !product.quantity
+            ) {
+                return subTotal; // تخطي المنتجات التي لا تحتوي على المعلومات الكافية
+            }
+
+            // حساب تكلفة الشراء بعد الخصم
+            const productBuyPrice = Number(product.productInfo.buyPrice);
+            const productQuantity = Number(product.quantity);
+            let productCost = productBuyPrice * productQuantity;
+
+            if (product.productInfo.kindDiscount === 'percentage') {
+                const discount = productCost * (Number(product.productInfo.valueDiscountOnBuy) / 100);
+                productCost -= discount;
+            } else if (product.productInfo.kindDiscount === 'fixed') {
+                const discount = Number(product.productInfo.valueDiscountOnBuy) * productQuantity;
+                productCost -= discount;
+            }
+
+            // حساب إجمالي سعر البيع
+            const productSellPrice = Number(product.priceWithIncrease) 
+                ? Number(product.priceWithIncrease) 
+                : Number(product.productInfo.priceMaterial);
+            const productTotalSellPrice = productSellPrice * productQuantity;
+            const discountAmount = productTotalSellPrice * (Number(product.price_offer) / 100);
+            const productSellTotalAfterDiscount = productTotalSellPrice - discountAmount;
+
+            // حساب الربح الصافي للمنتج
+            const productProfit = productSellTotalAfterDiscount - productCost;
+
+            return subTotal + productProfit;
+        }, 0);
+
+        return totalProfit + orderNetProfit;
+    }, 0);
+
+    return netProfit.toFixed(2);
+},
+
+
   // // Filter out unfinished orders and calculate installation cost
 
   calculateUnpaidMaterialsForAllOrders() {
-  const filteredOrders = this.filterByDate(this.orders, this.selectedFilter);
+  // const filteredOrders = this.filterByDate(this.orders, this.selectedFilter);
+  const filteredOrders =  this.filterByDateRange(this.orders, this.fromDate, this.toDate);
+
   const totalUnpaidMaterials = filteredOrders.reduce((total, order) => {
     if (order.financialClientTransactionId) {
       // جلب المعاملة المرتبطة
@@ -355,7 +552,9 @@ calculateTotalPureInstallationForAllOrders() {
 
   // // Filter out unfinished orders and calculate installation cost
   calculateUnpaidInstallationForAllOrders() {
-  const filteredOrders = this.filterByDate(this.orders, this.selectedFilter);
+  // const filteredOrders = this.filterByDate(this.orders, this.selectedFilter);
+  const filteredOrders =  this.filterByDateRange(this.orders, this.fromDate, this.toDate);
+
   const totalUnpaidInstallation = filteredOrders.reduce((total, order) => {
     if (order.financialClientTransactionId) {
       // جلب المعاملة المرتبطة
@@ -438,6 +637,7 @@ methods: {
   ...mapActions(usePurchasesStore, ['fetchPurchases']),
   ...mapActions(useReturnsStore, ['fetchAllReturns']), 
   ...mapActions(useTransactionsStore, ['fetchTransactions']),
+  ...mapActions(useRandomTransactionsStore, ['fetchAllAddTransactions']),
 
 
     // دالة لحساب الخصم المطبق على المرتجعات
@@ -461,6 +661,7 @@ async created() {
    this.fetchOrders();
    this.fetchPurchases();
    this.fetchAllReturns();
+   this.fetchAllAddTransactions();
    await this.fetchTransactions();
 },
 };
@@ -489,19 +690,39 @@ align-items: flex-end;
   justify-content:space-evenly;
   align-items: center;
   align-content: space-evenly;
-  //background-color: hotpink;
+  // background-color: hotpink;
   
 }
 
+.date-range {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: end;
+  // background-color: red;
+}
 
+.date-range input {
+  padding: 5px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.date-range label {
+  padding: 10px;
+ 
+}
 
 @media (max-width: 477px){
   .statistics_ressults{
-     // background-color: #f9f7f7;
-      background-color:hsl(0, 100%, 98%);
-      
+    // background-color: #f9f7f7;
+    background-color:hsl(0, 100%, 98%);  
   }
-
+  
+  .date-range {
+    flex-direction: column-reverse;
+    margin-right: 40px;
+  }
   
 }
 

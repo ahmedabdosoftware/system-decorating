@@ -5,15 +5,28 @@
   </template>
   
   <script>
+
+   import { mapActions } from "pinia";
+  // stores
+  import { useRandomTransactionsStore } from '@/store/transactions/randomTransactions.js';
+  
   export default {
     props: {
       isHidden: Boolean, // for parent pass intial value
     },
 
     methods: {
+      ...mapActions(useRandomTransactionsStore, ["toggleHidden"]),
+
       toggle() {
+
         const newState = !this.isHidden;
+
+        // change state in parent componnent 
         this.$emit('update:isHiddenActive', newState); 
+
+        // change state in store
+        this.toggleHidden()
       },
     },
   };
@@ -43,14 +56,16 @@
   .toggle-circle {
     width: 20px;
     height: 20px;
-    background-color: #fff;
+    background-color: #c9c6c6;
     border-radius: 50%;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s;
+    transition:  all 0.3s;
   }
   
   .toggle-circle.active {
     transform: translateX(25px); 
+    background-color: #fff;
+
   }
   </style>
   

@@ -56,7 +56,7 @@ import { useOrdersStore } from '@/store/order/orders.js';
 
 // componnents
   // ListTable
-  import ListTable from "@/components/orders/ListTable.vue";
+  import ListTable from "@/components/orders/table/ListTable.vue";
   // NoData
   import NoData from "@/shared/components/noData/NoData.vue";
   // Skeleton Table

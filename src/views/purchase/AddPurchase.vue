@@ -98,22 +98,7 @@
                 </div>
                 <div class="formbold-input-flex">
                     
-                    <div>
-                        <ValidationProvider name="سعر الشراء"  :rules="`${addedPurchase.length == 0 ? 'required|numeric|min_value:1' : ''}`"  v-slot="{ errors }">
-                          <label for="price_buy" class="formbold-form-label">   سعر الشراء  </label>
-  
-                          <input
-                              type="number"
-                              id="price_buy"
-                              placeholder="سعر الشراء"
-                              class="formbold-form-input"
-                              v-model="price_buy"
-                          
-                          />
-                          <p  class="info-message">ان قمت بتغير سعر الشراء سيتم تحديثه فى السيستم</p>
-                          <span class="error">{{ errors[0] }}</span>
-                        </ValidationProvider>
-                    </div>
+                  
                     <div>
                         <ValidationProvider name="سعر البيع"  :rules="`${addedPurchase.length == 0 ? 'required|numeric|min_value:1' : ''}`"  v-slot="{ errors }">
                           <label for="price_sell" class="formbold-form-label">  سعر البيع </label>
@@ -130,6 +115,54 @@
                           <span class="error">{{ errors[0] }}</span>
                         </ValidationProvider>
                     </div>
+
+                    <div>
+                        <ValidationProvider name=" نوع الخصم  "   :rules="`${addedPurchase.length == 0 ? 'required' : ''}`"  v-slot="{ errors }">
+                          <label for="price_sell" class="formbold-form-label">  نوع الخصم   </label>
+  
+                          <select  class="formbold-form-input-no-right-padding"  v-model="kindDiscount">
+                            <option value="fixed" >
+                            ثابت
+                            </option>
+                            <option value="percentage" >
+                            نسبة
+                            </option>
+                          </select>  
+                          <span class="error">{{ errors[0] }}</span>
+                        </ValidationProvider>
+                    </div>
+                    <div>
+                        <ValidationProvider name="   الخصم   "   :rules="`${addedPurchase.length == 0 ? 'required|numeric|min_value:1' : ''}`"  v-slot="{ errors }">
+                          <label for="price_sell" class="formbold-form-label">   الخصم  </label>
+  
+                          <input
+                              type="number"
+                              id="price_sell"
+                              placeholder=" الخصم"
+                              class="formbold-form-input"
+                              v-model="valueDiscountOnBuy"
+                          
+                          />
+                          <span class="error">{{ errors[0] }}</span>
+                        </ValidationProvider>
+                    </div>
+
+                    <div>
+                        <ValidationProvider name="سعر الشراء"  :rules="`${addedPurchase.length == 0 ? 'required|numeric|min_value:1' : ''}`"  v-slot="{ errors }">
+                          <label for="price_buy" class="formbold-form-label">   سعر الشراء  </label>
+  
+                          <input
+                              type="number"
+                              id="price_buy"
+                              placeholder="سعر الشراء"
+                              class="formbold-form-input"
+                              v-model="price_buy"
+                          
+                          />
+                          <p  class="info-message">ان قمت بتغير سعر الشراء سيتم تحديثه فى السيستم</p>
+                          <span class="error">{{ errors[0] }}</span>
+                        </ValidationProvider>
+                    </div>
                 </div>
 
                 <div class="formbold-mb-3 cont_add_del_upda">
@@ -140,7 +173,7 @@
 
                 </div>
 
-                <div class="formbold-input-flex">
+                <!-- <div class="formbold-input-flex">
 
                   <div>
                       <label for="discount_value" class="formbold-form-label">  الخصم </label>
@@ -166,7 +199,7 @@
                         <span class="error">{{ errors[0] }}</span>
                       </ValidationProvider>
                     </div>   
-                </div>
+                </div> -->
 
                 <div class="formbold-mb-3">
                   <label for="address" class="formbold-form-label">  عنوان/ اسم المورد </label>
@@ -281,6 +314,8 @@
           quantity: '',
           price_sell: 0,
           price_buy: 0,
+          valueDiscountOnBuy: 0,
+          kindDiscount: "fixed",
           //itemName:'',
           productInfo:'',
           
@@ -360,6 +395,8 @@
       name: this.selectedProduct,
       price_sell: this.price_sell,
       price_buy: this.price_buy,
+      valueDiscountOnBuy: this.valueDiscountOnBuy,
+      kindDiscount: this.kindDiscount,
       quantity: this.quantity,
       productInfo:this.productInfo,
     };
@@ -381,6 +418,9 @@
       this.quantity = '';
       this.price_buy=''
       this.price_sell=''
+      this.valueDiscountOnBuy=''
+      this.kindDiscount=''
+
       this.productInfo = '';
       this.selectProductForUpdateProp = '';
 
@@ -395,8 +435,10 @@
 
         this.selectedProduct = selectedUpdatePro.name;
         this.productId = selectedUpdatePro.id;
-        this.price_buy = selectedUpdatePro.price_buy;
         this.price_sell = selectedUpdatePro.price_sell;
+        this.price_buy = selectedUpdatePro.price_buy;
+        this.valueDiscountOnBuy= selectedUpdatePro.valueDiscountOnBuy
+        this.kindDiscount= selectedUpdatePro.kindDiscount
         this.quantity = selectedUpdatePro.quantity;
 
         this.isEditingProduct = true;
@@ -409,8 +451,10 @@
 
       if (index !== -1) {
         this.addedPurchase[index].name = this.selectedProduct;
-        this.addedPurchase[index].price_buy = this.price_buy;
         this.addedPurchase[index].price_sell = this.price_sell;
+        this.addedPurchase[index].price_buy = this.price_buy;
+        this.addedPurchase[index].valueDiscountOnBuy = this.valueDiscountOnBuy;
+        this.addedPurchase[index].kindDiscount = this.kindDiscount;
         this.addedPurchase[index].quantity = this.quantity;
 
         console.log(this.addedPurchase)
@@ -436,6 +480,11 @@
       this.productInfo = selectedProductObj ? selectedProductObj : '';
       this.price_sell = selectedProductObj ? selectedProductObj.priceMaterial : '';
       this.price_buy = selectedProductObj ? selectedProductObj.buyPrice : '';
+        // added recently so i put default values (0, fixed)
+      this.valueDiscountOnBuy = selectedProductObj?.valueDiscountOnBuy || 0; 
+      this.kindDiscount = selectedProductObj?.kindDiscount || 'fixed'; 
+      
+
       console.log(this.productId)
       console.log('our product',selectedProductObj)
 
@@ -487,6 +536,8 @@
                 id:existingProduct.id,
                 priceMaterial:Number(product.price_sell) , 
                 buyPrice: Number(product.price_buy), 
+                valueDiscountOnBuy: Number(product.valueDiscountOnBuy),
+                kindDiscount: product.kindDiscount,
                 
               };
               

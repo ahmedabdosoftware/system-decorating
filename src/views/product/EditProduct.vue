@@ -92,7 +92,8 @@
           </div>
           <div class="contPrice">
             <div class="price">
-              <label :class="{ 'dark-mode-title': getDarkMode }">price Material</label>
+
+              <label :class="{ 'dark-mode-title': getDarkMode }">price Material (sell)</label>
               <ValidationProvider
                 name="Price Material"
                 rules="required|double:1|min_value:0"
@@ -101,17 +102,28 @@
                 <input v-model="priceMaterial" placeholder="type here" type="text" />
                 <span class="error">{{ errors[0] }}</span>
               </ValidationProvider>
-              <label :class="{ 'dark-mode-title': getDarkMode }">price With Labor </label>
+              
+              <label :class="{ 'dark-mode-title': getDarkMode }">discount </label>
               <ValidationProvider
                 name="Price With Labor"
                 rules="required|double:1|min_value:0"
                 v-slot="{ errors }"
               >
-                <input v-model="priceWithLabor" placeholder="type here" type="text" />
+                <input class="valueDiscount discount" v-model="valueDiscountOnBuy" placeholder="type here" type="text" />
+                <select class="kindDiscount discount"  v-model="kindDiscount">
+                  <option value="fixed" >
+                    ثابت
+                  </option>
+                  <option  value="percentage">
+                    نسبة
+                  </option>
+                </select>   
                 <span class="error">{{ errors[0] }}</span>
               </ValidationProvider>
+
             </div>
             <div class="price offer">
+
               <label :class="{ 'dark-mode-title': getDarkMode }">offer price (optionally)</label>
               <ValidationProvider
                 name="Offer Price"
@@ -121,15 +133,27 @@
                 <input v-model="offerPrice" placeholder="type here" type="text" />
                 <span class="error">{{ errors[0] }}</span>
               </ValidationProvider>
+
               <label :class="{ 'dark-mode-title': getDarkMode }">buy price </label>
               <ValidationProvider
                 name="buy Price"
                 rules="double:1|min_value:0"
                 v-slot="{ errors }"
-              >
+              > 
                 <input v-model="buyPrice" placeholder="type here" type="text" />
                 <span class="error">{{ errors[0] }}</span>
               </ValidationProvider>
+
+              <label :class="{ 'dark-mode-title': getDarkMode }">price With Labor </label>
+              <ValidationProvider
+                name="Price With Labor"
+                rules="required|double:1|min_value:0"
+                v-slot="{ errors }"
+              >
+                <input v-model="priceWithLabor" placeholder="type here" type="text" />
+                <span class="error">{{ errors[0] }}</span>
+              </ValidationProvider>
+
             </div>
           </div>
           
@@ -137,7 +161,7 @@
             <div class="price-options">
              
             </div>
-            <div class="display-options">
+            <div class="display-options check">
               <label>
                 <input type="checkbox" v-model="displayOnSite" />
                 Display Product on Site
@@ -223,6 +247,8 @@ export default {
       priceWithLabor: "",
       offerPrice:"",
       buyPrice:"",
+      valueDiscountOnBuy:"",
+      kindDiscount:"fixed",
       selectedCategoryId: '',
       selectedUnitId:'',
       unitName:'',
@@ -284,6 +310,7 @@ export default {
       const product = this.products.find(product => product.id === this.id);
  
      if (product) {
+
        this.productTitle = product.name;
        this.description = product.description;
        this.imageUrl[0] = product.imageUrl;
@@ -292,6 +319,8 @@ export default {
        this.priceWithLabor = product.priceWithLabor;
        this.offerPrice = product.offerPrice || 0;
        this.buyPrice = product.buyPrice || 0;
+       this.valueDiscountOnBuy = product.valueDiscountOnBuy || 0;
+       this.kindDiscount = product.kindDiscount || "fixed";
        this.selectedCategoryId = product.categoryId;
        this.selectedUnitId = product.unitId;
        this.unitName = product.unitName;
@@ -346,12 +375,18 @@ export default {
           }
           
         let obj = {
+
+          // info
           name: this.productTitle,
+          description: this.description,  
+          // pricing
           priceMaterial: parseFloat(this.priceMaterial),
           priceWithLabor: parseFloat(this.priceWithLabor),
           offerPrice: parseFloat(this.offerPrice),
           buyPrice: parseFloat(this.buyPrice),
-          description: this.description,
+          valueDiscountOnBuy: parseFloat(this.valueDiscountOnBuy),
+          kindDiscount: this.kindDiscount,
+          // other
           categoryId: this.selectedCategoryId,
           unitId: this.selectedUnitId,
           unitName: this.unitName,
@@ -596,7 +631,22 @@ cursor:not-allowed;
 .upUnderImge {
   text-transform: capitalize;
 }
-
+.branch{
+  width: 160px !important;
+  // background-color: red;
+}
+.branch-label{
+  width: 80%;
+  // background-color: red;
+}
+.discount{
+  width: 45% !important;
+  // background-color: red;
+}
+.check{
+  margin-top: 20px;
+  // background-color: red;
+}
 // phone
 @media (max-width: 477px) {
   .title {

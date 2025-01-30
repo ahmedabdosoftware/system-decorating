@@ -1,5 +1,10 @@
 <template>
-    <div class="statistics_result" :class="{'statistics_result--nonPaid': isNonPaid}">
+    <div class="statistics_result"
+      :class="{
+        'statistics_result--nonPaid': isNonPaid,
+        'statistics_result--loading': isLoading,
+      }"     
+     >
       <div>
         <font-awesome-icon class="iconAwesome" :icon="icon" />
       </div>
@@ -31,7 +36,11 @@
       isNonPaid: {
         type: Boolean,
         default: false
-      }
+      },
+      isLoading: {
+      type: Boolean,
+      default: false,
+    },
     }
   }
   </script>
@@ -52,10 +61,16 @@
    width: 220px;
    min-height: 100px;
    background-color: rgb(240, 237, 237);
-   
    border-radius: 8px;
    margin: 15px 0px;
    display: flex;
+   border: 2px solid transparent;
+
+   
+   &--loading {
+    border-color: orange;
+    animation: pulse 1.5s infinite;
+  }
 
    >div:first-child{
       width: 60px;
@@ -108,6 +123,17 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
+}
+@keyframes pulse {
+  0% {
+    background-color: rgba(255, 165, 0, 0.3);
+  }
+  50% {
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  100% {
+    background-color: rgba(255, 165, 0, 0.3);
+  }
 }
 
 @media (max-width: 477px){

@@ -1,5 +1,6 @@
 <template>
-    <div :style="dropdownStyle" class="dropdown">
+    <!-- <div :style="dropdownStyle" class="dropdown"> -->
+    <div  class="dropdown">
       <div class="dropdown-content">
         <slot></slot> 
         
@@ -16,25 +17,25 @@
     props: ["position"],
     computed: {
     // بناءً على الـ prop "position" يتم تحديد الموقع
-    dropdownStyle() {
-      if (this.position === "products") {
-        return {
-          left: '65px',
-          top: '170px',
-        };
-      } else if (this.position === "storage") {
-        return {
-          left: '65px',  
-          top: '400px',
-        };
-      } else if (this.position === "purchases") {
-        return {
-          left: '65px',  
-          top: '450px',
-        };
-      }
-      return {}; 
-    },
+    // dropdownStyle() {
+    //   if (this.position === "products") {
+    //     return {
+    //       left: '65px',
+    //       top: '170px',
+    //     };
+    //   } else if (this.position === "storage") {
+    //     return {
+    //       left: '65px',  
+    //       top: '400px',
+    //     };
+    //   } else if (this.position === "purchases") {
+    //     return {
+    //       left: '65px',  
+    //       top: '450px',
+    //     };
+    //   }
+    //   return {}; 
+    // },
   },
 
    
@@ -43,7 +44,10 @@
   
   <style scoped lang="scss">
   .dropdown {
-    position: fixed;
+    // position: fixed;
+    position: absolute;
+    left: 50px;
+    top: 50px;
     display: none;
     width: 110px;
     z-index: 1000; 
@@ -68,7 +72,7 @@
   .dropdown-content a {
     height: 15px;
     border-radius: 15px;
-    color: rgb(31, 31, 48);
+    color: rgb(31, 31, 48) !important;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
@@ -79,8 +83,8 @@
     align-items: center;
     margin-top: 5px;
     font: {
-        size: 12px;
-        weight:500;
+        size: 12px !important;
+        weight:500 !important;
     }
     
     &:hover {

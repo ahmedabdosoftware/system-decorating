@@ -42,11 +42,12 @@
   
 .content-view {
   min-height: 100vh;
-  background-color: hsl(0, 100%, 98%);
+  background-color: #f7f7f9;
 // background-color: rgba(139, 69, 19, 0.05); // بني فاتح جدًا مع شفافية 5%
   margin-left: 20%;
   box-sizing: border-box;
   width: 80%;
+  // background-color: red;
 }
 
 

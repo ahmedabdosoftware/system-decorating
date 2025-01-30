@@ -1,6 +1,7 @@
 <template>
     <!-- /* eslint-disable */ -->
     <div class="page oredrs">
+      <!-- <Breadcrumb :breadcrumbs="breadcrumbs" /> -->
       <div class="title">
         <div>
           <div class="contTitle">
@@ -18,13 +19,13 @@
               />
               <button>export</button>
             </div>
-            <router-link to="/dashboard/AddNewOrder">
+            <router-link to="/dashboard/v1/AddNewOrder">
               <button class="add">+ add order</button>
             </router-link>
           </div>
         </div>
   
-        <div :class="{ 'dark-mode-box': getDarkMode }">
+        <div :class="{ 'dark-mode-box': getDarkMode }" class="filter_by_search">
           <div class="">
             <input
             :class="{ 'dark-mode-search': getDarkMode }"
@@ -79,20 +80,24 @@
   import { useOrdersStore } from '@/store/order/orders.js';
 
   // ListTable
-  import ListTable from "@/components/orders/ListTable.vue";
+  import ListTable from "@/components/orders/table/ListTable.vue";
   
   // Skeleton Table
   import TableSkeleton from '@/shared/components/loading/skeletonLoader/TableSkeleton.vue';
  
   // NoData
   import NoData from "@/shared/components/noData/NoData.vue";
-  
+
+  // Breadcrumb
+  // import Breadcrumb from "@/shared/components/breadcrumb/Breadcrumb.vue"; 
+
   export default {
     name: "Order",
     components: {
       ListTable,
       NoData,
       TableSkeleton,
+      // Breadcrumb,
     },
     computed: {
 
@@ -172,7 +177,11 @@
         selectedFilter: 'date',
         isLoading: true,
 
-        
+        breadcrumbs: [
+        { label: "Dashboard", link: "/dashboard" },
+        { label: "Orders", link: "/dashboard/orders" },
+        { label: "Create Order", link: "/dashboard/orders/create" }
+      ]
       };
     },
    
@@ -229,6 +238,8 @@
   // }
   /* scrollUp => end */
   
-  
+  .title{
+    // background-color: red;
+  }
   </style>
   

@@ -108,28 +108,47 @@
             ...mapState(useCategoriesStore, ['categories']),
             ...mapState(useReturnsStore, ['returns']),  
 // New
-            // حساب إجمالي المرتجعات مع الخصم
-            calculateTotalReturns() {
-                console.log(this.returns)
-                if (!this.returns || this.returns.length === 0) {
-                    return 0;
-                }
+        // حساب إجمالي المرتجعات مع الخصومات
+        calculateTotalReturns() {
+            if (!this.returns || this.returns.length === 0) {
+                return "0.00";
+            }
 
-                let totalReturns = 0;
+            let totalReturns = 0;
 
-                // حساب إجمالي المرتجعات بدون خصم
-                totalReturns = this.returns.reduce((total, ret) => {
-                    return total + ret.products.reduce((subTotal, product) => {
-                        return subTotal + product.quantityReturn * product.price_buy;
-                    }, 0);
-                }, 0);
-                console.log('totalReturns',totalReturns)
+            // حساب إجمالي المرتجعات مع الخصومات
+            this.returns.forEach(ret => {
+                ret.products.forEach(product => {
+                    if (product && typeof product.price_buy !== 'undefined' && typeof product.quantityReturn !== 'undefined') {
+                        const productTotalPrice = product.price_buy * product.quantityReturn;
 
-                // حساب إجمالي الخصم المطبق على المرتجعات
-                const discountOnReturns = this.calculateDiscountOnReturns(totalReturns);
+                        // التحقق من وجود الخصائص الجديدة
+                        const hasDiscount = typeof product.valueDiscountOnBuy !== 'undefined' && typeof product.kindDiscount !== 'undefined';
 
-                return (totalReturns - discountOnReturns).toFixed(2); // إجمالي المرتجعات مع الخصم
-            },
+                        if (hasDiscount) {
+                            if (product.kindDiscount === 'percentage') {
+                                // خصم بالنسبة المئوية
+                                const discount = productTotalPrice * (Number(product.valueDiscountOnBuy) / 100);
+                                totalReturns += productTotalPrice - discount;
+                            } else if (product.kindDiscount === 'fixed') {
+                                // خصم بقيمة ثابتة
+                                const discount = Number(product.valueDiscountOnBuy) * Number(product.quantityReturn);
+                                totalReturns += productTotalPrice - discount;
+                            } else {
+                                // إذا كان الخصم غير معروف أو غير محدد
+                                totalReturns += productTotalPrice;
+                            }
+                        } else {
+                            // إذا كانت الخصائص غير موجودة (منتج قديم)
+                            totalReturns += productTotalPrice;
+                        }
+                    }
+                });
+            });
+
+            return totalReturns.toFixed(2);
+        },
+
 
 
 ///////////////
@@ -142,7 +161,6 @@
                 const totalReturns = this.calculateTotalReturns;
                 return (totalPurchases - totalReturns).toFixed(2);
                 },
-
 
             // حساب إجمالي قبل الخصم
             calculateTotalPriceForAll() {
@@ -157,19 +175,29 @@
                 return total.toFixed(2);
                 },
 
-            // حساب إجمالي الخصومات
-                calculateDiscount() {
-                    const total = this.calculateTotalPriceForAll;
-                    let discountAmount = 0;
-                    
-                    if (this.purchaseInfo.discount_type === 'percentage') {
-                        discountAmount =Number(total) * (Number(this.purchaseInfo.discount_value) / 100);
-                    } else if (this.purchaseInfo.discount_type === 'fixed') {
-                        discountAmount = Number(this.purchaseInfo.discount_value);
+           // حساب إجمالي الخصومات لكل منتج
+            calculateDiscount() {
+                let discountAmount = 0;
+
+                this.purchaseInfo.products.forEach(product => {
+                    // التحقق من أن المنتج يحتوي على الخصائص المطلوبة
+                    if (product && typeof product.price_buy !== 'undefined' && typeof product.quantity !== 'undefined') {
+                        const productTotalPrice = product.price_buy * product.quantity;
+
+                        const hasDiscount = typeof product.valueDiscountOnBuy !== 'undefined' && typeof product.kindDiscount !== 'undefined';
+                        console.log(hasDiscount)
+                        if (hasDiscount) {
+                            if (product.kindDiscount === 'percentage' ) {
+                                discountAmount += productTotalPrice * (Number(product.valueDiscountOnBuy) / 100);
+                            } else if (product.kindDiscount === 'fixed') {
+                                discountAmount += Number(product.valueDiscountOnBuy) * Number(product.quantity);
+                            }
+                        }
                     }
-                    
-                    return discountAmount.toFixed(2);
-                    },
+                });
+
+                return discountAmount.toFixed(2);
+            },
 
             // حساب الإجمالي الكلي بعد الخصومات
             calculateGrandTotal() {
@@ -198,39 +226,6 @@
                     await this.fetchReturnsByPurchaseId(this.purchaseInfo.id);
                 }
             },
-
-
-
-
-
-// New
-
-        // حساب إجمالي الخصم المطبق على المرتجعات
-        calculateDiscountOnReturns(totalReturns) {
-        let discountAmount = 0;
-        
-        if (this.purchaseInfo.discount_type === 'percentage') {
-            discountAmount = Number(totalReturns) * (Number(this.purchaseInfo.discount_value) / 100);
-
-            console.log('totalReturns',totalReturns)
-            console.log('discount_value',this.purchaseInfo.discount_value)
-            console.log(discountAmount)
-        } else if (this.purchaseInfo.discount_type === 'fixed') {
-            // توزيع الخصم الثابت بناءً على النسبة بين إجمالي المرتجعات وإجمالي المشتريات
-            const totalPurchases = this.calculateTotalPriceForAll;
-            discountAmount = (Number(this.purchaseInfo.discount_value) * totalReturns) / totalPurchases;
-
-            console.log('calculateTotalPriceForAll',this.calculateTotalPriceForAll)
-            console.log('totalReturns',totalReturns)
-            console.log('discount_value',this.purchaseInfo.discount_value)
-            console.log(discountAmount)
-        }
-        
-        return discountAmount.toFixed(2);
-        },
-
-//////////////////////////
-
 
       
         calculateTotalPrice(product) {

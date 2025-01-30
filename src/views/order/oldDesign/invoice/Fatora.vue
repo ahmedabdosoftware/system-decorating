@@ -47,7 +47,7 @@ import { mapState, mapActions } from 'pinia'
 import { useOrdersStore } from '@/store/order/orders.js';
 
   // ShowFatoora
-  import ShowFatoora from "@/components/orders/ShowFatoora.vue";
+  import ShowFatoora from "@/components/orders/fatora/ShowFatoora.vue";
   
   // Skeleton Details 
   import DetailsSkeleton from '@/shared/components/loading/skeletonLoader/DetailsSkeleton.vue';

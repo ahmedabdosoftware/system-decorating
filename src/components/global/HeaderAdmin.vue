@@ -1,5 +1,5 @@
 <template>
-  <header :class="{ 'dark-mode-header': getDarkMode }">
+  <header :class="[{ 'scrolled': isScrolled, 'dark-mode-header': getDarkMode }]">
     <div :class="{ 'dark-mode': getDarkMode }">
       <div class="cont-threeLines">
         <img
@@ -8,36 +8,63 @@
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDcuD37EZ7RcuSCK-xgiviaswyxNkGoXYggQ&usqp=CAU"
         />
       </div>
-      <div :class="{ 'dark-mode-header-first': getDarkMode }">
+       <!-- Search Input -->
+       <div class="search-container">
         <img
-          class="searchIcon"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQzOOcc8zmCDsFQDkDQKfSwt-zN9jKB0xYhjg&usqp=CAU&reload=on"
+        class="icon-search"
+        :src="require('@/assets/icons/search.png')"   
         />
-        <input
-          :class="{ 'dark-mode-header-first': getDarkMode }"
-          placeholder="search"
-          type="search"
-        />
+        <input type="text" placeholder="Search" />
+        <button class="shortcut">⌘K</button>
       </div>
+
     </div>
     <div>
-      <div class="icon-noti">
+     
+      <!-- shop link  -->
+      <!-- <div class="icon-noti">
         <a href="https://ahmedabdosoftware.github.io/websiteUpdated-DSD/">
-          <font-awesome-icon icon="store"  class="icon"/>
+          <img
+              class="icon "
+              :src="require('@/assets/icons/shop.png')"   
+          />
         </a>
+      </div> -->
+      
+       <!-- langauge  -->
+      <div class="icon-noti">
+        <!-- <font-awesome-icon class="icon" icon="globe" /> -->
+        <!-- <img
+            class="icon talk"
+            :src="require('@/assets/icons/talk_2.png')"   
+        /> -->
+        <img
+        class="icon"
+        :src="require('@/assets/icons/langauge.png')"   
+        />
       </div>
+      <!-- Dark mode  -->
+      <div class="icon-noti dark-mode-icon-cont">
+        <img
+        class="icon dark-mode-icon"
+        :src="require('@/assets/icons/dark-mode.png')"   
+        />
+      </div>
+      <!-- active  -->
       <div class="icon-noti">
         <img
-          class="icon"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5WwKlKFSsvyMhbxygrwac256XsnEe-aPtkQ&usqp=CAU"
+        class="icon"
+        :src="require('@/assets/icons/active.png')"   
         />
       </div>
-      <div class="profile-cont">
-        <img
-          class="icon profile"
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlo1-fGoWrSZLpqx-_GVEOJJRTi3xtkFdl6Q&usqp=CAU"
-        />
+      <!-- Profile  -->
+      <div class="profile" >
+          <img src="https://i.pravatar.cc/300" alt="User Profile" 
+          />
+          <span class="status-dot"></span>
       </div>
+      
+
     </div>
   </header>
 </template>
@@ -45,15 +72,30 @@
 // import router from "./router";
 export default {
   name: "HeaderAdmin",
+  data() {
+    return {
+      isScrolled: false,
+    };
+  },
+
   methods: {
     appearMenue() {
       document.getElementById("sidebar").style.cssText = "left:0%;";
+    },
+    handleScroll() {
+      this.isScrolled = window.scrollY > 10; 
     },
   },
   computed: {
     getDarkMode() {
       return this.$store.state.darkMode;
     },
+  },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
@@ -62,7 +104,7 @@ export default {
 header {
   width: 100%;
   height: 63px;
-  background-color: white;
+  background-color:#f7f7f9;
   // background-color: black;
   display: flex;
   justify-content: space-between;
@@ -70,9 +112,15 @@ header {
   position: sticky;
   top: 0px;
   z-index: 2;
-  border-bottom: 2px solid rgb(215, 213, 213);
-}
+  transition: box-shadow 0.3s ease, border-radius 0.3s ease;
 
+  // border-bottom: 2px solid rgb(215, 213, 213);
+}
+header.scrolled {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
 header > div:nth-child(1) {
   min-width: 28%;
   height: 40px;
@@ -85,7 +133,7 @@ header > div:nth-child(1) {
   > div:first-child {
     width: 20px;
     height: 20px;
-    background-color: white;
+    // background-color: white;
     border-radius: 10px;
   }
   > div:nth-child(2) {
@@ -116,31 +164,33 @@ header > div:nth-child(1) {
 header > div:nth-child(2) {
   width: 170px;
   height: 100%;
-  //   background-color: red;
+  // background-color: red;
   display: flex;
+  flex-direction: row !important;
   justify-content: space-evenly;
   align-items: center;
 }
 .icon-noti {
   width: 20px;
   height: 20px;
-  background-color: white;
+  // background-color: white;
   border-radius: 10px;
 }
 .icon {
   width: 20px;
   height: 20px;
 }
-.profile-cont {
-  background-color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
+
+.talk{
+  width: 23px;
+  height: 23px;
+  
 }
-.profile {
-  border-radius: 20px;
-  width: 40px;
-  height: 40px;
+
+.dark-mode-icon{
+  width: 23px;
+  height: 23px;
+
 }
 .threeLines {
   width: 20px;
@@ -150,16 +200,50 @@ header > div:nth-child(2) {
 .cont-threeLines{
   display: none;
 }
-.dark-mode-header {
-  background-color: black;
-  border-bottom: 2px solid rgb(26, 26, 26) !important;
-}
-.dark-mode {
-  background-color: black;
-}
-.dark-mode-header-first {
-  background-color: rgb(36, 36, 36) !important;
-}
+
+ /* Search Container */
+  .search-container {
+    display: flex;
+    flex-direction: row !important;
+    align-items: center !important;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 5px 10px;
+    width: 250px;
+    margin-right: 15px;
+   
+    .icon-search{
+      width: 20px !important;
+      height: 20px !important;
+    }
+  }
+  
+  /* Profile Section */
+  .profile {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .profile img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .status-dot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    background-color: #28a745;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+  }
 
 @media print {
   header {
@@ -193,6 +277,9 @@ header > div:nth-child(2) {
         // background-color: aqua;
       }
     }
+  }
+  .dark-mode-icon-cont{
+    display: none;
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
     <div class="welcomeMessage">
         <p>
-         ! مرحبا يا احمد 
+         ! مرحبا يا محمد 
         </p>
       </div>
 </template>

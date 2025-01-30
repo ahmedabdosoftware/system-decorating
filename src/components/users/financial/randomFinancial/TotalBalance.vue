@@ -3,7 +3,7 @@
     <div class="">
       <div class="random__title">
         <div class="random__title__text">
-          <p>workers's accounting <span>Random</span></p>
+          <p v-if="userInfo"> {{ userInfo.role== "technical"? "workers's": "clint's"  }} accounting <span>Random</span></p>
         </div>
         <div class="cont__title__totalChange">
           <div class="random__title__total">
@@ -11,7 +11,7 @@
               <p>total Balance</p>
             </div>
             <div class="total__number">
-              <p> $76735,433,7630</p>
+              <p>{{ balance }} $</p>
             </div>
           </div>
           <div class="random__title__change">
@@ -36,7 +36,11 @@
 // componnents
   // ToggleSwitch
   import ToggleSwitch from '@/components/users/financial/randomFinancial/ToggleSwitch.vue';
-  
+
+  // store
+  import { mapState, mapActions } from "pinia";
+  import { useRandomTransactionsStore } from '@/store/transactions/randomTransactions.js';
+  import { useGetUserStore } from '@/store/users/users.js';
 
   export default {
     name: "TotalBalance",
@@ -45,24 +49,33 @@
       ToggleSwitch,
     },
     computed: {
-    
-
-    },
-  created() {
-     
-
-    },
+    ...mapState(useRandomTransactionsStore, ["balance"]),
+  },
     methods: {    
       updateHiddenStatus(){
+        console.log("before",this.isHidden)
+        this.isHidden = !this.isHidden; // Toggle the hidden value
+        console.log("after",this.isHidden)
 
-      }
-     
+      },
+      ...mapActions(useRandomTransactionsStore, ["fetchTransactionsByProfile"]),
+      ...mapActions(useGetUserStore, ['fetchSingleUser']),
+
     },
     data() {
       return {
         isHidden:false,
+        profileId: this.$route.params.profileId, 
+        userInfo:null,
 
       };
+    },
+    async created() {
+      await this.fetchTransactionsByProfile(this.profileId);
+      this.userInfo = await this.fetchSingleUser(this.profileId);
+
+      // this.isLoading = false;
+
     },
   };
   </script> 
@@ -77,6 +90,8 @@
       height: 200px;
       width: 100%;
       overflow: hidden;
+      background-color: #f9f9f9;
+
     }
     .random__title__text{
       // background-color: rgb(159, 107, 107);
@@ -98,7 +113,8 @@
       padding-left: 20px;
     }
     .random__title__total{
-      background-color:white;
+      // background-color:white;
+      background-color: #f9f9f9;
       box-shadow: 0 0 5px rgb(210, 205, 205);
       width: 470px;
       height: 130px;
@@ -126,22 +142,29 @@
     }
 
     .random__title__change{
-      width: 120px;
+      width: 130px;
       height: 70px;
       border-radius: 8px;
       margin-right: 20px;
-      // background-color: red;
+      background-color:white;
+      box-shadow: 0 0 5px rgb(210, 205, 205);     
       display: flex;
       flex-wrap: wrap;
       justify-content: space-evenly;
       align-items: center;
     }
-
+    .toggle{
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      align-items: center;
+    }
     .toggle__chosse{
       // width: 100%;
       // text-align: center;
       // background-color: coral;
-      margin-right: 10px;
+      // margin-right: 10px;
       span{
         text-transform: capitalize;
         color: rgb(36, 36, 235);
@@ -162,6 +185,16 @@
         margin-bottom: 10px;
       
       }
+    }
+    @media (max-width: 370px) {
+      .random__title__total{
+        width: 220px;
+      }
+
+      .random__title__change{
+        width: 65px;
+      }
+
     }
 
 

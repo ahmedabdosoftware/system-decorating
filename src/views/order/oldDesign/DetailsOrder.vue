@@ -37,7 +37,7 @@
 
   
   // ShowDetails
-  import ShowDetails from "@/components/orders/ShowDetails.vue";
+  import ShowDetails from "@/components/orders/details/ShowDetails.vue";
   
   // Skeleton Details 
   import DetailsSkeleton from '@/shared/components/loading/skeletonLoader/DetailsSkeleton.vue';

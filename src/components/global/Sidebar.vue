@@ -4,11 +4,8 @@
         <div :class="{ 'dark-mode-header': getDarkMode }" class="header">
           
           <img id="logoSystem" :src="require('@/assets/images/logo.svg')" />
-         
-          <img
-            class="loggo"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTUgxG9z03WuK9OPQ64aptvJjEyyPz2Cnhcw&usqp=CAU"
-          />
+          
+          <img  class="flag" :src="require('@/assets/icons/decoration.png')" />
           <span v-on:click="disappear()" class="x">x</span>
         </div>
         <div class="links">
@@ -16,7 +13,8 @@
           <!-- dashboard Section -->
           <div :class="{ 'dark-mode-content': getDarkMode }">
               <router-link to="/dashboard">
-                <font-awesome-icon class="iconAwesome" icon="house" />
+                <img  class="iconAwesome" :src="require('@/assets/icons/homepage.png')" />
+                <!-- <font-awesome-icon class="iconAwesome" icon="house" /> -->
               </router-link>
               <router-link to="/dashboard" v-if="!isCollapsed" >
                 <p class="link">dashboard</p>
@@ -26,7 +24,8 @@
           
           <!-- products Section -->
           <div @click="toggleSubMenu('products')" :class="[{'different-color': isProductsOpen, 'dark-mode-content': getDarkMode}, 'product-sup']">
-            <font-awesome-icon class="iconAwesome" icon="store" />
+            <!-- <font-awesome-icon class="iconAwesome" icon="store" /> -->
+            <img  class="iconAwesome" :src="require('@/assets/icons/products.png')" />
             <p class="link products_p">products</p>
             <font-awesome-icon v-if="!isCollapsed" class="arrow" :icon="isProductsOpen ? 'chevron-up' : 'chevron-down'" />
 
@@ -94,7 +93,9 @@
               </div>
           <div :class="{ 'dark-mode-content': getDarkMode }">
             <router-link  to="/dashboard/Order">
-              <font-awesome-icon class="iconAwesome" icon="briefcase" />
+              <!-- <font-awesome-icon class="iconAwesome" icon="briefcase" /> -->
+              <img  class="iconAwesome" :src="require('@/assets/icons/shopping-bag.png')" />
+
             </router-link >
             <router-link v-if="!isCollapsed" to="/dashboard/Order">
               <p class="link">orders</p>
@@ -102,15 +103,17 @@
           </div>
           <div :class="{ 'dark-mode-content': getDarkMode }">
             <router-link to="/dashboard/users/technicalPages/Technical">
-              <font-awesome-icon class="iconAwesome" icon="tools" />
+              <!-- <font-awesome-icon class="iconAwesome" icon="tools" /> -->
+              <img  class="iconAwesome" :src="require('@/assets/icons/setting.png')" />
             </router-link>
             <router-link v-if="!isCollapsed" to="/dashboard/users/technicalPages/Technical">
               <p class="link">technicals</p>
-            </router-link>
+            </router-link> 
           </div>
           <div :class="{ 'dark-mode-content': getDarkMode }">
             <router-link  to="/dashboard/users/clintPages/Clint">
-              <font-awesome-icon class="iconAwesome" icon="user-tie" />
+              <!-- <font-awesome-icon class="iconAwesome" icon="user-tie" /> -->
+              <img  class="iconAwesome" :src="require('@/assets/icons/profile.png')" />
             </router-link>
             <router-link v-if="!isCollapsed" to="/dashboard/users/clintPages/Clint">
               <p class="link">clients</p>
@@ -118,16 +121,18 @@
           </div>
           <div :class="{ 'dark-mode-content': getDarkMode }" class="projects">
             <router-link to="/dashboard/Projects">
-              <font-awesome-icon class="iconAwesome" icon="project-diagram" />
+              <!-- <font-awesome-icon class="iconAwesome" icon="project-diagram" /> -->
+              <img  class="iconAwesome" :src="require('@/assets/icons/practice_2.png')" />
+
             </router-link>
             <router-link v-if="!isCollapsed" to="/dashboard/Projects">
               <p class="link">projects</p>
-            </router-link>
+            </router-link> 
           </div>
-       
            <!-- Storage Section -->
            <div @click="toggleSubMenu('storage')" :class="[{'different-color': isStorageOpen, 'dark-mode-content': getDarkMode}, 'storage-sup']">
-            <font-awesome-icon class="iconAwesome" icon="boxes" />
+            <!-- <font-awesome-icon class="iconAwesome" icon="boxes" /> -->
+            <img  class="iconAwesome" :src="require('@/assets/icons/warehouse.png')" />
             <p class="link storage_p">storage</p>
             <font-awesome-icon v-if="!isCollapsed" class="arrow" :icon="isStorageOpen ? 'chevron-up' : 'chevron-down'" />
 
@@ -181,11 +186,12 @@
             </router-link>
           </div>
 
-
+          
           
         <!-- Purchases Section -->
         <div @click="toggleSubMenu('Purchases')" :class="[{'different-color': isPurchasesOpen, 'dark-mode-content': getDarkMode}, 'purchase-sup']">
-            <font-awesome-icon class="iconAwesome" icon="shopping-cart" />
+            <!-- <font-awesome-icon class="iconAwesome" icon="shopping-cart" /> -->
+            <img  class="iconAwesome" :src="require('@/assets/icons/Purchases.png')" />
             <p class="link purchases_p">Purchases</p>
             <font-awesome-icon v-if="!isCollapsed" class="arrow" :icon="isPurchasesOpen ? 'chevron-up' : 'chevron-down'" />
 
@@ -230,24 +236,27 @@
         <!-- catalog Section -->
         <div :class="{ 'dark-mode-content': getDarkMode }">
           <router-link  to="/dashboard/catalog">
-            <font-awesome-icon class="iconAwesome" icon="file-pdf"  />
+            <!-- <font-awesome-icon class="iconAwesome" icon="file-pdf"  /> -->
+            <img  class="iconAwesome" :src="require('@/assets/icons/list.png')" />
           </router-link>
           <router-link v-if="!isCollapsed" to="/dashboard/catalog">
             <p class="link">Catalog PDF</p>
-          </router-link>
+          </router-link> 
         </div>
         
         <!-- reviews Section -->
         <div :class="{ 'dark-mode-content': getDarkMode }" class="reviews">
             <router-link to="/dashboard/Reviews">
-              <font-awesome-icon class="iconAwesome" icon="comments" />
+              <!-- <font-awesome-icon class="iconAwesome" icon="comments" /> -->
+              <img  class="iconAwesome" :src="require('@/assets/icons/review.png')" />
             </router-link>
             <router-link v-if="!isCollapsed" to="/dashboard/Reviews">
               <p class="link">reviews</p>
             </router-link>
           </div>
           <div :class="{ 'dark-mode-content': getDarkMode }" class="themeCont">
-              <font-awesome-icon @click="theme()" class="iconAwesome" icon="adjust" />
+              <!-- <font-awesome-icon @click="theme()" class="iconAwesome" icon="adjust" /> -->
+              <img  class="iconAwesome" :src="require('@/assets/icons/dark-mode.png')" />
               <div v-if="!isCollapsed" class="theme" :class="{ 'dark-mode-content': getDarkMode }">
                 <p @click="theme()" class="link theme">theme</p>
                   <font-awesome-icon  class="iconAwesome" :icon="getDarkMode ? 'moon' : 'sun'" />
@@ -259,9 +268,15 @@
               :class="{ 'dark-mode-content': getDarkMode }"
               class="profile-cont"
             >
-              <div class="contImge">
+              <!-- <div class="contImge">
                 <font-awesome-icon class="profile" icon="user-circle" />
-              </div>
+              </div> -->
+              <!-- Profile  -->
+            <div class="profile" >
+              <img src="https://i.pravatar.cc/300" alt="User Profile" 
+              />
+              <span class="status-dot"></span>
+            </div>
             </div>
             <div v-if="!isCollapsed"
               class="log-out-word"
@@ -343,27 +358,11 @@
   .sidebar {
     width: 20%;
     height: 100vh;
-    background-color: white;
+    background-color: #f7f7f9; 
     position: fixed;
     left: 0px;
     top: 0px;
     transition: all 0.3s ease;
-    overflow-y: auto;
-    //overflow-x: visible;
-
-    &::-webkit-scrollbar {
-    width: 8px; 
-    height: 8px;
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2); 
-    border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(0, 0, 0, 0.4); 
-  }
 
 
     &.sidebar-collapsed {
@@ -376,16 +375,20 @@
     border-radius: 5px;
     display: flex;
     flex-wrap: wrap;
-    background-color: white;
+    // background-color: white;
     // background-color: rgb(205, 133, 133);
   }
   .header {
     width: 100%;
     height: 63px;
-    //background-color: firebrick;
+    // background-color: rgb(64, 63, 63);
     display: flex;
     align-items: center;
-    border-bottom: 2px solid rgb(215, 213, 213);
+    // border-bottom: 2px solid rgb(215, 213, 213);
+    // position: sticky; 
+    // top: 0px; 
+    // left: 0px;
+    // z-index: 1000; 
     div {
       width: 30%;
       height: 100%;
@@ -426,27 +429,57 @@
     transition: all 0.3s ease;
 
   }
+  .flag{
+    width: 30px !important;
+    height: 30px !important;
+  }
   .links {
     width: 100%;
-    height: 90%;
+    height: 90vh;
     // background-color: skyblue;
     transition: height 0.3s ease;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
+
+    overflow-y: auto;
+    // overflow-x: visible;
+
+    &::-webkit-scrollbar {
+    width: 6px; 
+    height: 8px;
+  }
+
+  &:hover  &::-webkit-scrollbar {
+    width: 4px; 
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2); 
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.4); 
+
+  }
+    
     div:hover {
       background-color: rgb(220, 220, 245);
+      transform: translateX(5px)
     }
     div:hover > div {
       background-color: rgb(220, 220, 245);
     }
-     div {
+    div {
       position: relative;
       border-radius: 5px;
       width: 100%;
       height: 45px;
       margin-bottom: 2px;
-      background-color: white;
+      transition: all 0.3s ease;
+      // background-color: white;
       display: flex;
       align-items: center;
       color:rgb(121, 120, 120);
@@ -474,7 +507,7 @@
           width: 20px;
           height: 20px;
           border-radius: 20px;
-          background-color: white;
+          // background-color: white;
           margin-left: 20px;
           margin-top: 6px;
           .profile {
@@ -498,6 +531,11 @@
       }
     }
   }
+  .links div a, .links div p {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: black !important;
+}
   .arrow {
     position: absolute;
     right: 10px;
@@ -531,13 +569,27 @@
     }
    
   }
+  /* Profile Section */
+  .profile {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .profile img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
   // collapse=> start
   .toggle-button {
     position: absolute;
     top: 65px;
     right: -4px;
     cursor: pointer;
-    border: 2px solid #ccc;
+    border: 2px solid rgb(162, 162, 163);
     width: 30px;
     height: 30px;
     border-radius: 50%;
@@ -546,8 +598,13 @@
     align-items: center;
     justify-content: center;
     background-color: white;
+    transition: all 0.4s ease;
+
   
-    
+    &:hover {
+      background-color: #e9ecef;
+      transform: rotate(180deg); 
+    }
   }
   
   .sidebar-collapsed .links div .link,
@@ -629,10 +686,14 @@
     .x {
       display: block;
     }
-    .loggo {
+    .flag {
       display: none;
     }
+    .links {
+
+    overflow-y: visible;
    
+  }
   }
   // phone
   @media (max-width: 477px) {
@@ -684,5 +745,6 @@
   
 
 }
+
   </style>
   
