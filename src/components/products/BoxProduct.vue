@@ -2,6 +2,7 @@
   <div class="contPro">
     <div :class="{ 'dark-mode': getDarkMode }">
       <div>
+        
         <img :src="oneProduct.imageUrl" />
       </div>
       <div>
