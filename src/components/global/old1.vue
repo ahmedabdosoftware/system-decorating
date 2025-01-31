@@ -136,11 +136,11 @@
     height: 40px;
     border-radius: 20px;
   }
-  .profile {
-    border-radius: 20px;
-    width: 40px;
-    height: 40px;
-  }
+  // .profile {
+  //   border-radius: 20px;
+  //   width: 40px;
+  //   height: 40px;
+  // }
   .threeLines {
     width: 20px;
     height: 20px;

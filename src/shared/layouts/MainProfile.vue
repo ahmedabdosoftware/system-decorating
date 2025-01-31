@@ -97,7 +97,7 @@ export default {
   .profile-content {
     min-height: 100vh;
     width: 100%;
-    background-color: #f9f7f7;
+    /* background-color: #f9f7f7; */
 
   }
   .infoUser{
@@ -105,7 +105,7 @@ export default {
     border-top-right-radius: 6px;
     width: 100%;
     height: 300px;
-    background-color: white;
+    /* background-color: white; */
     display: grid;
     grid-template-areas: 
     "backgroundd backgroundd backgroundd backgroundd "

@@ -1,17 +1,20 @@
 <template>
     <!-- /* eslint-disable */ -->
     <div class="page oredrs">
-      <!-- <Breadcrumb :breadcrumbs="breadcrumbs" /> -->
       <div class="title">
         <div>
-          <div class="contTitle">
+          <div>
+             <Breadcrumb :breadcrumbs="breadcrumbs" />
+          <!-- <div class="contTitle">
             <div>
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUQUVkx6lAgtb3-3fMuDZnDixihOSrrNSAOg&usqp=CAU"
               />
             </div>
             <p :class="{ 'dark-mode-title': getDarkMode }">order grid</p>
-          </div>
+          </div> -->
+         </div> 
+         <div>
           <div>
             <div class="export">
               <img
@@ -22,6 +25,7 @@
             <router-link to="/dashboard/v1/AddNewOrder">
               <button class="add">+ add order</button>
             </router-link>
+          </div>
           </div>
         </div>
   
@@ -59,6 +63,8 @@
           </div>
         </div>
       </div>
+
+      
       <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
         
         <TableSkeleton v-if="isLoading" :rows="5" :columns="6" />
@@ -89,7 +95,7 @@
   import NoData from "@/shared/components/noData/NoData.vue";
 
   // Breadcrumb
-  // import Breadcrumb from "@/shared/components/breadcrumb/Breadcrumb.vue"; 
+  import Breadcrumb from "@/shared/components/breadcrumb/Breadcrumb.vue"; 
 
   export default {
     name: "Order",
@@ -97,7 +103,7 @@
       ListTable,
       NoData,
       TableSkeleton,
-      // Breadcrumb,
+      Breadcrumb,
     },
     computed: {
 
@@ -179,8 +185,8 @@
 
         breadcrumbs: [
         { label: "Dashboard", link: "/dashboard" },
-        { label: "Orders", link: "/dashboard/orders" },
-        { label: "Create Order", link: "/dashboard/orders/create" }
+        { label: "Orders", link: "/dashboard/Order" },
+        // { label: "Create Order", link: "/dashboard/AddNewOrder" }
       ]
       };
     },
@@ -237,9 +243,9 @@
   //   text-align: center;
   // }
   /* scrollUp => end */
+
+
+
   
-  .title{
-    // background-color: red;
-  }
   </style>
   

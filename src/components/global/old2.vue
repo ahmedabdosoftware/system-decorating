@@ -138,12 +138,12 @@
   }
   
   /* Profile Section */
-  .profile {
+  /* .profile {
     display: flex;
     align-items: center;
     position: relative;
     cursor: pointer;
-  }
+  } */
   
   .profile img {
     width: 30px;

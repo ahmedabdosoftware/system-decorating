@@ -272,7 +272,7 @@
                 <font-awesome-icon class="profile" icon="user-circle" />
               </div> -->
               <!-- Profile  -->
-            <div class="profile" >
+            <div class="profile_sidbar" >
               <img src="https://i.pravatar.cc/300" alt="User Profile" 
               />
               <span class="status-dot"></span>
@@ -570,14 +570,14 @@
    
   }
   /* Profile Section */
-  .profile {
+  .profile_sidbar {
     display: flex;
     align-items: center;
     position: relative;
     cursor: pointer;
   }
   
-  .profile img {
+  .profile_sidbar img {
     width: 30px;
     height: 30px;
     border-radius: 50%;

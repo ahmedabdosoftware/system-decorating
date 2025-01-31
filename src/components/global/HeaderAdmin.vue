@@ -58,7 +58,7 @@
         />
       </div>
       <!-- Profile  -->
-      <div class="profile" >
+      <div class="profile_header" >
           <img src="https://i.pravatar.cc/300" alt="User Profile" 
           />
           <span class="status-dot"></span>
@@ -220,14 +220,14 @@ header > div:nth-child(2) {
   }
   
   /* Profile Section */
-  .profile {
+  .profile_header {
     display: flex;
     align-items: center;
     position: relative;
     cursor: pointer;
   }
   
-  .profile img {
+  .profile_header img {
     width: 30px;
     height: 30px;
     border-radius: 50%;

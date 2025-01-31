@@ -16,6 +16,7 @@
             </select>
 
         </div>
+        
           
     <div class="formbold-input-flex">
         
@@ -31,74 +32,75 @@
                 v-model="quantity"
             
             />
+
             <span class="error">{{ errors[0] }}</span>
             </ValidationProvider>
         </div>
         <div>
-            <label for="product" class="formbold-form-label">  Product  </label>
-            <ValidationProvider name="المنتج"  :rules="`${addedOrders.length == 0 ? 'required' : ''}`"  v-slot="{ errors }">
-            <input list="propList"  class="formbold-form-input"  placeholder=" Search for products " v-model="selectedProduct" @input="updateProductId">
-            <datalist id="propList">
-                <option v-for="product in myAllProducts" :key="product.id" :value="product.name" ></option>
-            </datalist>
+            <label for="Name" class="formbold-form-label">  Name  </label>
+            <ValidationProvider name="Name"  :rules="`${addedOrders.length == 0 ? 'required' : ''}`"  v-slot="{ errors }">
+            <input list="propList"  class="formbold-form-input"  placeholder=" Enter Name " v-model="name">
             <span class="error">{{ errors[0] }}</span>
             </ValidationProvider>
         </div>
     </div>
 
     <div class="formbold-input-flex">
+        <div>
+          <label for="Category" class="formbold-form-label">  Category </label>
+          <input
+              type="text"
+              id="Category"
+              placeholder="Category "
+              class="formbold-form-input"
+              v-model="Category"
+          />
+        </div>
+        <div>
+          <label for="Value" class="formbold-form-label">  Value </label>
+          <input
+              type="text"
+              id="Value"
+              placeholder="Value "
+              class="formbold-form-input"
+              v-model="Value"
+          />
+        </div>
 
+    </div>
+    <div v-if="name" class="formbold-input-flex">
         <div class="display-options">
-            <label v-if="selectedProduct" >
-                <input type="checkbox" v-model="pullFromBranch" />
-                Pull From Branch
+            <label  >
+                <input type="checkbox" v-model="JustForShowIn" />
+                Just Show In
             </label>
         </div>   
-        <div>
-        <label for="priceOffer" class="formbold-form-label">  Discount </label>
-        <input
-            type="number"
-            id="priceOffer"
-            placeholder="Discount "
-            class="formbold-form-input"
-            v-model="price_offer"
-        />
-        </div>
+        <div class="display-options">
+            <label >
+                <input type="checkbox" v-model="willCalculated" />
+                Will calculated
+            </label>
+        </div>   
+    </div>   
 
         
+    <div class="formbold-input-flex" v-if="name && willCalculated">
+      <div class="display-options">
+            <label  >
+                <input type="checkbox" v-model="instaltionCalculated" />
+                 iN Instaltion ?
+            </label>
+        </div>   
+        <div class="display-options">
+            <label >
+                <input type="checkbox" v-model="matrialCalculated" />
+                  In Matrial ?
+            </label>
+        </div>   
+      
     </div>
 
-    <div class="formbold-input-flex" v-if="pullFromBranch">
-        
-        <div>
-            <ValidationProvider name="الكمية المتاحة"   v-slot="{ errors }">
-                <label for="quantityInBranch" class="formbold-form-label">    Avilabel Quantity </label>
-                <input
-                    type="number"
-                    id="quantityInBranch"
-                    placeholder="Quantity"
-                    class="formbold-form-input"
-                    v-model="quantityInBranch"
-                    readonly
-                />
-                <p v-if="aboutQuantityInBranchMessage" class="warning-message"> {{ aboutQuantityInBranchMessage }} </p>
-                <span class="error">{{ errors[0] }}</span>
-            </ValidationProvider>
-        </div>
-        <div>
-            <label for="branch" class="formbold-form-label">   Avilabel Branches in</label>
-            <ValidationProvider name="الفروع"   v-slot="{ errors }">
-                <input list="List"  class="formbold-form-input"  placeholder=" ابحث فى الفروع" v-model="selectedBranch" @input="getProductFromBranch">
-                <datalist id="List">
-                <option v-for="branch in getAllBranchesHasProduct" :key="branch.id" :value="branch.nameBranch" ></option>
-                </datalist>
-                <p v-if="getAllBranchesHasProduct.length == 0" class="warning-message"> غير متوفر فى اى فرع </p>
-                <span class="error">{{ errors[0] }}</span>
-            </ValidationProvider>
-        </div>
-        </div>
-
-        <div class="formbold-mb-3 cont_add_del_upda">
+    <div class="formbold-mb-3 cont_add_del_upda">
             <button @click.prevent="addProduct" :disabled="!selectedProduct || !quantity" class="addProduct-btn"> Add</button>
             <button @click.prevent="updateProduct" :disabled="!selectedProduct || !quantity"  class="updateProduct-btn" >  Edit </button>
             <button @click.prevent="deleteProduct" class="deleteProduct-btn"> Delete </button>
@@ -163,10 +165,17 @@ export default {
       // product data  
         selectedProduct:'',
         productId:'',
-        price_offer: '',
         quantity: '',
-        //itemName:'',
+        Value: 0,
+        name:'----',
+        Category:'----',
         productInfo:'',
+
+        // where add that
+        JustForShowIn: false,
+        willCalculated: true,
+        instaltionCalculated: true,
+        matrialCalculated: false,
 
         // selectProductForUpdate
         selectProductForUpdateProp:'',
@@ -240,10 +249,9 @@ export default {
 
   let newProduct = {
     id: this.productId,
+    categoryName:this.productInfo,
     name: this.selectedProduct,
-    price_offer: this.price_offer,
     quantity: this.quantity,
-    productInfo:this.productInfo,
   };
 
   this.toPUllFromBranch(newProduct)

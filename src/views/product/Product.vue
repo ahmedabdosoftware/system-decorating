@@ -3,28 +3,33 @@
   <div class="page product">
     <div class="title">
       <div>
-        <div class="contTitle">
           <div>
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUQUVkx6lAgtb3-3fMuDZnDixihOSrrNSAOg&usqp=CAU"
-            />
+             <Breadcrumb :breadcrumbs="breadcrumbs" />
+          <!-- <div class="contTitle">
+            <div>
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUQUVkx6lAgtb3-3fMuDZnDixihOSrrNSAOg&usqp=CAU"
+              />
+            </div>
+            <p :class="{ 'dark-mode-title': getDarkMode }">product grid</p>
+          </div> -->
+         </div> 
+         <div>
+          <div>
+            <div class="export">
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmvEXj1Sr-tzeKuEP9PgzajIUDvR_-L-zfkg&usqp=CAU"
+              />
+              <button>export</button>
+            </div>
+            <router-link to="/dashboard/AddNewProduct">
+              <button class="add">+ add product</button>
+            </router-link>
           </div>
-          <p :class="{ 'dark-mode-title': getDarkMode }">product grid</p>
-        </div>
-        <div>
-          <div class="export">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmvEXj1Sr-tzeKuEP9PgzajIUDvR_-L-zfkg&usqp=CAU"
-            />
-            <button>export</button>
           </div>
-          <router-link to="/dashboard/AddNewProduct">
-            <button class="add">+ add product</button>
-          </router-link>
         </div>
-      </div>
-
-      <div :class="{ 'dark-mode-box': getDarkMode }">
+      
+      <div :class="{ 'dark-mode-box': getDarkMode }"  class="filter_by_search">
         <div class="">
           <input
           :class="{ 'dark-mode-search': getDarkMode }"
@@ -91,12 +96,16 @@ import BoxSkeletonLoader from '@/shared/components/loading/skeletonLoader/BoxSke
   // NoData
 import NoData from "@/shared/components/noData/NoData.vue";
 
+// Breadcrumb
+import Breadcrumb from "@/shared/components/breadcrumb/Breadcrumb.vue"; 
+
 export default {
   name: "Product",
   components: {
    NoData,
    BoxSkeletonLoader,
    ProductList,
+   Breadcrumb,
   },
   computed: {
     getDarkMode() {
@@ -182,6 +191,11 @@ export default {
       selectedCategory: 'all',
       selectedFilter: 'name',
       isLoading: true,
+      breadcrumbs: [
+        { label: "Dashboard", link: "/dashboard" },
+        { label: "Products", link: "/dashboard/Product" },
+        // { label: "Create Order", link: "/dashboard/AddNewOrder" }
+      ]
 
       
     };

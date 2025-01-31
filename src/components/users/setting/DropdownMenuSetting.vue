@@ -81,7 +81,8 @@ import { mapActions,mapState } from 'pinia'
       color:rgb(121, 120, 120);
       font-weight: 600;
       text-align: center;
-      background-color: white;
+      // background-color: white;
+      background-color: #f7f7f9;
 
       
     }

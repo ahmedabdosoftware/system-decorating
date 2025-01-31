@@ -16,7 +16,7 @@
             </div>
           </div>
   
-        <div :class="{ 'dark-mode-box': getDarkMode }">
+        <div :class="{ 'dark-mode-box': getDarkMode }" class="filter_by_search">
           <div class="">
             <input
             :class="{ 'dark-mode-search': getDarkMode }"

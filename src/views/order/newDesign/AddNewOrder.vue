@@ -30,6 +30,7 @@
                     :addedOrders="addedOrders" 
                     @added-orders-updated="handleAddedOrdersUpdate"/>
                 </div>
+                
                 <div  class="main-cont">
                   <!-- Details -->
                   <Details @details-updated="handleDetailsUpdate"/>
@@ -89,7 +90,7 @@ import UserSelectionComponent from "@/components/orders/shared/UserSelectionComp
 import DataLocationSelectionComponent from "@/components/orders/shared/DataLocationSelectionComponent.vue";
 import ShippingAndType from "@/components/orders/shared/ShippingAndType.vue";
 import Details from "@/components/orders/shared/Details.vue";
-import ProductMangerWraper from "@/components/orders/editOrder/productManger/ProductMangerWraper.vue";  
+import ProductMangerWraper from "@/components/orders/addOrder/productManger/ProductMangerWraper.vue";  
 import FormActions from "@/components/orders/shared/FormActions.vue";
 
 

@@ -3,14 +3,18 @@
     <div class="page Branches">
       <div class="title">
         <div>
-          <div class="contTitle">
+          <div>
+             <Breadcrumb :breadcrumbs="breadcrumbs" />
+          <!-- <div class="contTitle">
             <div>
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUQUVkx6lAgtb3-3fMuDZnDixihOSrrNSAOg&usqp=CAU"
               />
             </div>
-            <p :class="{ 'dark-mode-title': getDarkMode }">Branches grid</p>
-          </div>
+            <p :class="{ 'dark-mode-title': getDarkMode }">order Branch</p>
+          </div> -->
+         </div> 
+         <div>
           <div>
             <div class="export">
               <img
@@ -22,9 +26,12 @@
               <button class="add">+ add Branch</button>
             </router-link>
           </div>
+          </div>
         </div>
+
+
   
-        <div :class="{ 'dark-mode-box': getDarkMode }">
+        <div :class="{ 'dark-mode-box': getDarkMode }"  class="filter_by_search">
           <div class="">
             <input
             :class="{ 'dark-mode-search': getDarkMode }"
@@ -86,12 +93,16 @@
   // NoData
   import NoData from "@/shared/components/noData/NoData.vue";
   
+  // Breadcrumb
+  import Breadcrumb from "@/shared/components/breadcrumb/Breadcrumb.vue"; 
+
   export default {
     name: "Order",
     components: {
       ListTable,
       NoData,
       TableSkeleton,
+      Breadcrumb,
     },
     computed: {
 
@@ -153,6 +164,11 @@
         selectStatus: 'all',
         selectedFilter: 'date',
         isLoading: true,
+        breadcrumbs: [
+        { label: "Dashboard", link: "/dashboard" },
+        { label: "Branches", link: "/dashboard/Branches" },
+        // { label: "Create Order", link: "/dashboard/AddNewOrder" }
+      ]
 
         
       };

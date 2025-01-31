@@ -729,18 +729,31 @@ min-height:90vh;
 
 // popular title 
 
+
 .title {
   width: 100%;
-  height: 180px;
+  min-height: 300px ;
   display: flex;
   flex-wrap: wrap;
+ 
   > div:first-child {
     width: 100%;
-    height: 60%;
+    // height: 60%;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    > div:first-child {
+    // background-color: darkolivegreen !important;
+    >div{
+      width: 100% ;
+      height: 100px ;
+    }
+    > div:first-child{
+      // background-color: darkolivegreen !important;
+      display: flex;
+      align-items: center;
+    }
+    > div:first-child > div {
       background-color: blue;
       height: 40px;
       width: 190px;
@@ -770,12 +783,18 @@ min-height:90vh;
         margin-right: 10px;
       }
     }
-    > div:nth-of-type(2) {
+
+    > div:nth-of-type(2){
+      display: flex;
+      justify-content: flex-end;
+    }
+    > div:nth-of-type(2) >div {
       width: 340px;
       height: 80px;
       display: flex;
       justify-content: space-evenly;
-      align-items: center;
+      align-items: flex-start;
+      // background-color: red !important;
       > div {
         width: 100px;
         height: 40px;
@@ -808,7 +827,7 @@ min-height:90vh;
     display: flex;
     justify-content: space-between ;
     align-items: center;
-    div:first-child{
+    >div:first-child{
       display: flex;
       justify-content: space-evenly ;
       align-items: center;
@@ -855,17 +874,38 @@ min-height:90vh;
           justify-content: space-evenly;
           align-items: center;
           height: 80%;
-          border-radius: 3px;
-          background-color: white;
-        border: 2px solid rgb(222, 218, 218);
-        button {
-          background-color: white;
         }
+        
+        >div:nth-child(2) {
+            border: 2px solid rgb(222, 218, 218);
+            border-radius: 3px;
+            button {
+              background-color: transparent;
+            }
+        
 
       }
     }
   }
 }
+.font_sm{
+  font-size: 15px !important;
+}
+// popular title "responsive"
+
+
+@media (max-width: 477px) {
+  .title > div:first-child > div {
+    height: 70px;
+}
+.title > div:nth-of-type(2) {
+  height: auto;
+}
+}
+
+
+
+
 
 // spichial title (with no filter search element) 
 
@@ -1010,13 +1050,13 @@ align-content: flex-start;
 margin-left: 4%;
 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
 // border-radius: 15px; 
-border-bottom-right-radius: 10px;
-border-bottom-left-radius: 10px;
+// border-bottom-right-radius: 10px;
+// border-bottom-left-radius: 10px;
 }
 .filter_by_search{
   box-shadow: -1px 0px 8px rgba(0, 0, 0, 0.2) !important;  
-  border-top-right-radius: 10px;
-  border-top-left-radius: 10px !important;
+  // border-top-right-radius: 10px;
+  // border-top-left-radius: 10px !important;
   
 
 }
@@ -1053,6 +1093,8 @@ font-size: 19px;
 
 
 @media (max-width: 477px) {
+
+
 .title {
   > div:nth-of-type(2) {
     div:first-child{
