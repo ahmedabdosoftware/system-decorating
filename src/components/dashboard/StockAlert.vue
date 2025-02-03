@@ -3,14 +3,18 @@
     <div class="page StockAlerts">
       <div class="title">
         <div>
+          <div>
+             <!-- <Breadcrumb :breadcrumbs="breadcrumbs" /> -->
           <div class="contTitle">
             <div>
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUQUVkx6lAgtb3-3fMuDZnDixihOSrrNSAOg&usqp=CAU"
               />
             </div>
-            <p :class="{ 'dark-mode-title': getDarkMode }">Stock alerts info</p>
+            <p :class="{ 'dark-mode-title': getDarkMode }">stock alert </p>
           </div>
+         </div> 
+         <div>
           <div>
             <div class="export">
               <img
@@ -18,7 +22,8 @@
               />
               <button>export</button>
             </div>
-           
+         
+          </div>
           </div>
         </div>
   

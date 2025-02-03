@@ -1,6 +1,6 @@
 <template>
     <div class="view order-view">
-      <div class="title">
+      <div class="create_title">
             <p :class="{ 'dark-mode-title': getDarkMode }">create order</p>
       </div>
       <ValidationObserver ref="observer" v-slot="{ invalid }">
@@ -28,7 +28,8 @@
                   <!-- product-manager-wraper -->
                   <ProductMangerWraper
                     :addedOrders="addedOrders" 
-                    @added-orders-updated="handleAddedOrdersUpdate"/>
+                    @added-orders-updated="handleAddedOrdersUpdate"
+                    @updateFields ="handleupdateFields"/>
                 </div>
                 
                 <div  class="main-cont">
@@ -114,6 +115,12 @@ import FormActions from "@/components/orders/shared/FormActions.vue";
     },
     data() {
         return {
+
+
+        // for all Fields added  
+           addedFields: [],
+
+
         // for all products added  
            addedOrders: [],
 
@@ -220,6 +227,10 @@ import FormActions from "@/components/orders/shared/FormActions.vue";
           this.addedOrders = addedOrders; 
           console.log("update addedOrders by emit event",this.addedOrders)
         },
+        handleupdateFields(addedFields) {
+          this.addedFields = addedFields; 
+          console.log("update addedFields by emit event",this.addedFields)
+        },
         handleDetailsUpdate(details) {
           this.notes = details.notes || '';
           this.status = details.status || '0';
@@ -317,6 +328,7 @@ import FormActions from "@/components/orders/shared/FormActions.vue";
       (product) => product.amountOfIncrease || product.editOfInstallation
     );
       const newOrder = {
+        jokerFields:this.addedFields,
         products: this.addedOrders,
         customerName: this.selectedCustomer,
         customerId: this.customerId,

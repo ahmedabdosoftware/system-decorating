@@ -1,7 +1,7 @@
 <template>
   <ValidationObserver ref="observer" v-slot="{ invalid }">
     <div class="addProduct">
-      <div class="title">
+      <div class="create_title">
         <p :class="{ 'dark-mode-title': getDarkMode }">create product</p>
       </div>
       <div :class="{ 'dark-moode': getDarkMode }" class="allContentt">
@@ -390,12 +390,15 @@ export default {
     async creatNewProduct(e) {
       e.preventDefault();
       try {
+
         this.isLoading = true;
+
+        var downloadURL="";
         if (this.imageUrl.length > 0) {
           console.log(this.imageUrl[0])
-          
-          const downloadURL = await this.uploadImage(this.imageUrl[0]);
+           downloadURL = await this.uploadImage(this.imageUrl[0]);
           console.log(downloadURL)
+        }
           let obj = {
             // info
             name: this.productTitle,
@@ -428,7 +431,7 @@ export default {
           });
           this.isLoading = false;
 
-        }
+       
       } catch (error) {
         sweetalert({
           text: "uncreated",

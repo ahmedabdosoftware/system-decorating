@@ -119,7 +119,7 @@
       default: "0",
     },
     initialOrderNumber: {
-      type: String,
+      // type: String,
       default: "",
     },
     initialManualLaborCost: {
@@ -304,7 +304,7 @@
     height: 60px;
     flex-direction: column;
     align-items: flex-start;
-    background-color: white;
+    // background-color: white;
     border-radius: 0px;
     padding: 10;
     box-shadow:none;

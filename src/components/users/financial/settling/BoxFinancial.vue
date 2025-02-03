@@ -1,7 +1,7 @@
 <template>
     <div class="contBox">
       <div :class=" { 'dark-mode': getDarkMode }">
-        <span class="title">{{ Financial.adress }}</span>
+        <span class="title_boxFinanchial">{{ Financial.adress }}</span>
        <div class="contBox__toggle">
 
           <div class="contBox__toggle__chosse" >
@@ -165,7 +165,7 @@
     justify-content: center;
   }
  
-  .title{
+  .title_boxFinanchial{
     position: absolute;
     top: 0px;
     left: 50%;

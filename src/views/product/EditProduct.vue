@@ -1,7 +1,7 @@
 <template>
   <ValidationObserver ref="observer" v-slot="{ invalid }">
     <div class="editProduct">
-      <div class="title">
+      <div class="create_title">
         <p :class="{ 'dark-mode-title': getDarkMode }">update product</p>
       </div>
       <div :class="{ 'dark-moode': getDarkMode }" class="allContentt">

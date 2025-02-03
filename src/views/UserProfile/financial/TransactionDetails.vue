@@ -2,12 +2,18 @@
     <div class="details">
       <div class="title">
         <div>
+          <div>
+             <!-- <Breadcrumb :breadcrumbs="breadcrumbs" /> -->
           <div class="contTitle">
             <div>
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUQUVkx6lAgtb3-3fMuDZnDixihOSrrNSAOg&usqp=CAU" />
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUQUVkx6lAgtb3-3fMuDZnDixihOSrrNSAOg&usqp=CAU"
+              />
             </div>
-            <p :class="{ 'dark-mode-title': getDarkMode }">Details grid</p>
+            <p :class="{ 'dark-mode-title': getDarkMode }"> details grid</p>
           </div>
+         </div> 
+         <div>
           <div>
             <div class="export">
               <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmvEXj1Sr-tzeKuEP9PgzajIUDvR_-L-zfkg&usqp=CAU" />
@@ -17,6 +23,7 @@
               <font-awesome-icon class="printIcon" icon="fa-solid fa-print" />
               <p>print</p>
             </button>
+          </div>
           </div>
         </div>
       </div>

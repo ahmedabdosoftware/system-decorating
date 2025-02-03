@@ -1,159 +1,123 @@
 <template>
-    <div class="statistics_result"
-      :class="{
-        'statistics_result--nonPaid': isNonPaid,
-        'statistics_result--loading': isLoading,
-      }"     
-     >
-      <div>
-        <font-awesome-icon class="iconAwesome" :icon="icon" />
-      </div>
-      <div>
-        <p class="title">{{ title }}</p>
-        <slot>
-          <!-- المحتوى الافتراضي  -->
-          <span>{{ value }}</span>
-        </slot>
-      </div>
+  <div 
+    class="statistics-result"
+    :class="{
+      'statistics-result--non-paid': isNonPaid,
+      'statistics-result--loading': isLoading
+    }"
+  >
+    <div class="statistics-result__icon">
+      <font-awesome-icon class="statistics-result__icon-img" :icon="icon" />
     </div>
-  </template>
-  
-  <script>
-  export default {
-    props: {
-      icon: {
-        type: String,
-        required: true
-      },
-      title: {
-        type: String,
-        required: true
-      },
-      value: {
-        type: [String, Number],
-        default: ''
-      },
-      isNonPaid: {
-        type: Boolean,
-        default: false
-      },
-      isLoading: {
-      type: Boolean,
-      default: false,
+    <div class="statistics-result__content">
+      <p class="statistics-result__title">{{ title }}</p>
+      <slot>
+        <span class="statistics-result__value">{{ value }}</span>
+      </slot>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    icon: {
+      type: String,
+      required: true
     },
+    title: {
+      type: String,
+      required: true
+    },
+    value: {
+      type: [String, Number],
+      default: ''
+    },
+    isNonPaid: {
+      type: Boolean,
+      default: false
+    },
+    isLoading: {
+      type: Boolean,
+      default: false
     }
   }
-  </script>
-
-
-  
-<style scoped lang="scss">
-
-%center{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
 }
+</script>
 
+<style scoped lang="scss">
+.statistics-result {
+  width: 220px;
+  height: 100px;
+  background-color: rgb(240, 237, 237);
+  border-radius: 8px;
+  margin: 15px 0;
+  display: flex;
+  border: 2px solid transparent;
+  align-items: center;
+  padding:5px;
 
-.statistics_result{
-   width: 220px;
-   min-height: 100px;
-   background-color: rgb(240, 237, 237);
-   border-radius: 8px;
-   margin: 15px 0px;
-   display: flex;
-   border: 2px solid transparent;
-
-   
-   &--loading {
+  &--loading {
     border-color: orange;
     animation: pulse 1.5s infinite;
   }
 
-   >div:first-child{
-      width: 60px;
-      height: 100px;
-     // background-color: red;
-     @extend %center;
+  &--non-paid {
+    background-color: #ffefef;
   }
-  >div:nth-child(2){
-      width: 160px;
-      height: 100px;
-     // background-color: blue;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-end;
-      p,span{
-          font: {
-              size: 19px;
-              weight: 600;
-          }
-          color: rgb(49, 48, 48);
-          padding-right: 5px;
-          // font-family: "Aref Ruqaa", serif;
-          // font-weight: 400;
-          // font-style: normal;
-          // font-family: "Rakkas", serif;
-          // font-weight: 400;
-          // font-style: normal;
-          font-family: "Lateef", serif;
-          font-weight: 700;
-          font-style: normal;
-      }
-      p{
-          color: rgb(109, 108, 108);
-          margin-bottom: 10px;
-          font-size: 14px;
-      }
-   }
-   
 }
 
-.iconAwesome{
+.statistics-result__icon {
+  width: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.statistics-result__icon-img {
   width: 40px;
   height: 40px;
 }
-.title{
-    align-items: center;
-    width: 100%;
-    height: 40px !important;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
+
+.statistics-result__content {
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
 }
+
+.statistics-result__title {
+  color: rgb(109, 108, 108);
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-family: "Lateef", serif;
+  font-weight: 700;
+}
+
+.statistics-result__value {
+  font-size: 19px;
+  font-weight: 600;
+  color: rgb(49, 48, 48);
+}
+
 @keyframes pulse {
-  0% {
-    background-color: rgba(255, 165, 0, 0.3);
-  }
-  50% {
-    background-color: rgba(255, 165, 0, 0.1);
-  }
-  100% {
-    background-color: rgba(255, 165, 0, 0.3);
-  }
+  0% { background-color: rgba(255, 165, 0, 0.3); }
+  50% { background-color: rgba(255, 165, 0, 0.1); }
+  100% { background-color: rgba(255, 165, 0, 0.3); }
 }
 
-@media (max-width: 477px){
-  
-
-  .statistics_result{
-      margin: 15px;
-      width: 250px;
-      height: 100px;
-      background-color: white;
-  }
-  .statistics_result--nonPaid{
+@media (max-width: 477px) {
+  .statistics-result {
+    margin: 15px;
     width: 250px;
+    height: 100px;
+    background-color: white;
   }
-  .iconAwesome{
-      width: 30px;
-      height: 30px;
+  
+  .statistics-result__icon-img {
+    width: 30px;
+    height: 30px;
   }
-}
-
+} 
 </style>
-
-

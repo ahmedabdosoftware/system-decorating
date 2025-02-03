@@ -486,7 +486,7 @@ cancelChange(){
    
     .product-manager {  
        margin-top: 20px;
-       max-width: 310px;
+       max-width: 320px;
        border-radius: 0px;
        margin-bottom: 0px;
 

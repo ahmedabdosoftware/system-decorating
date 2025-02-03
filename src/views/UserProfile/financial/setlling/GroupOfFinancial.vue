@@ -3,14 +3,18 @@
     <div class="page settling">
       <div class="title">
         <div>
+          <div>
+             <!-- <Breadcrumb :breadcrumbs="breadcrumbs" /> -->
           <div class="contTitle">
             <div>
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUQUVkx6lAgtb3-3fMuDZnDixihOSrrNSAOg&usqp=CAU"
               />
             </div>
-            <p :class="{ 'dark-mode-title': getDarkMode }">settling grid</p>
+            <p :class="{ 'dark-mode-title': getDarkMode }">setling grid</p>
           </div>
+         </div> 
+         <div>
           <div>
             <div class="export">
               <img
@@ -18,9 +22,10 @@
               />
               <button>export</button>
             </div>
+           
+          </div>
           </div>
         </div>
-  
         <div :class="{ 'dark-mode-box': getDarkMode }">
           <div class="">
            

@@ -1,6 +1,6 @@
 <template>
     <div class="addBranch">
-        <div class="title">
+        <div class="create_title">
             <p :class="{ 'dark-mode-title': getDarkMode }">create branch</p>
         </div>
         <div :class="{ 'dark-moode': getDarkMode }" class="allContentt">

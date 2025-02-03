@@ -1,6 +1,6 @@
 <template>
     <div class="addOrder">
-        <div class="title">
+        <div class="create_title">
             <p :class="{ 'dark-mode-title': getDarkMode }">Return Purchases</p>
         </div>
         <div :class="{ 'dark-moode': getDarkMode }" class="allContentt">

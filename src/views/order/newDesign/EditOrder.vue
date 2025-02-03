@@ -1,6 +1,6 @@
 <template>
   <div class="view order-view">
-    <div class="title">
+    <div class="create_title">
           <p :class="{ 'dark-mode-title': getDarkMode }">Update order</p>
     </div>
     <ValidationObserver ref="observer" v-slot="{ invalid }">

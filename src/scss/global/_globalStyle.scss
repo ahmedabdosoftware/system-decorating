@@ -891,6 +891,21 @@ min-height:90vh;
 .font_sm{
   font-size: 15px !important;
 }
+.create_title{
+  height: 100px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  // background-color: red;
+  p {
+    text-transform: capitalize;
+    font-size: 22px;
+    font-weight: 600;
+    margin-left: 20px;
+  }
+
+}
 // popular title "responsive"
 
 
@@ -1135,6 +1150,7 @@ font-size: 19px;
     }
   }
 }
+
 }
 
 
