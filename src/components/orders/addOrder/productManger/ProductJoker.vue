@@ -117,7 +117,8 @@
           rules="required|double:1|min_value:0"
           v-slot="{ errors }"
         >
-          <input class="formbold-form-input" v-model.number="currentField.valueDiscountOnBuy" placeholder="type here" type="number" />
+        <input class="formbold-form-input" v-model.number="currentField.valueDiscountOnBuy" placeholder="type here" type="number" />
+        <span class="error">{{ errors[0] }}</span>
         </ValidationProvider>
       </div>
       <div>
