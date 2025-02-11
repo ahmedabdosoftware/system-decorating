@@ -172,6 +172,7 @@ export default {
         purchaseCost: 0,
         valueDiscountOnBuy: 0,
         kindDiscount: "fixed",
+        price_offer: 0,
       };
     },
     addField() {

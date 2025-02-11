@@ -48,6 +48,15 @@
                     <td>{{ product.productInfo.name }}</td>
                     <td>{{ categoryName(product) }}</td>
                     </tr>
+                     <!-- Joker Fields -->
+                    <tr v-for="(joker, index) in orderInfo.jokerFields" :key="'joker-' + index">
+                      <td>{{ calculateJokerTotal(joker) }}</td>
+                      <td v-if="isAdmin">---</td>
+                      <td>{{ joker.quantity || '---' }}</td>
+                      <td>{{ joker.value || '---' }}</td>
+                      <td>{{ joker.name || '---' }}</td>
+                      <td>{{ joker.category || '---' }}</td>
+                    </tr>
                     <tr  v-if="orderInfo.shipping">
                       <td colspan="3">{{ orderInfo.shipping }}</td>
                       <td colspan="3">الشحن</td>
@@ -168,7 +177,7 @@
         ...mapActions(useCategoriesStore, ['fetchCategories']),
   
   
-         calculateTotalPrice(product) {
+        calculateTotalPrice(product) {
           const productTotalPrice = product.productInfo.priceMaterial * product.quantity;
           const discountAmount = productTotalPrice * (product.price_offer / 100);
           return (productTotalPrice - discountAmount).toFixed(2);
@@ -179,14 +188,26 @@
           return  discountAmount.toFixed(2);
         },
         categoryName(product){
-        const categoryProductName = this.categories.find(category => category.id === product.productInfo.categoryId) 
-        console.log(categoryProductName);
-        if(categoryProductName){
-          return categoryProductName.name
-        }
+          const categoryProductName = this.categories.find(category => category.id === product.productInfo.categoryId) 
+          console.log(categoryProductName);
+          if(categoryProductName){
+            return categoryProductName.name
+          }
+      },
+        calculateJokerTotal(joker) {
+          if (!joker.willBeCalculated) {
+            return '---';
+          }
+
+          if (joker.value && joker.quantity) {
+            return (joker.value * joker.quantity).toFixed(2);
+          } else if (joker.value) {
+            return joker.value;
+          } else {
+            return '---';
+          }
       },
        Fatora() {
-  
           const layout = this.$route.meta.layout;
           const orderId =this.orderInfo.id
           if (layout === 'DashboardLayout') {

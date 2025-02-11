@@ -116,6 +116,7 @@ export default {
  // background-color: aqua;
   display: flex;
   flex-wrap: wrap;
+  min-height: 100vh;
 }
 
 .title {

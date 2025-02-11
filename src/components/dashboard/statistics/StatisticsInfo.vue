@@ -323,35 +323,52 @@ computed: {
 // orders  حساب التركيب لجميع
   calculateTotalInstallationForAllOrders() {
 
-    // const FilteredOrders =  this.filterByDate(this.orders, this.selectedFilter)
-    const FilteredOrders =  this.filterByDateRange(this.orders, this.fromDate, this.toDate);
-    const getOrderWithInstalitionProducts = FilteredOrders?.filter(order => order.invoiceType === 'تركيب' || order.invoiceType === 'تركيب وتوريد');
+    const FilteredOrders = this.filterByDateRange(this.orders, this.fromDate, this.toDate);
+    const getOrderWithInstallationProducts = FilteredOrders?.filter(
+      order => order.invoiceType === 'تركيب' || order.invoiceType === 'تركيب وتوريد'
+    );
 
-
-    const totalInstallation =getOrderWithInstalitionProducts.reduce((total, order) => {
-
+    const totalInstallation = getOrderWithInstallationProducts.reduce((total, order) => {
+      // إذا كان laborPrice موجودًا، نستخدمه مباشرة ولا نحسب أي شيء آخر
       if (order.laborPrice) {
         return total + parseFloat(order.laborPrice);
-      } else {
-        const orderTotalInstallation = order.products.reduce((subTotal, product) => {
-          if (product.productInfo.priceWithLabor) {
+      }
 
+      let orderTotalInstallation = 0;
+
+      // حساب إجمالي التركيبات من المنتجات العادية
+      if (order.products) {
+        orderTotalInstallation += order.products.reduce((subTotal, product) => {
+          if (product.productInfo.priceWithLabor) {
             const productInstallationPrice = product.editOfInstallation 
               ? product.editOfInstallation 
               : product.productInfo.priceWithLabor;
-
-
             return subTotal + productInstallationPrice * product.quantity;
           } else {
             return subTotal;
           }
         }, 0);
-        return total + orderTotalInstallation;
       }
-    
+
+      // حساب إجمالي التركيبات من حقول Joker
+      if (order.jokerFields) {
+        orderTotalInstallation += order.jokerFields.reduce((subTotal, joker) => {
+          if (joker.willBeCalculated && joker.calculationType === "installation") {
+            if (joker.value && joker.quantity) {
+              return subTotal + (joker.value * joker.quantity);
+            } else if (joker.value) {
+              return subTotal + joker.value;
+            }
+          }
+          return subTotal;
+        }, 0);
+      }
+
+      return total + orderTotalInstallation;
     }, 0);
-  
+
     return totalInstallation.toFixed(2);
+
   },
 
 // orders  حساب صافى ربح المصنعيه لجميع
@@ -378,20 +395,40 @@ calculateTotalPureInstallationForAllOrders() {
 
   const totalInstallation = getOrderWithInstalitionProducts.reduce((total, order) => {
 
-    const orderTotalInstallation = order.laborPrice
-      ? parseFloat(order.laborPrice)
-      : order.products.reduce((subTotal, product) => {
+    let orderTotalInstallation = 0;
+
+    // إذا كان laborPrice موجودًا، نستخدمه مباشرة
+    if (order.laborPrice) {
+      orderTotalInstallation = parseFloat(order.laborPrice);
+    } else {
+      // حساب إجمالي المصنعية من المنتجات العادية
+      if (order.products) {
+        orderTotalInstallation += order.products.reduce((subTotal, product) => {
           if (product.productInfo.priceWithLabor) {
             const productInstallationPrice = product.editOfInstallation 
               ? product.editOfInstallation 
               : product.productInfo.priceWithLabor;
-
             return subTotal + productInstallationPrice * product.quantity;
           } else {
             return subTotal;
           }
-        
         }, 0);
+      }
+
+      // حساب إجمالي المصنعية من حقول Joker
+      if (order.jokerFields) {
+        orderTotalInstallation += order.jokerFields.reduce((subTotal, joker) => {
+          if (joker.willBeCalculated && joker.calculationType === "installation") {
+            if (joker.value && joker.quantity) {
+              return subTotal + (joker.value * joker.quantity);
+            } else if (joker.value) {
+              return subTotal + joker.value;
+            }
+          }
+          return subTotal;
+        }, 0);
+      }
+    }
 
         
     // جلب المعاملة المرتبطة وخصم التكاليف إن وجدت
@@ -445,8 +482,10 @@ calculateTotalPureInstallationForAllOrders() {
 
     const totalSales = getOrderWithSellProducts.reduce((total, order) => {
       
-    console.log(order)
-    const orderTotalSales = order.products.reduce((subTotal, product) => {
+    // console.log(order)
+    let orderTotalSales = 0;
+    if (order.products) {
+      orderTotalSales += order.products.reduce((subTotal, product) => {
         const productPrice =Number(product.priceWithIncrease)  
           ? Number(product.priceWithIncrease) 
           :Number(product.productInfo.priceMaterial);
@@ -455,8 +494,23 @@ calculateTotalPureInstallationForAllOrders() {
         const discountAmount = Number(productTotalPrice)  * (Number(product.price_offer) / 100);
         return subTotal + (productTotalPrice - discountAmount);
       }, 0);
+    }
+
+     // حساب إجمالي التركيبات من حقول Joker
+     if (order.jokerFields) {
+      orderTotalSales += order.jokerFields.reduce((subTotal, joker) => {
+          if (joker.willBeCalculated && joker.calculationType === "material") {
+            if (joker.value && joker.quantity) {
+              return subTotal + (joker.value * joker.quantity);
+            } else if (joker.value) {
+              return subTotal + joker.value;
+            }
+          }
+          return subTotal;
+        }, 0);
+      }
+
       return total + orderTotalSales;
-  
     }, 0);
   
     return totalSales.toFixed(2);
@@ -466,53 +520,94 @@ calculateTotalPureInstallationForAllOrders() {
 
   // حساب صافي الربح لجميع الطلبات
 calculateNetProfit() {
-    // فلترة الطلبات حسب النطاق الزمني المحدد
-    const FilteredOrders = this.filterByDateRange(this.orders, this.fromDate, this.toDate);
-    const getOrderWithSellProducts = FilteredOrders?.filter(order => order.invoiceType === 'توريد' || order.invoiceType === 'تركيب وتوريد');
+  const FilteredOrders = this.filterByDateRange(this.orders, this.fromDate, this.toDate);
+    const getOrderWithSellProducts = FilteredOrders?.filter(
+      order => order.invoiceType === 'توريد' || order.invoiceType === 'تركيب وتوريد'
+    );
 
     const netProfit = getOrderWithSellProducts.reduce((totalProfit, order) => {
-        const orderNetProfit = order.products.reduce((subTotal, product) => {
-            // التحقق من وجود البيانات المطلوبة
-            if (
-                !product.productInfo?.buyPrice ||
-                typeof product.productInfo.valueDiscountOnBuy === 'undefined' ||
-                typeof product.productInfo.kindDiscount === 'undefined' ||
-                !product.quantity
-            ) {
-                return subTotal; // تخطي المنتجات التي لا تحتوي على المعلومات الكافية
-            }
+      let orderNetProfit = 0;
 
+      // حساب صافي الربح من المنتجات العادية
+      if (order.products) {
+        orderNetProfit += order.products.reduce((subTotal, product) => {
+          // التحقق من وجود البيانات المطلوبة
+          if (
+            !product.productInfo?.buyPrice ||
+            typeof product.productInfo.valueDiscountOnBuy === 'undefined' ||
+            typeof product.productInfo.kindDiscount === 'undefined' ||
+            !product.quantity
+          ) {
+            return subTotal; // تخطي المنتجات التي لا تحتوي على المعلومات الكافية
+          }
+
+          // حساب تكلفة الشراء بعد الخصم
+          const productBuyPrice = Number(product.productInfo.buyPrice);
+          const productQuantity = Number(product.quantity);
+          let productCost = productBuyPrice * productQuantity;
+
+          if (product.productInfo.kindDiscount === 'percentage') {
+            const discount = productCost * (Number(product.productInfo.valueDiscountOnBuy) / 100);
+            productCost -= discount;
+          } else if (product.productInfo.kindDiscount === 'fixed') {
+            const discount = Number(product.productInfo.valueDiscountOnBuy) * productQuantity;
+            productCost -= discount;
+          }
+
+          // حساب إجمالي سعر البيع
+          const productSellPrice = Number(product.priceWithIncrease)
+            ? Number(product.priceWithIncrease)
+            : Number(product.productInfo.priceMaterial);
+          const productTotalSellPrice = productSellPrice * productQuantity;
+          const discountAmount = productTotalSellPrice * (Number(product.price_offer) / 100);
+          const productSellTotalAfterDiscount = productTotalSellPrice - discountAmount;
+
+          // حساب الربح الصافي للمنتج
+          const productProfit = productSellTotalAfterDiscount - productCost;
+
+          return subTotal + productProfit;
+        }, 0);
+      }
+
+      // حساب صافي الربح من حقول Joker
+      if (order.jokerFields) {
+        orderNetProfit += order.jokerFields.reduce((subTotal, joker) => {
+          if (joker.willBeCalculated && joker.calculationType === "material") {
             // حساب تكلفة الشراء بعد الخصم
-            const productBuyPrice = Number(product.productInfo.buyPrice);
-            const productQuantity = Number(product.quantity);
-            let productCost = productBuyPrice * productQuantity;
+            const jokerBuyPrice = Number(joker.purchaseCost);
+            const jokerQuantity = Number(joker.quantity);
+            console.log("jokerQuantity",jokerQuantity)
+            let jokerCost = jokerBuyPrice * (jokerQuantity || 1);
+            console.log("jokerCost",jokerCost)
 
-            if (product.productInfo.kindDiscount === 'percentage') {
-                const discount = productCost * (Number(product.productInfo.valueDiscountOnBuy) / 100);
-                productCost -= discount;
-            } else if (product.productInfo.kindDiscount === 'fixed') {
-                const discount = Number(product.productInfo.valueDiscountOnBuy) * productQuantity;
-                productCost -= discount;
+            if (joker.kindDiscount === 'percentage') {
+              const discount = jokerCost * (Number(joker.valueDiscountOnBuy) / 100);
+              jokerCost -= discount;
+            } else if (joker.kindDiscount === 'fixed') {
+              const discount = Number(joker.valueDiscountOnBuy) * jokerQuantity;
+              jokerCost -= discount;
             }
 
             // حساب إجمالي سعر البيع
-            const productSellPrice = Number(product.priceWithIncrease) 
-                ? Number(product.priceWithIncrease) 
-                : Number(product.productInfo.priceMaterial);
-            const productTotalSellPrice = productSellPrice * productQuantity;
-            const discountAmount = productTotalSellPrice * (Number(product.price_offer) / 100);
-            const productSellTotalAfterDiscount = productTotalSellPrice - discountAmount;
+            const jokerSellPrice = Number(joker.value);
+            const jokerSellTotal = jokerSellPrice * (jokerQuantity || 1); // إذا لم تكن الكمية موجودة، نستخدم 1
+            const discountAmount = jokerSellTotal * (Number(joker.price_offer || 0) / 100);
+            const jokerSellTotalAfterDiscount = jokerSellTotal - discountAmount;
 
-            // حساب الربح الصافي للمنتج
-            const productProfit = productSellTotalAfterDiscount - productCost;
+            // حساب الربح الصافي لحقل Joker
+            const jokerProfit = jokerSellTotalAfterDiscount - jokerCost;
 
-            return subTotal + productProfit;
+            return subTotal + jokerProfit;
+          }
+          return subTotal;
         }, 0);
+      }
 
-        return totalProfit + orderNetProfit;
+      return totalProfit + orderNetProfit;
     }, 0);
 
     return netProfit.toFixed(2);
+ 
 },
 
 

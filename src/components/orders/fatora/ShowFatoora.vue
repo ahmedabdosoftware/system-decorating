@@ -64,7 +64,15 @@
                   <td>{{ product.productInfo.name }}</td>
                   <td>{{ categoryName(product) }}</td>
                 </tr>
-
+                <!-- Joker Fields -->
+                <tr v-for="(joker, index) in orderInfo.jokerFields" :key="'joker-' + index">
+                  <td>{{ calculateJokerTotal(joker) }}</td>
+                  <td v-if="shouldDisplayDiscount">---</td>
+                  <td>{{ joker.quantity || '---' }}</td>
+                  <td>{{ joker.value || '---' }}</td>
+                  <td>{{ joker.name || '---' }}</td>
+                  <td>{{ joker.category || '---' }}</td>
+                </tr>
               <!-- installition -->
                 <!-- Not Fixed -->
                 <tr 
@@ -209,19 +217,59 @@ export default {
       }, 0);
       return totalDiscount.toFixed(2)
     },
-    // حساب الإجمالي الكلي بعد الخصومات
+
+    // calculate Total Matrials ( Normal Producrs + Joker Fields)
     calculateGrandTotal() {
-      const grandTotal = this.orderInfo.products.reduce((total, product) => {
+      
+      
+      // حساب الإجمالي الكلي بعد الخصومات (anchient)
+      // const grandTotal = this.orderInfo.products.reduce((total, product) => {
 
-        const productPrice = product.priceWithIncrease && this.isCustomized ==="true" ? product.priceWithIncrease : product.productInfo.priceMaterial;
-        const productTotalPrice = productPrice * product.quantity;
+      //   const productPrice = product.priceWithIncrease && this.isCustomized ==="true" ? product.priceWithIncrease : product.productInfo.priceMaterial;
+      //   const productTotalPrice = productPrice * product.quantity;
 
-        const discountAmount = productTotalPrice * (product.price_offer / 100);
-        return total + (productTotalPrice - discountAmount);
-      }, 0);
+      //   const discountAmount = productTotalPrice * (product.price_offer / 100);
+      //   return total + (productTotalPrice - discountAmount);
+      // }, 0);
+
+      // const shippingCost = Number(this.orderInfo.shipping) || 0;
+
+      // return (grandTotal+shippingCost).toFixed(2);
+
+      let totalMaterials = 0;
+
+      // calculate Total Matrials From Normal Producrs
+      if (this.orderInfo.products) {
+          totalMaterials += this.orderInfo.products.reduce((total, product) => {
+            const productPrice = product.priceWithIncrease && this.isCustomized === "true" 
+              ? product.priceWithIncrease 
+              : product.productInfo.priceMaterial;
+            const productTotalPrice = productPrice * product.quantity;
+            const discountAmount = productTotalPrice * (product.price_offer / 100);
+            return total + (productTotalPrice - discountAmount);
+          }, 0);
+        }
+
+
+      // calculate Total Matrials From Joker Fields
+      if (this.orderInfo.jokerFields) {
+        totalMaterials += this.orderInfo.jokerFields.reduce((total, joker) => {
+          if (joker.willBeCalculated && joker.calculationType === "material") {
+            if (joker.value && joker.quantity) {
+              return total + (joker.value * joker.quantity);
+            } else if (joker.value) {
+              return total + joker.value;
+            }
+          }
+          return total;
+        }, 0);
+      }
+
+
+    // calculate shipping Cost
       const shippingCost = Number(this.orderInfo.shipping) || 0;
 
-      return (grandTotal+shippingCost).toFixed(2);
+      return (totalMaterials+shippingCost).toFixed(2);
     },
   // حساب إجمالي الكميات فقط
   calculateTotalQuantity() {
@@ -241,35 +289,80 @@ export default {
         return totalQuantity;
       }
       ,
-    // حساب اجمالي التركيب
-    calculateTotalInstallation() {
 
-    if (this.orderInfo.laborPrice) {
-      
-      return this.orderInfo.laborPrice;
-      
-    }else{
-      
-      const totalInstallation = this.orderInfo.products.reduce((total, product) => {
-        let productInstallationPrice;
+  // حساب إجمالي التركيبات (منتجات + حقول Joker)
+  calculateTotalInstallationWithJoker() {
+    let totalInstallation = 0;
 
-         // إذا كان هناك تعديل مخصص لسعر المصنعية (editOfInstallation) والفاتورة مخصصة
-      if (this.isCustomized === "true" && product.editOfInstallation && Number(product.editOfInstallation) > 0) {
-        productInstallationPrice = product.editOfInstallation * product.quantity;
-      } else if (product.productInfo.priceWithLabor) {
-        // إذا لم يكن هناك تعديل مخصص، استخدم السعر الافتراضي للمصنعية
-        productInstallationPrice = product.productInfo.priceWithLabor * product.quantity;
-      } else {
-        // في حال عدم وجود سعر للمصنعية، إرجاع الإجمالي بدون تغيير
-        console.log('no labor for that:', product);
+    // حساب إجمالي التركيبات من المنتجات العادية
+    if (this.orderInfo.products) {
+      console.log("enter this.orderInfo.products")
+      totalInstallation += this.orderInfo.products.reduce((total, product) => {
+        let productInstallationPrice = 0;
+
+        if (this.isCustomized === "true" && product.editOfInstallation && Number(product.editOfInstallation) > 0) {
+          productInstallationPrice = product.editOfInstallation * product.quantity;
+        } else if (product.productInfo.priceWithLabor) {
+          productInstallationPrice = product.productInfo.priceWithLabor * product.quantity;
+        }
+
+        return total + productInstallationPrice;
+      }, 0);
+    }
+
+    // حساب إجمالي التركيبات من حقول Joker
+    if (this.orderInfo.jokerFields) {
+      console.log("enter this.orderInfo.jokerFields")
+      totalInstallation += this.orderInfo.jokerFields.reduce((total, joker) => {
+        if (joker.willBeCalculated && joker.calculationType === "installation") {
+          if (joker.value && joker.quantity) {
+            return total + (joker.value * joker.quantity);
+          } else if (joker.value) {
+            return total + joker.value;
+          }
+        }
         return total;
-      }
-
-      return total + productInstallationPrice;
-    }, 0);
+      }, 0);
+    }
 
     return totalInstallation.toFixed(2);
-  }
+  },
+    // حساب اجمالي التركيب
+    calculateTotalInstallation() {
+        // (anchient)
+        //   if (this.orderInfo.laborPrice) {
+            
+        //     return this.orderInfo.laborPrice;
+            
+        //   }else{
+            
+        //     const totalInstallation = this.orderInfo.products.reduce((total, product) => {
+        //       let productInstallationPrice;
+
+        //       // إذا كان هناك تعديل مخصص لسعر المصنعية (editOfInstallation) والفاتورة مخصصة
+        //     if (this.isCustomized === "true" && product.editOfInstallation && Number(product.editOfInstallation) > 0) {
+        //       productInstallationPrice = product.editOfInstallation * product.quantity;
+        //     } else if (product.productInfo.priceWithLabor) {
+        //       // إذا لم يكن هناك تعديل مخصص، استخدم السعر الافتراضي للمصنعية
+        //       productInstallationPrice = product.productInfo.priceWithLabor * product.quantity;
+        //     } else {
+        //       // في حال عدم وجود سعر للمصنعية، إرجاع الإجمالي بدون تغيير
+        //       console.log('no labor for that:', product);
+        //       return total;
+        //     }
+
+        //     return total + productInstallationPrice;
+        //   }, 0);
+
+        //   return totalInstallation.toFixed(2);
+        // }
+
+        if (this.orderInfo.laborPrice) {
+          return this.orderInfo.laborPrice;
+        } else {
+          return this.calculateTotalInstallationWithJoker;
+        }
+
   }
   },
   async created() {
@@ -309,6 +402,20 @@ export default {
       const discountAmount = productTotalPrice * (product.price_offer / 100);
 
     return  discountAmount.toFixed(2);
+    },
+
+    calculateJokerTotal(joker) {
+      if (!joker.willBeCalculated) {
+        return '---';
+      }
+
+      if (joker.value && joker.quantity) {
+        return (joker.value * joker.quantity).toFixed(2);
+      } else if (joker.value) {
+        return joker.value;
+      } else {
+        return '---';
+      }
     },
    
     categoryName(product){
@@ -586,7 +693,7 @@ $buttom_font: 19px;
   width: 100%;
   height: 120px;
   @extend %center_flex;
-  margin: 15px 0px;
+  margin: 30px 0px;
   
 }
 
@@ -643,7 +750,7 @@ $buttom_font: 19px;
 
   //fatoora__title
  .fatoora__title{
- 
+ padding: 6px;
   >div:nth-child(2){
     width:60%;
   }

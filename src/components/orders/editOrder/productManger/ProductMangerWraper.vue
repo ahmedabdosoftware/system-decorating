@@ -1,7 +1,7 @@
 <template>
   <div class="product-manager respo-form-order">
     <TransitionWrapper>
-      <component :is="currentComponent" :addedOrders="addedOrders"  @added-orders-updated="handleAddedOrdersUpdate"/> 
+      <component :is="currentComponent" :addedOrders="addedOrders" :addedFields="addedFields"  @added-orders-updated="handleAddedOrdersUpdate" @updateFields ="handleupdateFields"/> 
     </TransitionWrapper>
     <div class="arrows-tra">
       <button @click="navigateTo('previous')" class="arrow-tra left-arrow"> &larr;</button>
@@ -26,6 +26,10 @@ export default {
   },
   props: {
     addedOrders: {
+      type: Array,
+      required: true,
+    },
+    addedFields: {
       type: Array,
       required: true,
     },
@@ -55,6 +59,10 @@ export default {
     handleAddedOrdersUpdate(addedOrders) {
       // إعادة إرسال الحدث إلى المكون الأب
       this.$emit('added-orders-updated', addedOrders);
+    },
+    handleupdateFields(addedFields) {
+      // إعادة إرسال الحدث إلى المكون الأب
+      this.$emit('updateFields', addedFields);
     },
   },
 };

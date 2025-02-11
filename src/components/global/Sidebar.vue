@@ -107,7 +107,7 @@
               <img  class="iconAwesome" :src="require('@/assets/icons/setting.png')" />
             </router-link>
             <router-link v-if="!isCollapsed" to="/dashboard/users/technicalPages/Technical">
-              <p class="link">technicals</p>
+              <p class="link">technician</p>
             </router-link> 
           </div>
           <div :class="{ 'dark-mode-content': getDarkMode }">

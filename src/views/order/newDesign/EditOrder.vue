@@ -39,7 +39,9 @@
                 <!-- product-manager-wraper -->
                 <ProductMangerWraper
                   :addedOrders="addedOrders" 
-                  @added-orders-updated="handleAddedOrdersUpdate"/>
+                  :addedFields="addedFields" 
+                  @added-orders-updated="handleAddedOrdersUpdate"
+                  @updateFields ="handleupdateFields"/>
               </div>
               <div  class="main-cont">
                 <!-- Details -->
@@ -136,6 +138,10 @@
     },
     data() {
         return {
+          
+          // for all Fields added  
+          addedFields: [],
+
         // for all products added  
            addedOrders: [],
 
@@ -250,6 +256,10 @@
           this.addedOrders = addedOrders; 
           console.log("update addedOrders by emit event",this.addedOrders)
         },
+        handleupdateFields(addedFields) {
+          this.addedFields = addedFields; 
+          console.log("update addedFields by emit event",this.addedFields)
+        },
         handleDetailsUpdate(details) {
           this.notes = details.notes || '';
           this.status = details.status || '0';
@@ -275,6 +285,7 @@
         console.log(order)
         if (order) {
         this.addedOrders = order.products;
+        this.addedFields = order.jokerFields || [];
         this.selectedCustomer = order.customerName;
         this.customerId = order.customerId;
         this.customerInfo = order.customerInfo;
@@ -498,6 +509,7 @@
         );
         const updatedOrderData  = {
           id: this.Id,
+          jokerFields:this.addedFields,
           products: this.addedOrders,
           customerName: this.selectedCustomer,
           customerId: this.customerId,
