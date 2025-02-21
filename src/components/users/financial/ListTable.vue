@@ -12,10 +12,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(transaction, index) in transactions" :key="transaction.id">
+            <tr v-for="(transaction, index) in transactionsWithCalculatedTotal" :key="transaction.id">
               <td>{{ transaction.date }}</td>
-              <td>{{ transaction.adress }}</td>
-              <td>{{ transaction.amount }}</td>
+              <td>{{ transaction.location }}</td>
+              <td>{{ transaction.totalAmount }}</td>
               <td>{{ transaction.status }}</td>
               <td class="actions">
                 <DropdownMenu ref="dropdownMenu" :transaction="transaction" @closeOthers="openDropdownHandle(index)" />
@@ -45,6 +45,22 @@ import DropdownMenu from "@/components/users/financial/DropdownMenu.vue";
       getDarkMode() {
         return this.$store.state.darkMode;
       },
+      transactionsWithCalculatedTotal() {
+        // return New array after return right total
+      return this.transactions.map((transaction) => {
+        //  check  both first
+        const bothType = transaction.typesData.find((type) => type.type === "both");
+        if (bothType && bothType.totalAmount > 0) {
+          return { ...transaction, totalAmount: bothType.totalAmount };
+        }
+        // NO BOTH? collect total from other kind
+        const otherTypesTotal = transaction.typesData
+          .filter((type) => type.type !== "both")
+          .reduce((sum, type) => sum + Number(type.totalAmount) , 0);
+
+        return { ...transaction, totalAmount: otherTypesTotal };
+      });
+    },
     },
     methods: {
       openDropdownHandel(index) {

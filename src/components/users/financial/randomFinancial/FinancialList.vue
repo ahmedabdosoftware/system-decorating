@@ -3,7 +3,9 @@
     <!-- Head -->
     <div class="head">
       <slot name="title"></slot>
-      <img src="https://via.placeholder.com/40" alt="User Image" />
+      <slot name="icon">
+        <img src="https://via.placeholder.com/40" alt="User Image" />
+      </slot>
     </div>
 
     <!-- Payments Section -->
@@ -153,12 +155,14 @@ export default {
   .financial-list {
     width: 100%;
     min-height: 400px;
+    // box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
     background-color: #f8f9fa;
   
     .head {
       width: 100%;
       height: 60px;
-      background-color: #ffffff;
+      // background-color: #ffffff;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -181,7 +185,7 @@ export default {
       width: 100%;
       min-height: 80px;
       padding: 15px;
-      background-color: #f0f0f0;
+      // background-color: #f0f0f0;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -190,17 +194,17 @@ export default {
     .footer {
       width: 100%;
       height: 90px;
-      background-color: #ffffff;
+      // background-color: #ffffff;
       display: flex;
       justify-content: space-evenly;
       align-items: center;
       border-top: 1px solid #ddd;
   
       .spicial-btn {
-        background-color: #28a745;
+        // background-color: #28a745;
   
         &:hover {
-          background-color: #1e7e34;
+          // background-color: #1e7e34;
         }
       }
     }

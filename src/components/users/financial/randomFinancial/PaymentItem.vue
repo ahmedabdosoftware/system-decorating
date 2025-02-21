@@ -59,7 +59,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #ffffff;
+  // background-color: #ffffff;
   padding: 10px 15px;
   border: 1px solid #ddd;
   border-radius: 5px;

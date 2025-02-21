@@ -8,11 +8,15 @@
             <div class="icon">✔️</div>
             <h3>Add Payment</h3>
           </div>
+          <ValidationObserver ref="observer" v-slot="{ invalid }">
           <form @submit.prevent="setTransactionType('Add')">
             <div class="form-row">
               <div>
                 <label for="amount">Amount</label>
-                <input id="amount" type="number" v-model="form.amount" placeholder="Amount, Total" required />
+                <ValidationProvider name="Amount" rules="required|numeric|min_value:1" v-slot="{ errors }">
+                  <input id="amount" type="number" v-model="form.amount" placeholder="Amount, Total" required />
+                  <span class="error">{{ errors[0] }}</span>
+                </ValidationProvider>
               </div>
               <div>
                 <label for="date">Date</label>
@@ -26,11 +30,13 @@
               </div>
             </div>
             <div class="actions">
-              <button type="button" class="upload-button" @click="setTransactionType('Add')">
-                <span>⬆️</span> <span>Add</span>
+              <button type="button" class="upload-button" :class="{ 'disabled-btn': invalid }" :disabled="invalid" @click="setTransactionType('Add')">
+                <img  class="iconAwesome" :src="require('@/assets/icons/push.png')" />
+                <span>Add</span>
               </button>
-              <button type="button" class="deduct-button" @click="setTransactionType('Pull')">
-                <span>⬇️</span><span>Pull</span>
+              <button type="button" class="deduct-button" :class="{ 'disabled-btn': invalid }" :disabled="invalid" @click="setTransactionType('Pull')">
+                <img  class="iconAwesome" :src="require('@/assets/icons/pull.png')" />
+                <span>Pull</span>
               </button>
               <div v-if="getRole== 'technical'" class="confirmation-toggle">
                 <div class="toggle-container" @click="toggleReduce">
@@ -40,6 +46,8 @@
               </div>
             </div>
           </form>
+        </ValidationObserver>
+
         </div>
 
         <!-- الجزء الأيمن: الصورة -->
@@ -282,7 +290,10 @@ export default {
     left: 28px;
     background-color: #28a745;
   }
-  
+  .iconAwesome{
+    width: 20px;
+    height: 20px;
+  }
   @media (max-width: 768px) {
     // tablet
     

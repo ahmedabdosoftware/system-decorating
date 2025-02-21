@@ -82,14 +82,20 @@
         
         <StatisticsResult 
           icon="cash-register"
+          title="ليك كام برا"
+          :value="finalTotalBalance"
+                    :isLoading="true"
+        />
+        <!-- <StatisticsResult 
+          icon="cash-register"
           title="خامات غير مدفوعه "
           :value="calculateUnpaidMaterialsForAllOrders"
-        />
-        <StatisticsResult 
+        /> -->
+        <!-- <StatisticsResult 
           icon="cash-register"
           title="مصنعيه غير مدفوعه "
           :value="calculateUnpaidInstallationForAllOrders"
-        />
+        /> -->
         
        
 
@@ -119,6 +125,7 @@ import { usePurchasesStore } from '@/store/purchases/purchase.js';
 import { useReturnsStore } from '@/store/purchaseReturns/returns.js';
 import { useTransactionsStore } from '@/store/transactions/transactions.js';
 import { useRandomTransactionsStore } from '@/store/transactions/randomTransactions.js';
+import { useGetUserStore } from '@/store/users/users.js';
 
 
 // library
@@ -151,10 +158,11 @@ computed: {
     purchases: 'purchases',
   }),
   ...mapState(useTransactionsStore, {
-    transactions: 'transactions',
+    transactions: 'transactions', totalRemainingBalance:'totalRemainingBalance',
   }),
   ...mapState(useReturnsStore, ['returns']),  
   ...mapState(useRandomTransactionsStore, ['allAddTransactions']),  
+  ...mapState(useRandomTransactionsStore, ['transactionsData']),  
 
 
       // حساب المشتريات لجميع Purchases
@@ -726,13 +734,29 @@ calculateNetProfit() {
   //     return total + orderTotalSales;
   //   }, 0).toFixed(2);
   // },
+
+  finalTotalBalance() {
+    const onePlace = this.totalRemainingBalance;
+    const moreThanPlace = this.transactionsData;
+
+    // حساب إجمالي الـ balance من transactionsData
+      var totalBalancesSum = moreThanPlace.reduce(
+        (sum, profile) => sum + profile.balance, 
+        0
+      );
+
+    // حساب المجموع النهائي
+    return onePlace + totalBalancesSum;
+  }
 },
 methods: {
   ...mapActions(useOrdersStore, ['fetchOrders']),
   ...mapActions(usePurchasesStore, ['fetchPurchases']),
   ...mapActions(useReturnsStore, ['fetchAllReturns']), 
-  ...mapActions(useTransactionsStore, ['fetchTransactions']),
+  ...mapActions(useTransactionsStore, ['fetchTransactions','fetchUsersAndTransactions']),
   ...mapActions(useRandomTransactionsStore, ['fetchAllAddTransactions']),
+  ...mapActions(useRandomTransactionsStore, ['fetchTransactionsForClients']),
+  ...mapActions(useGetUserStore, ['fetchUsers']),
 
 
     // دالة لحساب الخصم المطبق على المرتجعات
@@ -757,7 +781,14 @@ async created() {
    this.fetchPurchases();
    this.fetchAllReturns();
    this.fetchAllAddTransactions();
-   await this.fetchTransactions();
+   this.fetchTransactions();
+   await this.fetchUsers();
+   // More than Place
+   this.fetchTransactionsForClients();
+   // One Place
+   this.fetchUsersAndTransactions();
+  //  console.log("transactionsData",this.transactionsData)
+  //  console.log("totalRemainingBalance",this.totalRemainingBalance)
 },
 };
 </script>

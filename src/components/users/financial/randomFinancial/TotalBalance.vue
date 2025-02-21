@@ -90,7 +90,8 @@
       height: 200px;
       width: 100%;
       overflow: hidden;
-      background-color: #f9f9f9;
+      background-color: #f7f7f9;
+
 
     }
     .random__title__text{
@@ -114,7 +115,7 @@
     }
     .random__title__total{
       // background-color:white;
-      background-color: #f9f9f9;
+      background-color: #f7f7f9;
       box-shadow: 0 0 5px rgb(210, 205, 205);
       width: 470px;
       height: 130px;
@@ -127,7 +128,6 @@
     .total__text{
       width: 100%;
       height: 40px;
-      // background-color: red;
     }
     .total__number{
       width: 80%;
@@ -146,7 +146,7 @@
       height: 70px;
       border-radius: 8px;
       margin-right: 20px;
-      background-color:white;
+      // background-color:white;
       box-shadow: 0 0 5px rgb(210, 205, 205);     
       display: flex;
       flex-wrap: wrap;

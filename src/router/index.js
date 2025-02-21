@@ -50,18 +50,29 @@ import deleteUser from "../views/users/shared/deleteUser.vue";
 
 
 import MainProfile from "@/shared/layouts/MainProfile.vue";
-import UserOrder from "../views/UserProfile/UserOrder.vue";
-import UserFinancial from "../views/UserProfile/financial/UserFinancial.vue";
-import AddFinancial from "../views/UserProfile/financial/AddFinancial.vue";
+import UserOrder from "../views/UserProfile/orders/UserOrder.vue";
 
-import GroupOfFinancial from "../views/UserProfile/financial/setlling/GroupOfFinancial.vue";
+//  Old
+// import UserFinancial from "../views/UserProfile/financial/userFinancial/oldDesign/UserFinancial.vue";
+// import AddFinancial from "../views/UserProfile/financial/specificTransaction/AddFinancial.vue";
+// import EditTransaction from "../views/UserProfile/financial/specificTransaction/oldDesign/EditTransaction.vue";
+// import TransactionDetails from "../views/UserProfile/financial/specificTransaction/oldDesign/TransactionDetails.vue";
+// import ListOfTransaction from "../views/UserProfile/financial/specificTransaction/oldDesign/ListOfTransaction.vue";
+// import GroupOfFinancial from "../views/UserProfile/financial/specificTransaction/oldDesign/setlling/GroupOfFinancial.vue";
+
+//  New
+import UserFinancial from "../views/UserProfile/financial/userFinancial/newDesign/UserFinancial.vue";
+// specificTransaction
+import AddFinancial from "../views/UserProfile/financial/specificTransaction/newDesign/AddFinancial.vue";
+import EditFinancial from "../views/UserProfile/financial/specificTransaction/newDesign/EditFinancial.vue";
+import ListOfTransaction from "../views/UserProfile/financial/specificTransaction/newDesign/ListOfTransaction.vue";
+// RandomFinancial
 import RandomFinancial from "../views/UserProfile/financial/randomFinancial/RandomFinancial.vue";
 
 
-import TransactionDetails from "../views/UserProfile/financial/TransactionDetails.vue";
-import EditTransaction from "../views/UserProfile/financial/EditTransaction.vue";
+
 import UserProject from "../views/UserProfile/projects/UserProject.vue";
-import UserSetting from "../views/UserProfile/UserSetting.vue";
+import UserSetting from "../views/UserProfile/settings/UserSetting.vue";
 
 import Login from "../views/auth/Login.vue";
 
@@ -270,12 +281,13 @@ const routes = [
         component: DetailsReturn,
         meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
       },
-      {
-        path: "TransactionDetails/:transactionId",
-        name: "TransactionDetails",
-        component: TransactionDetails,
-        meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
-      },
+      //old
+      // {
+      //   path: "TransactionDetails/:transactionId",
+      //   name: "TransactionDetails",
+      //   component: TransactionDetails,
+      //   meta: { requiresAuth: true, roles: ['admin'],layout: 'DashboardLayout' },
+      // },
       {
         path: "Reviews",
         name: "Reviews",
@@ -334,29 +346,43 @@ const routes = [
             meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
           },
           {
+            path: "ListOfTransaction",
+            name: "ListOfTransaction",
+            component: ListOfTransaction,
+            meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
+          },
+          {
             path: "AddFinancial",
             name: "AdminAddFinancial",
             component: AddFinancial,
             meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
           },
-          {
-            path: "TransactionDetails/:transactionId",
-            name: "AdminTransactionDetails",
-            component: TransactionDetails,
-            meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
-          },
+          // New Design
           {
             path: "EditTransaction/:transactionId",
-            name: "AdminEditTransaction",
-            component: EditTransaction,
-            meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
+            name: "EditTransaction",
+            component: EditFinancial, 
           },
-          {
-            path: "GroupOfFinancial",
-            name: "GroupOfFinancial",
-            component: GroupOfFinancial,
-            meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
-          },
+          
+          //old
+          // {
+          //   path: "TransactionDetails/:transactionId",
+          //   name: "AdminTransactionDetails",
+          //   component: TransactionDetails,
+          //   meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
+          // },
+          // {
+          //   path: "EditTransaction/:transactionId",
+          //   name: "AdminEditTransaction",
+          //   component: EditTransaction,
+          //   meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
+          // },
+          // {
+          //   path: "GroupOfFinancial",
+          //   name: "GroupOfFinancial",
+          //   component: GroupOfFinancial,
+          //   meta: { requiresAuth: true, roles: ['admin'],layout: 'profileInDashboardLayout' },
+          // },
           {
             path: "RandomFinancial",
             name: "RandomFinancial",
@@ -414,17 +440,30 @@ const routes = [
         meta: { requiresAuth: true, roles: ['technical', 'clint', 'admin'] ,layout: 'profileOutDashboardLayout'},
       },
       {
-        path: "TransactionDetails/:transactionId",
-        name: "UserTransactionDetails",
-        component: TransactionDetails,
+        path: "ListOfTransaction",
+        name: "ListOfTransaction",
+        component: ListOfTransaction,
         meta: { requiresAuth: true, roles: ['technical', 'clint', 'admin'] ,layout: 'profileOutDashboardLayout'},
       },
-      {
-        path: "EditTransaction/:transactionId",
-        name: "UserEditTransaction",
-        component: EditTransaction,
-        meta: { requiresAuth: true, roles: ['technical', 'clint', 'admin'] ,layout: 'profileOutDashboardLayout'},
+       // New Design
+       {
+        path: "/transactions/edit/:transactionId/:profileId",
+        name: "EditFinancial",
+        component: EditFinancial, 
       },
+      // old
+      // {
+      //   path: "TransactionDetails/:transactionId",
+      //   name: "UserTransactionDetails",
+      //   component: TransactionDetails,
+      //   meta: { requiresAuth: true, roles: ['technical', 'clint', 'admin'] ,layout: 'profileOutDashboardLayout'},
+      // },
+      // {
+      //   path: "EditTransaction/:transactionId",
+      //   name: "UserEditTransaction",
+      //   component: EditTransaction,
+      //   meta: { requiresAuth: true, roles: ['technical', 'clint', 'admin'] ,layout: 'profileOutDashboardLayout'},
+      // },
       {
         path: "projects",
         name: "UserProjects",

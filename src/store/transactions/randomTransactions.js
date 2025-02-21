@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { db } from "@/firebase/firebaseConfig.js";
+import { useGetUserStore } from '@/store/users/users.js';
 
 export const useRandomTransactionsStore = defineStore("randomTransactions", {
   state: () => ({
@@ -26,6 +27,10 @@ export const useRandomTransactionsStore = defineStore("randomTransactions", {
 
   // التحكم في عرض أو إخفاء العناصر المخفية 
   hidden: false, 
+
+// مصفوفة لتخزين بيانات كل ProfileId
+  transactionsData: [], 
+
 
 
   }),
@@ -191,6 +196,75 @@ export const useRandomTransactionsStore = defineStore("randomTransactions", {
     }
   },
 
+  async fetchTransactionsForClients() {
+    try {
+      const userStore = useGetUserStore(); // استدعاء استور المستخدمين
+      const clientUsers = userStore.clientUsers.map(user => user.id); // استخراج الـ IDs
+      console.log("clientUsers",userStore.clientUsers)
+      if (clientUsers.length > 0) {
+        await this.fetchTransactionsByProfiles(clientUsers);
+      }
+    } catch (error) {
+      console.error("Error fetching transactions for clients:", error);
+    }
+  },
+
+  async fetchTransactionsByProfiles(profileIds) {
+    try {
+      const transactionsArray = [];
+
+      for (const profileId of profileIds) {
+        // جلب معاملات Add وتجاهل المعاملات المخفية
+        const addQuerySnapshot = await db
+          .collection("AddRandomTransaction")
+          .where("userId", "==", profileId)
+          // .where("hidden", "==", true) // استبعاد المعاملات المخفية
+          .get();
+
+        const addTransactions = addQuerySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+          amount: Number(doc.data().amount || 0),
+        }));
+
+        // جلب معاملات Pull وتجاهل المعاملات المخفية
+        const pullQuerySnapshot = await db
+          .collection("PullRandomTransaction")
+          .where("userId", "==", profileId)
+          // .where("hidden", "==", true) // استبعاد المعاملات المخفية
+          .get();
+
+        const pullTransactions = pullQuerySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+          amount: Number(doc.data().amount || 0),
+        }));
+
+        // حساب الرصيد لكل بروفايل
+        const totalAdd = addTransactions.reduce((sum, t) => sum + t.amount, 0);
+        const totalPull = pullTransactions.reduce((sum, t) => sum + t.amount, 0);
+        const balance = totalAdd - totalPull;
+
+        // إنشاء كائن يحتوي على بيانات المستخدم
+        const profileData = {
+          profileId,
+          addTransactions,
+          pullTransactions,
+          balance,
+        };
+
+        // إضافة البيانات إلى المصفوفة
+        transactionsArray.push(profileData);
+      }
+
+      // تحديث حالة Pinia بالمصفوفة الجديدة
+      this.transactionsData = transactionsArray;
+
+      console.log("Fetched Transactions Data:", this.transactionsData);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  },
 
     // Fetch All AddRandomTransaction
     async fetchAllAddTransactions() {

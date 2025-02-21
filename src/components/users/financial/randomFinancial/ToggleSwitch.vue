@@ -36,8 +36,8 @@
   .toggle-switch {
     width: 50px;
     height: 25px;
-    background-color: #792424;
-    background-color: rgb(241, 240, 237);
+    /* background-color: #792424; */
+    /* background-color: rgb(241, 240, 237); */
     background-color: var(--popularCalar);
 
 

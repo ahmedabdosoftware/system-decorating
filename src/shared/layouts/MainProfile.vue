@@ -92,6 +92,8 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
      min-height: 100vh;
+     overflow-x: hidden;
+
   }
   
   .profile-content {

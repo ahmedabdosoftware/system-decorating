@@ -39,7 +39,7 @@ export default {
     ...mapState(useUserStore, ['isAdmin', 'isClint', 'isTechnical']),
   },
   methods: {
-    ...mapActions(useTransactionsStore, ['deleteTransaction']),
+    ...mapActions(useTransactionsStore, ['deleteSpecificTransaction']),
     ...mapActions(useOrdersStore, ['updateOrder']),
 
     toggle() {
@@ -66,18 +66,22 @@ export default {
 
     async deletteFinancial(transaction) {
       try {
-        await this.deleteTransaction(transaction.id, this.$route.params.profileId);
+        // old
+        // await this.deleteTransaction(transaction.id, this.$route.params.profileId);
+        
+        await this.deleteSpecificTransaction(transaction.id, this.$route.params.profileId);
 
-        if (transaction.orderId) {
-          const updatePayload = {
-            id: transaction.orderId,
-            ...(transaction.transactionType === 'فنى'
-              ? { financialTechnicalTransactionId: null }
-              : { financialClientTransactionId: null }),
-          };
+        // old
+        // if (transaction.orderId) {
+        //   const updatePayload = {
+        //     id: transaction.orderId,
+        //     ...(transaction.transactionType === 'فنى'
+        //       ? { financialTechnicalTransactionId: null }
+        //       : { financialClientTransactionId: null }),
+        //   };
 
-          await this.updateOrder(updatePayload);
-        }
+        //   await this.updateOrder(updatePayload);
+        // }
 
         sweetalert({
           text: "Transaction deleted successfully",

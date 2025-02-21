@@ -22,12 +22,18 @@
         <template #title>
           <h2>Pull Payments</h2>
         </template>
+        <template #icon>
+          <img  class="iconAwesome" :src="require('@/assets/icons/pull.png')" />
+        </template>
         </FinancialList>
         <!-- push Payments -->
         <FinancialList paymentType="Add">
           <template #title>
             <h2>push Payments</h2>
           </template>
+          <template #icon>
+          <img  class="iconAwesome" :src="require('@/assets/icons/push.png')" />
+        </template>
         </FinancialList>
         <!-- <NoData v-if="true" context="transactions"></NoData> -->
       </div>
@@ -118,14 +124,18 @@
 
 <style scoped lang="scss">
   .allContent{
-    background-color: hsl(0, 100%, 98%);
+    // background-color: hsl(0, 100%, 98%);
+    border-radius: 10px;
+    background-color: #f7f7f9;
+
   }
   .allContent > div {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
-    width: 49%;
+    width: 50%;
     min-height: 380px;  
+    // background-color: red;
   }
   .add-payment{
     width: 96%;
