@@ -738,15 +738,15 @@ calculateNetProfit() {
   finalTotalBalance() {
     const onePlace = this.totalRemainingBalance;
     const moreThanPlace = this.transactionsData;
-
+    console.log(onePlace)
     // حساب إجمالي الـ balance من transactionsData
       var totalBalancesSum = moreThanPlace.reduce(
-        (sum, profile) => sum + profile.balance, 
+        (sum, profile) => sum + Number(profile.balance), 
         0
       );
 
     // حساب المجموع النهائي
-    return onePlace + totalBalancesSum;
+    return  Number(onePlace) + totalBalancesSum;
   }
 },
 methods: {

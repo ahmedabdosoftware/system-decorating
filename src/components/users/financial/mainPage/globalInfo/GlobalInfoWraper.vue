@@ -23,7 +23,7 @@
            {{ getRole== 'technical' ? "Transiction" :"More" }}
         </template>
         <template #value>
-          {{ getRole== 'technical' ? "----" : moreBalance }}
+          {{ moreBalance }}
         </template>
       </FinancialBox>
 

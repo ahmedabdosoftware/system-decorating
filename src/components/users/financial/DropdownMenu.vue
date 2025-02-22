@@ -2,11 +2,11 @@
     <div class="dropdown">
       <button class="dropbtn" @click="toggle">:</button>
       <div v-if="visible" class="dropdown-content">
-        <a href="#" @click.prevent="generateRoute('TransactionDetails',transaction.id)">
+        <!-- <a href="#" @click.prevent="generateRoute('TransactionDetails',transaction.id)">
         <span>تفاصيل</span> <font-awesome-icon class="icon" :icon="['fas', 'eye']" />
-      </a>
+        </a> -->
         <a v-if="isAdmin"  href="#" @click.prevent="generateRoute('EditTransaction',transaction.id)">
-        <span>تعديل</span> <font-awesome-icon class="icon" :icon="['fas', 'edit']" />
+        <span>اجراء</span> <font-awesome-icon class="icon" :icon="['fas', 'edit']" />
         </a>
         <a v-if="isAdmin"  href="#" @click.prevent="deletteFinancial(transaction)">
             <span>حذف</span> <font-awesome-icon class="icon" :icon="['fas', 'trash']" />

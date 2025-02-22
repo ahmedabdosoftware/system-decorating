@@ -153,7 +153,7 @@ export const useTransactionsStore = defineStore('transactions', {
   getters: {
     totalRemainingBalance() {
       return this.userTransactionSummaries.reduce((total, user) => {
-        const userTotal = user.transactions.reduce((sum, transaction) => sum + transaction.remainingBalance, 0);
+        const userTotal = user.transactions.reduce((sum, transaction) => sum + Number(transaction.remainingBalance) , 0);
         return total + userTotal;
       }, 0);
     }
