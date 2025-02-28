@@ -3,7 +3,7 @@
     <div class="">
       <div class="random__title">
         <div class="random__title__text">
-          <p v-if="userInfo"> {{ userInfo.role== "technical"? "workers's": "clint's"  }} accounting <span>Random</span></p>
+          <p v-if="userInfo"> {{ userInfo.role== "technical"? "workers's": "clint's"  }} accounting <span>{{ userInfo.role== "technical"? "Transiction": "More Than Place"  }}</span></p>
         </div>
         <div class="cont__title__totalChange">
           <div class="random__title__total">
@@ -91,7 +91,6 @@
       width: 100%;
       overflow: hidden;
       background-color: #f7f7f9;
-
 
     }
     .random__title__text{

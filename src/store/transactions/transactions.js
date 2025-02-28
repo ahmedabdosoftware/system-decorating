@@ -111,42 +111,48 @@ export const useTransactionsStore = defineStore('transactions', {
     
     // NEW way
     async fetchUsersAndTransactions() {
-      const userStore = useGetUserStore(); // استدعاء استور المستخدمين
-      const users = userStore.clientUsers
-      console.log("clientUsers",userStore.clientUsers)
-      
-      const transactionsData = [];
-      
-      for (const user of users) {
-        const querySnapshot = await db.collection('SpecificTransactions')
-          .where('userId', '==', user.id)
-          .get();
-        
-        const userTransactions = querySnapshot.docs.map(doc => {
-          const transaction = { id: doc.id, ...doc.data() };
-          let remainingBalance = 0;
-          const bothType = transaction.typesData.find(t => t.type === 'both');
-          
-          if (bothType && bothType.totalAmount) {
-            remainingBalance = bothType.remainingValue;
-          } else {
-            const materials = transaction.typesData.find(t => t.type === 'materials');
-            const manufacturing = transaction.typesData.find(t => t.type === 'manufacturing');
-            
-            const materialsRemaining = materials ? Number(materials.remainingValue) || 0 : 0;
-            const manufacturingRemaining = manufacturing ? Number(manufacturing.remainingValue) || 0 : 0;
-            
-            remainingBalance = materialsRemaining + manufacturingRemaining;
-          }
-          
-          return { ...transaction, remainingBalance };
-        });
-        
-        transactionsData.push({ userId: user.id, userName: user.name, transactions: userTransactions });
+      try {
+        const userStore = useGetUserStore(); // استدعاء استور المستخدمين
+        const users = userStore.clientUsers;
+        console.log("clientUsers", users);
+    
+        // تشغيل جميع الطلبات بالتوازي باستخدام `Promise.all`
+        // insted of For loop for every profile, Now It Faster
+        const transactionsData = await Promise.all(users.map(async (user) => {
+          const querySnapshot = await db.collection('SpecificTransactions')
+            .where('userId', '==', user.id)
+            .get();
+    
+          const userTransactions = querySnapshot.docs.map((doc) => {
+            const transaction = { id: doc.id, ...doc.data() };
+            let remainingBalance = 0;
+            const bothType = transaction.typesData.find(t => t.type === 'both');
+    
+            if (bothType && bothType.totalAmount) {
+              remainingBalance = bothType.remainingValue;
+            } else {
+              const materials = transaction.typesData.find(t => t.type === 'materials');
+              const manufacturing = transaction.typesData.find(t => t.type === 'manufacturing');
+    
+              const materialsRemaining = materials ? Number(materials.remainingValue) || 0 : 0;
+              const manufacturingRemaining = manufacturing ? Number(manufacturing.remainingValue) || 0 : 0;
+    
+              remainingBalance = materialsRemaining + manufacturingRemaining;
+            }
+    
+            return { ...transaction, remainingBalance };
+          });
+    
+          return { userId: user.id, userName: user.name, transactions: userTransactions };
+        }));
+    
+        // تحديث حالة Pinia بالمصفوفة الجديدة دفعة واحدة
+        this.userTransactionSummaries = transactionsData;
+    
+        console.log("userTransactionSummaries", this.userTransactionSummaries);
+      } catch (error) {
+        console.error("Error fetching users and transactions:", error);
       }
-      
-      this.userTransactionSummaries = transactionsData;
-      console.log("userTransactionSummaries",this.userTransactionSummaries)
     },
 
   },

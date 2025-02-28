@@ -24,6 +24,7 @@
                       @shipping-updated="handleShippingUpdate"
                       @shippingShape-updated="handleCustomShippingUpdate"
                       @orderType-updated="handleTypeUpdate"
+                      @updateGroup-updated="handleGroup"
                   />  
                   <!-- product-manager-wraper -->
                   <ProductMangerWraper
@@ -143,6 +144,7 @@ import FormActions from "@/components/orders/shared/FormActions.vue";
           laborPrice:'',
           shipping:'',
           customShipping:'',
+          Group:'',
 
           file: null, // for add picture
 
@@ -221,6 +223,11 @@ import FormActions from "@/components/orders/shared/FormActions.vue";
         handleTypeUpdate(invoiceType) {
             this.invoiceType = invoiceType;
             console.log("update invoiceType by emit event",this.invoiceType)
+
+        },
+        handleGroup(Group) {
+            this.Group = Group;
+            console.log("update invoiceType by emit event",this.Group)
 
         },
         handleAddedOrdersUpdate(addedOrders) {
@@ -345,6 +352,7 @@ import FormActions from "@/components/orders/shared/FormActions.vue";
         laborPrice: this.laborPrice,
         shipping: this.shipping,
         customShipping: this.customShipping,
+        Group: this.Group,
         imageUrl,
 
         displaySale: this.displaySale,

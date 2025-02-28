@@ -63,22 +63,22 @@
 
     props: {
     initialCustomerName: {
-      type: String,
+      // type: String,
       default: "",
     },
     initialCustomerId: {
-      type: Number,
+      // type: Number,
       default: null,
     },
     initialCustomerInfo: {
       default: "",
     },
     initialTechnicalName: {
-      type: String,
+      // type: String,
       default: "",
     },
     initialTechnicalId: {
-      type: Number,
+      // type: Number,
       default: null,
     },
     initialTechnicalInfo: {

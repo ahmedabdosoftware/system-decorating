@@ -41,6 +41,7 @@
             <option value="date">date</option>
             <option value="customerName">customer</option>
             <option value="numberOfOrder">order number</option>
+            <option value="Group">Invoice Group</option>
           </select>
           </div>
           <div :class="{ 'dark-mode-box': getDarkMode }">
@@ -128,6 +129,10 @@
               // البحث
           if (this.searchQuery) {
             filteredOrders = filteredOrders.filter(order => {
+              // Check First If THere Is this Property That U search By
+              if (order[this.selectedFilter] === undefined || order[this.selectedFilter] === null) {
+                return false;
+              }
               const valueToSearch = order[this.selectedFilter].toString().toLowerCase();
               console.log(order[this.selectedFilter].toString().toLowerCase())
               return valueToSearch.includes(this.searchQuery.toLowerCase());
@@ -186,6 +191,7 @@
         breadcrumbs: [
         { label: "Dashboard", link: "/dashboard" },
         { label: "Orders", link: "/dashboard/Order" },
+        { label: "Invoice System", link: "/dashboard/Order" },
         // { label: "Create Order", link: "/dashboard/AddNewOrder" }
       ]
       };

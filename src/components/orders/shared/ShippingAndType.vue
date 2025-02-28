@@ -4,6 +4,7 @@
       <div class="form-container">
         <!--  shipping -->
         <div class="form-item full-width" >
+
           <input
             type="text"
             id="shipping"
@@ -22,17 +23,36 @@
             v-model="customShipping"
             @input="updatecustomShipping"
           />
+
         </div>
-        <!-- اختيار نوع الفاتوره -->
-        <div class="form-item with-label">
-         <label class="input-label"> order Type</label>
-          <!-- <font-awesome-icon icon="calendar-alt" class="form-icon" /> -->
-          <select  class="form-input select" name="occupation" id="occupation" v-model="invoiceType"   @change="updateinvoiceType">
-            <option value="تركيب">تركيب</option>
-            <option value="توريد"> توريد</option>
-            <option value="تركيب وتوريد">تركيب وتوريد </option>
-        </select>
-        </div>
+
+        <div class="form-item">
+          <!-- اختيار نوع الفاتوره -->
+          <div class="form-item with-label">
+
+            <label class="input-label"> order Type</label>
+            <!-- <font-awesome-icon icon="calendar-alt" class="form-icon" /> -->
+            <select  class="form-input select" name="occupation" id="occupation" v-model="invoiceType"   @change="updateinvoiceType">
+              <option value="تركيب">تركيب</option>
+              <option value="توريد"> توريد</option>
+              <option value="تركيب وتوريد">تركيب وتوريد </option>
+            </select>
+
+          </div>
+        <!--  حدد كوليكشن -->
+          <div class="form-item with-label">
+    
+            <label class="input-label"> Invoices Group </label>
+            <input
+                type="text"
+                id="Group"
+                class="form-input"
+                placeholder="EX: october"
+                v-model="Group"
+                @input="updateGroup"
+              />
+          </div>
+      </div>
       </div>
     </div>
   </template>
@@ -54,12 +74,17 @@ export default {
       type: String,
       default: "تركيب وتوريد",
     },
+    initialGroup: {
+      type: String,
+      default: "",
+    },
   }, 
   data() {
     return {
       shipping: this.initialShipping,
       customShipping: this.initialCustomShipping,
       invoiceType: this.initialInvoiceType,
+      Group: this.Group,
     };
   },
   methods: {
@@ -75,6 +100,10 @@ export default {
       // Emit the date data to the parent component
       this.$emit("orderType-updated", this.invoiceType);
     },
+    updateGroup() {
+      // Emit the date data to the parent component
+      this.$emit("updateGroup-updated", this.Group);
+    },
   },
   watch: {
       // Watch for changes in props and update local data
@@ -87,6 +116,9 @@ export default {
       },
       initialInvoiceType(newVal) {
         this.invoiceType = newVal;
+      },
+      initialGroup(newVal) {
+        this.Group = newVal;
       },
       
     },
@@ -148,7 +180,7 @@ export default {
 }
 .input-label{
   margin-top: 10px;
-  font-size: 19px;
+  font-size: 17px;
   font-weight: 700;
   color: #333;
 
@@ -187,6 +219,10 @@ export default {
    
        margin-right: 5px;
      }
+
+     .input-label{
+        font-size: 12px;
+      }
     }
     
 </style>

@@ -405,9 +405,9 @@ export default {
     },
 
     calculateJokerTotal(joker) {
-      if (!joker.willBeCalculated) {
-        return '---';
-      }
+      // if (!joker.willBeCalculated) {
+      //   return '---';
+      // } 
 
       if (joker.value && joker.quantity) {
         return (joker.value * joker.quantity).toFixed(2);

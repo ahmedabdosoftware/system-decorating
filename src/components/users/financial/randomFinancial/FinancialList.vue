@@ -21,31 +21,41 @@
 
     <!-- Footer -->
     <div class="footer">
-      <!-- زر الصفحة التالية -->
-      <button
-        class="common-btn"
-        :disabled="!addHasNextPage && paymentType === 'Add' || !pullHasNextPage && paymentType === 'Pull'"
-        @click="paymentType === 'Add' ? fetchAddTransactions(5, 'next',profileId) : fetchPullTransactions(5, 'next',profileId)"
-      >
-        Next
-        <font-awesome-icon icon="chevron-right" />
-      </button>
+      <div class="footer_total">
+        <font-awesome-icon icon="wallet" class="total-icon" />
+        <span class="total-label">Total {{ paymentType === 'Add' ? "Push" : "Pull" }}:</span>
+        <span class="total-amount">{{ totalAmount }} EGP</span>
+      </div>
 
-      <!-- زر الصفحة السابقة -->
-      <button
-        class="common-btn"
-        :disabled="!addHasPreviousPage && paymentType === 'Add' || !pullHasPreviousPage && paymentType === 'Pull'"
-        @click="paymentType === 'Add' ? fetchAddTransactions(5, 'previous',profileId) : fetchPullTransactions(5, 'previous',profileId)"
-      >
-        <font-awesome-icon icon="chevron-left" />
-        Previous
-      </button>
+      <div class="footer_btns">
 
-     <!-- زر آخر عملية -->
-    <button class="common-btn spicial-btn" @click="paymentType === 'add' ? fetchAddTransactions(5,null,profileId) : fetchPullTransactions(5,null,profileId)">
-      <font-awesome-icon icon="clock" />
-      Last Added
-    </button>
+        <!-- زر الصفحة التالية -->
+        <button
+          class="common-btn"
+          :disabled="!addHasNextPage && paymentType === 'Add' || !pullHasNextPage && paymentType === 'Pull'"
+          @click="paymentType === 'Add' ? fetchAddTransactions(5, 'next',profileId) : fetchPullTransactions(5, 'next',profileId)"
+        >
+          Next
+          <font-awesome-icon icon="chevron-right" />
+        </button>
+
+        <!-- زر الصفحة السابقة -->
+        <button
+          class="common-btn"
+          :disabled="!addHasPreviousPage && paymentType === 'Add' || !pullHasPreviousPage && paymentType === 'Pull'"
+          @click="paymentType === 'Add' ? fetchAddTransactions(5, 'previous',profileId) : fetchPullTransactions(5, 'previous',profileId)"
+        >
+          <font-awesome-icon icon="chevron-left" />
+          Previous
+        </button>
+
+        <!-- زر آخر عملية -->
+        <button class="common-btn spicial-btn" @click="paymentType === 'add' ? fetchAddTransactions(5,null,profileId) : fetchPullTransactions(5,null,profileId)">
+          <font-awesome-icon icon="clock" />
+          Last Added
+        </button>
+      </div>
+
     </div>
   </div>
 </template>
@@ -108,6 +118,9 @@ export default {
         return this.pullTransactions;
       }
       return [];
+    },
+    totalAmount() {
+      return this.filteredData.reduce((sum, payment) => sum + (Number(payment.amount) || 0), 0);
     }
   },
 
@@ -195,19 +208,54 @@ export default {
       width: 100%;
       height: 90px;
       // background-color: #ffffff;
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
       border-top: 1px solid #ddd;
-  
-      .spicial-btn {
-        // background-color: #28a745;
-  
-        &:hover {
-          // background-color: #1e7e34;
+      display: flex;
+      flex-wrap: wrap;
+      .footer_total {
+        // background-color: #7e1e36;
+        width: 100%;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 8px;
+        // color: #fff;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border-bottom: 1px solid rgb(107, 104, 104);
+        padding-left: 15px;
+        .total-icon {
+          font-size: 1.5rem;
+          color: #007bff;
         }
+
+        .total-label {
+          font-weight: 600;
+        }
+
+        .total-amount {
+          // color: #007bff;
+        }
+      }
+
+      .footer_btns{
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        // background-color: #435447;
+        padding-top: 10px;
+        .spicial-btn {
+          // background-color: #28a745;
+    
+          &:hover {
+            // background-color: #1e7e34;
+          }
+      }
+       
       }
     }
   }
+  
   </style>
   

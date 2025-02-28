@@ -211,61 +211,52 @@ export const useRandomTransactionsStore = defineStore("randomTransactions", {
 
   async fetchTransactionsByProfiles(profileIds) {
     try {
-      const transactionsArray = [];
-
-      for (const profileId of profileIds) {
-        // جلب معاملات Add وتجاهل المعاملات المخفية
-        const addQuerySnapshot = await db
-          .collection("AddRandomTransaction")
-          .where("userId", "==", profileId)
-          // .where("hidden", "==", true) // استبعاد المعاملات المخفية
-          .get();
-
+      
+      // insted of For loop To Get every profile and Do  Request then Request and Repeat This Operation, Now It Faster
+      const transactionsArray = await Promise.all(profileIds.map(async (profileId) => {
+        // تشغيل الـ 2 requests في نفس الوقت (بدل ما يكونوا متتالين)
+        const [addQuerySnapshot, pullQuerySnapshot] = await Promise.all([
+          db.collection("AddRandomTransaction")
+            .where("userId", "==", profileId)
+            // .where("hidden", "==", true) // 
+            .get(),
+          db.collection("PullRandomTransaction")
+            .where("userId", "==", profileId)
+            // .where("hidden", "==", true) // 
+            .get()
+        ]);
+  
+        // تحويل البيانات من الـ snapshots
         const addTransactions = addQuerySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
           amount: Number(doc.data().amount || 0),
         }));
-
-        // جلب معاملات Pull وتجاهل المعاملات المخفية
-        const pullQuerySnapshot = await db
-          .collection("PullRandomTransaction")
-          .where("userId", "==", profileId)
-          // .where("hidden", "==", true) // استبعاد المعاملات المخفية
-          .get();
-
+  
         const pullTransactions = pullQuerySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
           amount: Number(doc.data().amount || 0),
         }));
-
+  
         // حساب الرصيد لكل بروفايل
         const totalAdd = addTransactions.reduce((sum, t) => sum + t.amount, 0);
         const totalPull = pullTransactions.reduce((sum, t) => sum + t.amount, 0);
         const balance = totalAdd - totalPull;
-
+  
         // إنشاء كائن يحتوي على بيانات المستخدم
-        const profileData = {
-          profileId,
-          addTransactions,
-          pullTransactions,
-          balance,
-        };
-
-        // إضافة البيانات إلى المصفوفة
-        transactionsArray.push(profileData);
-      }
-
-      // تحديث حالة Pinia بالمصفوفة الجديدة
+        return { profileId, addTransactions, pullTransactions, balance };
+      }));
+  
+      // تحديث حالة Pinia بالمصفوفة الجديدة دفعة واحدة
       this.transactionsData = transactionsArray;
-
+  
       console.log("Fetched Transactions Data:", this.transactionsData);
     } catch (error) {
       console.error("Error fetching transactions:", error);
     }
   },
-
+  
     // Fetch All AddRandomTransaction
     async fetchAllAddTransactions() {
         try {

@@ -32,9 +32,12 @@
                     :initialShipping="shipping"
                     :initialCustomShipping="customShipping"
                     :initialInvoiceType="invoiceType"
+                    :initialGroup="Group"
                     @shipping-updated="handleShippingUpdate"
                     @shippingShape-updated="handleCustomShippingUpdate"
                     @orderType-updated="handleTypeUpdate"
+                    @updateGroup-updated="handleGroup"
+
                 />  
                 <!-- product-manager-wraper -->
                 <ProductMangerWraper
@@ -164,6 +167,7 @@
           laborPrice:'',
           shipping:'',
           customShipping:'',
+          Group:'',
 
           file: null, // for add picture
 
@@ -242,6 +246,10 @@
             console.log("update shipping by emit event",this.shipping)
 
         },
+        handleGroup(Group) {
+            this.Group = Group;
+            console.log("update invoiceType by emit event",this.Group)
+        },
         handleCustomShippingUpdate(customShipping) {
             this.customShipping = customShipping;
             console.log("update customShipping by emit event",this.customShipping)
@@ -301,6 +309,7 @@
         this.laborPrice = order.laborPrice;
         this.shipping = order.shipping;
         this.customShipping = order.customShipping;
+        this.Group = order.Group || "";
         this.currentImageUrl = order.imageUrl;
 
         this.displaySale = order.displaySale ;
@@ -526,6 +535,7 @@
           laborPrice: this.laborPrice,
           shipping: this.shipping,
           customShipping: this.customShipping,
+          Group: this.Group,
           imageUrl,
 
           displaySale: this.displaySale,
