@@ -1,6 +1,6 @@
-import CryptoJS from 'crypto-js';
+import CryptoJS from "crypto-js";
 
-const secretKey = 'your-secret-key'; // استخدم مفتاحًا سريًا آمنًا
+const secretKey = "your-secret-key"; // استخدم مفتاحًا سريًا آمنًا
 
 export function encrypt(text) {
   return CryptoJS.AES.encrypt(text, secretKey).toString();

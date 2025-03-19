@@ -18,41 +18,38 @@
             />
             <button>png</button>
           </div>
-         
-            <button @click="print" class="generate">
-              <font-awesome-icon class="printIcon" icon="fa-solid fa-print" />
-              <p>print</p> 
-            </button>
-         
+
+          <button @click="print" class="generate">
+            <font-awesome-icon class="printIcon" icon="fa-solid fa-print" />
+            <p>print</p>
+          </button>
         </div>
       </div>
-
     </div>
 
     <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
-
       <DetailsSkeleton v-if="isLoading" />
-      <ShowFatoora v-else-if="orderInfo" :orderInfo="orderInfo" :isCustomized="isCustomized" ></ShowFatoora>
+      <ShowFatoora
+        v-else-if="orderInfo"
+        :orderInfo="orderInfo"
+        :isCustomized="isCustomized"
+      ></ShowFatoora>
+    </div>
 
-    </div>
-    
-    <div id="scrollUp" class="scrollUp">
-      
-    </div>
+    <div id="scrollUp" class="scrollUp"></div>
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'pinia'
-import { useOrdersStore } from '@/store/order/orders.js';
+import { mapState, mapActions } from "pinia";
+import { useOrdersStore } from "@/store/order/orders.js";
 
-  // ShowFatoora
-  import ShowFatoora from "@/components/orders/fatora/ShowFatoora.vue";
-  
-  // Skeleton Details 
-  import DetailsSkeleton from '@/shared/components/loading/skeletonLoader/DetailsSkeleton.vue';
- 
-  
+// ShowFatoora
+import ShowFatoora from "@/components/orders/fatora/ShowFatoora.vue";
+
+// Skeleton Details
+import DetailsSkeleton from "@/shared/components/loading/skeletonLoader/DetailsSkeleton.vue";
+
 export default {
   name: "Fatora",
   components: {
@@ -63,57 +60,49 @@ export default {
     getDarkMode() {
       return this.$store.state.darkMode;
     },
-    ...mapState(useOrdersStore, ['orders']),
-   
+    ...mapState(useOrdersStore, ["orders"]),
   },
   async created() {
-    
-    console.log('before fetched:', this.orders);
+    console.log("before fetched:", this.orders);
     try {
       await this.fetchOrders();
       this.isLoading = false;
 
-      console.log('Orders fetched:', this.orders);
+      console.log("Orders fetched:", this.orders);
       this.orderId = this.$route.params.orderId;
-      this.isCustomized = this.$route.params.isCustom
+      this.isCustomized = this.$route.params.isCustom;
 
-      console.log('Order ID:', this.orderId);
-      console.log('isCustomized Param:', this.isCustomized);
+      console.log("Order ID:", this.orderId);
+      console.log("isCustomized Param:", this.isCustomized);
 
-      this.orderInfo = this.orders.find(order => order.id === this.orderId);
-      console.log('Order Info:', this.orderInfo);
-
-      
-      
+      this.orderInfo = this.orders.find((order) => order.id === this.orderId);
+      console.log("Order Info:", this.orderInfo);
     } catch (error) {
       this.isLoading = false;
 
-      console.error('Error fetching orders:', error);
+      console.error("Error fetching orders:", error);
     }
   },
-  
+
   methods: {
-    ...mapActions(useOrdersStore, ['fetchOrders']),
+    ...mapActions(useOrdersStore, ["fetchOrders"]),
     print() {
       window.print();
     },
-   
   },
   data() {
     return {
-      orderId: '',
+      orderId: "",
       orderInfo: null,
-      isLoading:true,
+      isLoading: true,
       isCustomized: false, // حالة لتحديد نوع الفاتورة
-
-
     };
   },
 };
 </script>
 <style scoped lang="scss">
 .fatora {
- // background-color: aqua;
+  // background-color: aqua;
   display: flex;
   flex-wrap: wrap;
   min-height: 100vh;
@@ -122,7 +111,7 @@ export default {
 .title {
   width: 100%;
   height: 80px;
- // background-color: sandybrown;
+  // background-color: sandybrown;
   display: flex;
   flex-wrap: wrap;
   > div:first-child {
@@ -173,7 +162,7 @@ export default {
         width: 100px;
         height: 40px;
         background-color: white;
-       // background-color: black;
+        // background-color: black;
         border-radius: 4px;
         display: flex;
         justify-content: space-evenly;
@@ -192,7 +181,6 @@ export default {
       }
     }
   }
- 
 }
 .contTitle {
   background-color: blue;
@@ -215,24 +203,24 @@ export default {
   margin-left: 4%;
 }
 
-%center_flex{
+%center_flex {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .generate {
-    @extend  %center_flex;
+  @extend %center_flex;
 
-    width: 140px;
-    height: 40px;
-    background-color: blue;
-    cursor: pointer;
-    border-radius: 5px;
-    .printIcon{
-      width: 20px;
-      height: 20px;
-    }
+  width: 140px;
+  height: 40px;
+  background-color: blue;
+  cursor: pointer;
+  border-radius: 5px;
+  .printIcon {
+    width: 20px;
+    height: 20px;
+  }
 
   p {
     font-size: 17px;
@@ -249,8 +237,6 @@ export default {
 }
 
 @media (max-width: 477px) {
- 
-
   .title {
     height: 210px;
     // background-color: red;
@@ -266,18 +252,12 @@ export default {
       }
     }
   }
-  
-
-
 }
 
-@media print{
-  .title,.fatoora__btns {
-    display: none ;
+@media print {
+  .title,
+  .fatoora__btns {
+    display: none;
   }
-
- 
-  
-
 }
 </style>

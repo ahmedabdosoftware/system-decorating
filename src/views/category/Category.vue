@@ -9,7 +9,7 @@
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfifgpU6f6DdemdITBpg_essXRVuwWFaTnhJgl9QGDvchprPgRpZFDLgAZhDRlBiYvEd8&usqp=CAU"
             />
           </div>
-          <p :class=" { 'dark-mode-title': getDarkMode } ">category grid</p>
+          <p :class="{ 'dark-mode-title': getDarkMode }">category grid</p>
         </div>
         <div>
           <div class="export">
@@ -29,7 +29,6 @@
           placeholder="search"
           type="search"
           v-model="searchQuery"
-
         />
         <div :class="{ 'dark-mode-box': getDarkMode }">
           <div>
@@ -50,29 +49,28 @@
       </div>
     </div>
     <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
-
       <div v-if="isLoading">
         <BoxSkeletonLoader v-for="n in 6" :key="n" />
       </div>
-      <CategoryList v-else-if="filteredCategories.length > 0" :Categories="filteredCategories"></CategoryList>
+      <CategoryList
+        v-else-if="filteredCategories.length > 0"
+        :Categories="filteredCategories"
+      ></CategoryList>
       <NoData v-else context="categories"></NoData>
-
     </div>
-   
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'pinia';
+import { mapState, mapActions } from "pinia";
 //  store
-import { useCategoriesStore } from '@/store/categories/categories.js';
+import { useCategoriesStore } from "@/store/categories/categories.js";
 //  CategoryList
 import CategoryList from "@/components/categories/CategoryList.vue";
- // NoData
- import NoData from "@/shared/components/noData/NoData.vue";
+// NoData
+import NoData from "@/shared/components/noData/NoData.vue";
 // Skeleton Box
-import BoxSkeletonLoader from '@/shared/components/loading/skeletonLoader/BoxSkeletonLoader.vue';
-
+import BoxSkeletonLoader from "@/shared/components/loading/skeletonLoader/BoxSkeletonLoader.vue";
 
 export default {
   name: "Category",
@@ -80,49 +78,41 @@ export default {
     CategoryList,
     NoData,
     BoxSkeletonLoader,
-
-
   },
   data() {
     return {
-      searchQuery: '',
+      searchQuery: "",
       isLoading: true,
-
     };
   },
   computed: {
     getDarkMode() {
       return this.$store.state.darkMode;
     },
-    ...mapState(useCategoriesStore, ['categories']),
+    ...mapState(useCategoriesStore, ["categories"]),
     filteredCategories() {
       const query = this.searchQuery.toLowerCase();
       // just to be more clear code and less time (optmization) but this condition not  nessesry event the query is "empty string" no problem will return all categories
       if (!query) {
         return this.categories;
       }
-      return this.categories.filter(category =>
+      return this.categories.filter((category) =>
         category.name.toLowerCase().includes(query)
       );
     },
   },
   methods: {
-    ...mapActions(useCategoriesStore, ['fetchCategories']),
-  
+    ...mapActions(useCategoriesStore, ["fetchCategories"]),
   },
- async created() {
-  await this.fetchCategories();
-  this.isLoading = false;
-
-
+  async created() {
+    await this.fetchCategories();
+    this.isLoading = false;
   },
 };
 </script>
 
 <style scoped lang="scss">
-
-
-.allContent > div  {
+.allContent > div {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
@@ -144,61 +134,53 @@ export default {
     }
   }
 
-  
-.title--noFilterSearch {
+  .title--noFilterSearch {
+    > div:first-child {
+      height: 70%;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: flex-start;
 
-> div:first-child {
-  height: 70%;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: flex-start;
+      > div:first-child {
+        width: 196px;
+        p {
+          margin-left: 0px;
+          font-size: 16px;
+          margin-right: 0px;
+        }
+      }
+      > div:nth-of-type(2) {
+        display: flex;
+        justify-content: flex-end;
+        a {
+          margin-left: 20px;
+          button {
+            width: 120px;
+            font-size: 15px;
+          }
+        }
+        align-items: flex-end;
+        > div {
+          width: 70px;
+          button {
+            width: 40px;
+          }
+          img {
+            width: 16px;
+            height: 16px;
+            margin-left: 3px;
+            margin-right: 3px;
+          }
+        }
+      }
+    }
+    > div:nth-of-type(2) {
+      margin-left: 4%;
 
-   >div:first-child {
-    width: 196px;
-    p {
-      margin-left: 0px;
-      font-size: 16px;
-      margin-right: 0px;
+      input {
+        margin-left: 4px;
+      }
     }
   }
-  > div:nth-of-type(2) {
-    display: flex;
-    justify-content: flex-end;
-    a{
-      margin-left: 20px;
-      button {
-        width: 120px;
-        font-size: 15px;
-      }
-      
-    }
-    align-items: flex-end;
-    > div {
-      width: 70px;
-      button {
-        width: 40px;
-      }
-      img {
-        width: 16px;
-        height: 16px;
-        margin-left: 3px;
-        margin-right: 3px;
-      }
-    }
-  }
 }
-> div:nth-of-type(2) {
-  margin-left: 4%;
-
-  input {
-    margin-left: 4px;
-
-  }
-
-}
-}
-
- 
-}
-
 </style>

@@ -5,24 +5,23 @@
       <div :class="{ 'dark-mode-box': getDarkMode }" class="filter_by_search">
         <div class="">
           <input
-          :class="{ 'dark-mode-search': getDarkMode }"
-          placeholder="search"
-          type="search"
-          v-model="searchQuery" 
-        />
-        <select placeholder="filter"  class="filter" v-model="selectedFilter">
-          <option value="date">date</option>
-          <option value="customerName">customer</option>
-          <option value="numberOfOrder">order number</option>
-        </select>
+            :class="{ 'dark-mode-search': getDarkMode }"
+            placeholder="search"
+            type="search"
+            v-model="searchQuery"
+          />
+          <select placeholder="filter" class="filter" v-model="selectedFilter">
+            <option value="date">date</option>
+            <option value="customerName">customer</option>
+            <option value="numberOfOrder">order number</option>
+          </select>
         </div>
         <div :class="{ 'dark-mode-box': getDarkMode }">
           <div>
-            <select placeholder="filter"  class="filter"  v-model="selectStatus">
-              <option  value="all">الكل</option>
+            <select placeholder="filter" class="filter" v-model="selectStatus">
+              <option value="all">الكل</option>
               <option value="1">مؤكد</option>
-              <option value="2">منتهى </option>
-             
+              <option value="2">منتهى</option>
             </select>
           </div>
           <div>
@@ -36,33 +35,30 @@
       </div>
     </div>
     <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
-      
       <TableSkeleton v-if="isLoading" :rows="5" :columns="6" />
-      <ListTable v-else-if="getOrders.length > 0" :orders="getOrders"  class="ListTable_cont"></ListTable>
-      <NoData v-else  context="orders"></NoData>
-   
+      <ListTable
+        v-else-if="getOrders.length > 0"
+        :orders="getOrders"
+        class="ListTable_cont"
+      ></ListTable>
+      <NoData v-else context="orders"></NoData>
     </div>
-   
-
   </div>
 </template>
 
 <script>
-
-// actions 
-import {  mapState , mapActions } from 'pinia'
+// actions
+import { mapState, mapActions } from "pinia";
 //store
-import { useOrdersStore } from '@/store/order/orders.js';
+import { useOrdersStore } from "@/store/order/orders.js";
 
 // componnents
-  // ListTable
-  import ListTable from "@/components/orders/table/ListTable.vue";
-  // NoData
-  import NoData from "@/shared/components/noData/NoData.vue";
-  // Skeleton Table
-  import TableSkeleton from '@/shared/components/loading/skeletonLoader/TableSkeleton.vue';
-  
-  
+// ListTable
+import ListTable from "@/components/orders/table/ListTable.vue";
+// NoData
+import NoData from "@/shared/components/noData/NoData.vue";
+// Skeleton Table
+import TableSkeleton from "@/shared/components/loading/skeletonLoader/TableSkeleton.vue";
 
 export default {
   name: "Order",
@@ -75,77 +71,66 @@ export default {
     getDarkMode() {
       return this.$store.state.darkMode;
     },
-    ...mapState(useOrdersStore, ['orders']),
+    ...mapState(useOrdersStore, ["orders"]),
 
-  // ============ filter => start=======================================
-        
-        getOrders() {
-          let filteredOrders = this.orders.filter(order => order.status !== '0');
-          if (this.profileId) {
-              filteredOrders = filteredOrders.filter(order => 
-              order.customerId === this.profileId || order.technicalId === this.profileId
-            );
-          }          
-          // فلترة حسب الحالة
-          if (this.selectStatus !== 'all') {
-            filteredOrders = filteredOrders.filter(
-              order => order.status == this.selectStatus
-            );
-          }
-          
-            // البحث
-        if (this.searchQuery) {
-          filteredOrders = filteredOrders.filter(order => {
-            const valueToSearch = order[this.selectedFilter].toString().toLowerCase();
-            console.log(order[this.selectedFilter].toString().toLowerCase())
-            return valueToSearch.includes(this.searchQuery.toLowerCase());
-          });
-        }
-                     
-          return filteredOrders;
-        }
-  // ============ filter => end=======================================
-   
+    // ============ filter => start=======================================
+
+    getOrders() {
+      let filteredOrders = this.orders.filter((order) => order.status !== "0");
+      if (this.profileId) {
+        filteredOrders = filteredOrders.filter(
+          (order) =>
+            order.customerId === this.profileId ||
+            order.technicalId === this.profileId
+        );
+      }
+      // فلترة حسب الحالة
+      if (this.selectStatus !== "all") {
+        filteredOrders = filteredOrders.filter(
+          (order) => order.status == this.selectStatus
+        );
+      }
+
+      // البحث
+      if (this.searchQuery) {
+        filteredOrders = filteredOrders.filter((order) => {
+          const valueToSearch = order[this.selectedFilter]
+            .toString()
+            .toLowerCase();
+          console.log(order[this.selectedFilter].toString().toLowerCase());
+          return valueToSearch.includes(this.searchQuery.toLowerCase());
+        });
+      }
+
+      return filteredOrders;
+    },
+    // ============ filter => end=======================================
   },
 
-  async created(){
-    
+  async created() {
     this.profileId = this.$route.params.profileId;
-    await this.fetchOrders()
+    await this.fetchOrders();
     this.isLoading = false;
-
-
   },
   methods: {
-    
     // ============ my actions => start=======================================
 
-    ...mapActions(useOrdersStore, ['fetchOrders']),
-
-
+    ...mapActions(useOrdersStore, ["fetchOrders"]),
 
     // ============ my actions => end==========================================
-
-   
-
   },
   data() {
     return {
-      searchQuery: '',
-      selectStatus: 'all',
-      selectedFilter: 'date',
+      searchQuery: "",
+      selectStatus: "all",
+      selectedFilter: "date",
       profileId: null,
       isLoading: true,
-
     };
   },
- 
- 
 };
 </script>
 <style scoped lang="scss">
-
-
 .title--pagesInProfile {
   width: 100%;
   height: 80px;
@@ -153,7 +138,7 @@ export default {
   //background-color: sandybrown;
   display: flex;
   flex-wrap: wrap;
- 
+
   > div:first-child {
     width: 96%;
     height: 100%;
@@ -163,15 +148,15 @@ export default {
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
     display: flex;
-    justify-content: space-between ;
+    justify-content: space-between;
     align-items: center;
-    div:first-child{
+    div:first-child {
       display: flex;
-      justify-content: space-evenly ;
+      justify-content: space-evenly;
       align-items: center;
       height: 100%;
       width: 350px;
-       //background-color: red;
+      //background-color: red;
       select {
         // margin-right: 400px;
         border-radius: 5px;
@@ -196,87 +181,72 @@ export default {
     > div:nth-child(2) {
       width: 350px;
       height: 40px;
-       //background-color: red;
-       display: flex;
-       justify-content: space-evenly;
-       align-items: center;
-       select {
+      //background-color: red;
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      select {
         border-radius: 5px;
         height: 30px;
         text-transform: capitalize;
         color: black;
         border: solid 2px rgb(233, 230, 230);
         width: 100% !important;
-
       }
-       div {
-         width: 140px;
-         display: flex;
-         justify-content: space-evenly;
-         align-items: center;
-         height: 80%;
-         border-radius: 3px;
-         background-color: white;
+      div {
+        width: 140px;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        height: 80%;
+        border-radius: 3px;
+        background-color: white;
         border: 2px solid rgb(222, 218, 218);
         button {
           background-color: white;
         }
-
       }
     }
   }
 }
-
-
 
 @media (max-width: 477px) {
   .allContent {
     margin-bottom: 250px;
   }
- 
- 
 }
 
-  
 .title--pagesInProfile {
+  > div:first-child {
+    > div:first-child {
+      width: 210px;
 
-> div:first-child {
-   >div:first-child {
-    width: 210px;
-  
-    input {
-    margin-left: 4px;
-    width: 100px;
-    
-  }
-  select{
-    width: 70px;
-
-  }
-  }
-  > div:nth-of-type(2) {
-    
-    > div {
-      width: 70px;
-      button {
+      input {
+        margin-left: 4px;
+        width: 100px;
+      }
+      select {
         width: 70px;
-        font-size: 11px;
-      }
-      img {
-        width: 16px;
-        height: 16px;
-        margin-left: 3px;
-        margin-right: 3px;
       }
     }
-    >div:nth-child(2){
-      width: 90px;
-
-
+    > div:nth-of-type(2) {
+      > div {
+        width: 70px;
+        button {
+          width: 70px;
+          font-size: 11px;
+        }
+        img {
+          width: 16px;
+          height: 16px;
+          margin-left: 3px;
+          margin-right: 3px;
+        }
+      }
+      > div:nth-child(2) {
+        width: 90px;
+      }
     }
   }
 }
-
-}
-
 </style>

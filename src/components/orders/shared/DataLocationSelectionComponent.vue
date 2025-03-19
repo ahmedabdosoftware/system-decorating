@@ -1,37 +1,36 @@
 <template>
-    <div class="details-selection respo-form-order">
-      <h3 class="details-selection-title">Date - Location Selection</h3>
-      <div class="form-container">
-        <!-- اختيار المكان -->
-        <div class="form-item respo-form-item">
-          <font-awesome-icon icon="location-pin" class="form-icon" />
-          <input
-            type="text"
-            id="location"
-            class="form-input"
-            placeholder="Enter location"
-            v-model="selectedLocation"
-            @input="updateLocation"
-          />
-        </div>
-  
-        <!-- اختيار التاريخ -->
-        <div class="form-item respo-form-item">
-          <font-awesome-icon icon="calendar-alt" class="form-icon" />
-          <input
-            type="date"
-            id="date"
-            class="form-input"
-            v-model="selectedDate"
-            @input="updateDate"
-          />
-        </div>
+  <div class="details-selection respo-form-order">
+    <h3 class="details-selection-title">Date - Location Selection</h3>
+    <div class="form-container">
+      <!-- اختيار المكان -->
+      <div class="form-item respo-form-item">
+        <font-awesome-icon icon="location-pin" class="form-icon" />
+        <input
+          type="text"
+          id="location"
+          class="form-input"
+          placeholder="Enter location"
+          v-model="selectedLocation"
+          @input="updateLocation"
+        />
+      </div>
+
+      <!-- اختيار التاريخ -->
+      <div class="form-item respo-form-item">
+        <font-awesome-icon icon="calendar-alt" class="form-icon" />
+        <input
+          type="date"
+          id="date"
+          class="form-input"
+          v-model="selectedDate"
+          @input="updateDate"
+        />
       </div>
     </div>
-  </template>
+  </div>
+</template>
 
 <script>
-
 export default {
   name: "DataLocationSelectionComponent",
   props: {
@@ -44,7 +43,7 @@ export default {
       default: "",
     },
   },
- 
+
   data() {
     return {
       selectedLocation: this.initialLocation,
@@ -71,7 +70,7 @@ export default {
   },
 };
 </script>
-  <style scoped>
+<style scoped>
 .details-selection {
   background-color: #ffffff;
   border-radius: 16px;
@@ -121,18 +120,16 @@ export default {
   width: 160px;
 }
 @media (max-width: 477px) {
-   
-   .details-selection {  
-       margin-top: 20px;
-       max-width: 360px;
-           border-radius: 0px;
-     }
-     .form-input {
-      width: 90px;
-    }
-     .form-item {
-   
-       margin-right: 5px;
-     }
-    }
+  .details-selection {
+    margin-top: 20px;
+    max-width: 360px;
+    border-radius: 0px;
+  }
+  .form-input {
+    width: 90px;
+  }
+  .form-item {
+    margin-right: 5px;
+  }
+}
 </style>

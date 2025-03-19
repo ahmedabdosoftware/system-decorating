@@ -1,13 +1,23 @@
 <template>
   <div class="product-manager respo-form-order">
     <TransitionWrapper>
-      <component :is="currentComponent" :addedOrders="addedOrders" :addedFields="addedFields"  @added-orders-updated="handleAddedOrdersUpdate" @updateFields ="handleupdateFields"/> 
+      <component
+        :is="currentComponent"
+        :addedOrders="addedOrders"
+        :addedFields="addedFields"
+        @added-orders-updated="handleAddedOrdersUpdate"
+        @updateFields="handleupdateFields"
+      />
     </TransitionWrapper>
     <div class="arrows-tra">
-      <button @click="navigateTo('previous')" class="arrow-tra left-arrow"> &larr;</button>
+      <button @click="navigateTo('previous')" class="arrow-tra left-arrow">
+        &larr;
+      </button>
       <div>
         <p>To Joker / Edit</p>
-        <button @click="navigateTo('next')" class="arrow-tra right-arrow">&rarr;</button>
+        <button @click="navigateTo('next')" class="arrow-tra right-arrow">
+          &rarr;
+        </button>
       </div>
     </div>
   </div>
@@ -58,11 +68,11 @@ export default {
     },
     handleAddedOrdersUpdate(addedOrders) {
       // إعادة إرسال الحدث إلى المكون الأب
-      this.$emit('added-orders-updated', addedOrders);
+      this.$emit("added-orders-updated", addedOrders);
     },
     handleupdateFields(addedFields) {
       // إعادة إرسال الحدث إلى المكون الأب
-      this.$emit('updateFields', addedFields);
+      this.$emit("updateFields", addedFields);
     },
   },
 };

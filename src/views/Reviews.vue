@@ -25,7 +25,7 @@
             <span>July</span>
           </div>
           <div>
-            <p  class="reviewsLastMonth">reviews until last month</p>
+            <p class="reviewsLastMonth">reviews until last month</p>
           </div>
         </div>
       </div>
@@ -575,7 +575,7 @@ export default {
     > div {
       width: 100%;
       height: 40%;
-        // background-color: darkkhaki;
+      // background-color: darkkhaki;
     }
     > div:first-child {
       display: flex;
@@ -589,7 +589,7 @@ export default {
         justify-content: space-evenly;
         align-items: center;
         margin-right: 60px;
-        span{
+        span {
           width: 20px;
           height: 20px;
           background-color: white;
@@ -741,7 +741,7 @@ export default {
   > div {
     // background-color: white;
     display: grid;
-    grid-template-columns: repeat(10,10%);
+    grid-template-columns: repeat(10, 10%);
     grid-template-rows: repeat(10, 10%);
     > div:first-child {
       grid-area: 2/1/5/2;
@@ -854,135 +854,125 @@ export default {
 // ipad
 @media (max-width: 821px) {
   .info-review > div:nth-of-type(3) {
-  > div:first-child {
-    > div {
-      width: 100% !important;
+    > div:first-child {
+      > div {
+        width: 100% !important;
+      }
     }
- }
-}
+  }
 
-.contReviews {
-  > div {
-    > div:nth-child(3) {
-      grid-area: 2/5/4/9;
+  .contReviews {
+    > div {
+      > div:nth-child(3) {
+        grid-area: 2/5/4/9;
+      }
+      > div:nth-child(5) {
+        grid-area: 10/5/12/11;
+      }
     }
-    > div:nth-child(5) {
-      grid-area: 10/5/12/11;
-}
-}
-}
+  }
 }
 // phone
 @media (max-width: 477px) {
   .info-review {
     width: 100%;
-  height: 600px;
-  flex-wrap: wrap;
-}
-.info-review > div {
-  width: 50%;
-  height: 270px;
-}
-.info-review > div:nth-of-type(3){
-  width: 70%;
-}
-
-.info-review > div:nth-of-type(2)::after {
-  background-color:white !important;
-}
-.info-review > div:first-child,
-.info-review > div:nth-of-type(2){
-
-> div:first-child {
-    p {
-      margin-right: 0px;
-      // background-color: darksalmon;
-    }
+    height: 600px;
+    flex-wrap: wrap;
   }
-  > div:nth-of-type(2) {
-    p {
-      margin-right: 0px;
-      // background-color: red;
-    }
+  .info-review > div {
+    width: 50%;
+    height: 270px;
   }
-  > div:nth-of-type(3) {
+  .info-review > div:nth-of-type(3) {
+    width: 70%;
+  }
+
+  .info-review > div:nth-of-type(2)::after {
+    background-color: white !important;
+  }
+  .info-review > div:first-child,
+  .info-review > div:nth-of-type(2) {
     > div:first-child {
-      div {
+      p {
         margin-right: 0px;
-        // background-color: rgb(39, 130, 50);
-      }
-      .rate {
-        margin-left: 0px !important;
-        // background-color: rgb(13, 38, 128);
+        // background-color: darksalmon;
       }
     }
-
+    > div:nth-of-type(2) {
+      p {
+        margin-right: 0px;
+        // background-color: red;
+      }
+    }
+    > div:nth-of-type(3) {
+      > div:first-child {
+        div {
+          margin-right: 0px;
+          // background-color: rgb(39, 130, 50);
+        }
+        .rate {
+          margin-left: 0px !important;
+          // background-color: rgb(13, 38, 128);
+        }
+      }
     }
   }
 
-  .rating{
-    margin-left:10px;
+  .rating {
+    margin-left: 10px;
     // background-color:salmon;
   }
-  .reviewsLastMonth{
+  .reviewsLastMonth {
     padding-left: 17px;
     // background-color:salmon;
   }
   .contReviews {
     width: 100%;
-  > div {
-    height: 400px !important;
-    width: 100%;
-    grid-template-columns: repeat(11,9%);
-  }
- 
-  > div {
-    >div:first-child{
-      grid-area: 2/1/7/3;
+    > div {
+      height: 400px !important;
+      width: 100%;
+      grid-template-columns: repeat(11, 9%);
     }
-    > div:nth-child(2) {
-      grid-area: 2/3/7/6;
-      p:first-child {
-        padding-left: 5px
+
+    > div {
+      > div:first-child {
+        grid-area: 2/1/7/3;
       }
-      p:nth-child(3) {
-        margin-bottom: 0px;
-      }
-      p:nth-child(2),
-      p:nth-child(3) {
-        padding-left: 5px;
-      }
-    }
-    > div:nth-child(3) {
-      grid-area: 2/6/3/12;
-    }
-    > div:nth-child(4) {
-      grid-area: 3/6/10/12;
-    }
-    > div:nth-child(5) {
-      grid-area: 10/6/12/12;
-      div:first-child,
-      div:nth-child(2) {
-        width: 60px;
-        font-weight: 500;
-        height: 30px;
-        p{
-          font-size: 9px !important;
-          text-align: center;
-          line-height: 30px;
-          text-transform: capitalize;
+      > div:nth-child(2) {
+        grid-area: 2/3/7/6;
+        p:first-child {
+          padding-left: 5px;
         }
-
+        p:nth-child(3) {
+          margin-bottom: 0px;
+        }
+        p:nth-child(2),
+        p:nth-child(3) {
+          padding-left: 5px;
+        }
+      }
+      > div:nth-child(3) {
+        grid-area: 2/6/3/12;
+      }
+      > div:nth-child(4) {
+        grid-area: 3/6/10/12;
+      }
+      > div:nth-child(5) {
+        grid-area: 10/6/12/12;
+        div:first-child,
+        div:nth-child(2) {
+          width: 60px;
+          font-weight: 500;
+          height: 30px;
+          p {
+            font-size: 9px !important;
+            text-align: center;
+            line-height: 30px;
+            text-transform: capitalize;
+          }
+        }
       }
     }
   }
 }
-
-
-
-}
-
-
-
-
 </style>

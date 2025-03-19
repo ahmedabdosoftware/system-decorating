@@ -6,17 +6,21 @@ import router from "./router";
 import store from "./store";
 
 //pinia
-import { createPinia, PiniaVuePlugin } from 'pinia'
-import { useUserStore } from '@/store/auth/auth.js';
+import { createPinia, PiniaVuePlugin } from "pinia";
+import { useUserStore } from "@/store/auth/auth.js";
 
-
-//plugins 
+//plugins
 
 //FontAwesomeIcon
-import FontAwesomeIcon from './plugins/fontawesome'
-Vue.component('font-awesome-icon', FontAwesomeIcon)
+import FontAwesomeIcon from "./plugins/fontawesome";
+Vue.component("font-awesome-icon", FontAwesomeIcon);
 
+// Vuetify
+import Vuetify from "vuetify";
+import "vuetify/dist/vuetify.min.css";
+import "@mdi/font/css/materialdesignicons.css";
 
+Vue.use(Vuetify);
 
 //scss
 import "../src/scss/main.scss";
@@ -27,15 +31,13 @@ import "../src/filter";
 Vue.config.productionTip = false;
 
 //use pinia
-Vue.use(PiniaVuePlugin)
-const pinia = createPinia()
-
-
+Vue.use(PiniaVuePlugin);
+const pinia = createPinia();
 
 // vee-validate
-import { ValidationObserver, ValidationProvider } from 'vee-validate';
-Vue.component('ValidationObserver', ValidationObserver);
-Vue.component('ValidationProvider', ValidationProvider);
+import { ValidationObserver, ValidationProvider } from "vee-validate";
+Vue.component("ValidationObserver", ValidationObserver);
+Vue.component("ValidationProvider", ValidationProvider);
 
 // directive
 Vue.directive("font", {
@@ -44,11 +46,15 @@ Vue.directive("font", {
   },
 });
 
+// إنشاء Vuetify instance
+const vuetify = new Vuetify();
+
 new Vue({
   render: (h) => h(App),
   pinia,
   router,
   store,
+  vuetify,
 }).$mount("#app");
 
 // call handleAuthStateChanged with every reload

@@ -1,9 +1,9 @@
 <template>
-  <div 
+  <div
     class="statistics-result"
     :class="{
       'statistics-result--non-paid': isNonPaid,
-      'statistics-result--loading': isLoading
+      'statistics-result--loading': isLoading,
     }"
   >
     <div class="statistics-result__icon">
@@ -23,26 +23,26 @@ export default {
   props: {
     icon: {
       type: String,
-      required: true
+      required: true,
     },
     title: {
       type: String,
-      required: true
+      required: true,
     },
     value: {
       type: [String, Number],
-      default: ''
+      default: "",
     },
     isNonPaid: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isLoading: {
       type: Boolean,
-      default: false
-    }
-  }
-}
+      default: false,
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -55,7 +55,7 @@ export default {
   display: flex;
   border: 2px solid transparent;
   align-items: center;
-  padding:5px;
+  padding: 5px;
 
   &--loading {
     border-color: orange;
@@ -102,9 +102,15 @@ export default {
 }
 
 @keyframes pulse {
-  0% { background-color: rgba(255, 165, 0, 0.3); }
-  50% { background-color: rgba(255, 165, 0, 0.1); }
-  100% { background-color: rgba(255, 165, 0, 0.3); }
+  0% {
+    background-color: rgba(255, 165, 0, 0.3);
+  }
+  50% {
+    background-color: rgba(255, 165, 0, 0.1);
+  }
+  100% {
+    background-color: rgba(255, 165, 0, 0.3);
+  }
 }
 
 @media (max-width: 477px) {
@@ -114,10 +120,10 @@ export default {
     height: 100px;
     background-color: white;
   }
-  
+
   .statistics-result__icon-img {
     width: 30px;
     height: 30px;
   }
-} 
+}
 </style>

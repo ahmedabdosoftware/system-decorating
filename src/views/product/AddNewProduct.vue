@@ -7,7 +7,9 @@
       <div :class="{ 'dark-moode': getDarkMode }" class="allContentt">
         <form class="cont-form" @submit.prevent="creatNewProduct">
           <div class="name">
-            <label :class="{ 'dark-mode-title': getDarkMode }">product title</label>
+            <label :class="{ 'dark-mode-title': getDarkMode }"
+              >product title</label
+            >
             <ValidationProvider
               name="Product Title"
               rules="required"
@@ -22,7 +24,9 @@
             </ValidationProvider>
           </div>
           <div class="description">
-            <label :class="{ 'dark-mode-title': getDarkMode }">description</label>
+            <label :class="{ 'dark-mode-title': getDarkMode }"
+              >description</label
+            >
             <ValidationProvider
               name="Description"
               rules="required"
@@ -37,7 +41,7 @@
             </ValidationProvider>
             <p class="note">you will be able to edit it later.</p>
           </div>
-          
+
           <div class="imgeCont">
             <ValidationProvider
               name="Image"
@@ -60,7 +64,11 @@
             <div class="uploadCont uploadContImge">
               <img id="up" class="upload" v-bind:src="imageUrl[2]" />
             </div>
-            <div v-on:click.prevent="uploadFile()" id="btn" class="uploadCont uploadImge">
+            <div
+              v-on:click.prevent="uploadFile()"
+              id="btn"
+              class="uploadCont uploadImge"
+            >
               <img
                 class="upload"
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbQN9NvIcWwtddjv-IerO_kox9AJ0cCFU2Ew&usqp=CAU"
@@ -74,110 +82,146 @@
           </div>
           <div class="contCatoSup">
             <div class="cato">
-              <label :class="{ 'dark-mode-title': getDarkMode }">category</label>
-                <select v-model="selectedCategoryId">
-                  <option v-for="category in categories" :value="category.id" :key="category.id">
-                    {{ category.name }}
-                  </option>
-                </select>
+              <label :class="{ 'dark-mode-title': getDarkMode }"
+                >category</label
+              >
+              <select v-model="selectedCategoryId">
+                <option
+                  v-for="category in categories"
+                  :value="category.id"
+                  :key="category.id"
+                >
+                  {{ category.name }}
+                </option>
+              </select>
             </div>
             <div class="cato">
               <label :class="{ 'dark-mode-title': getDarkMode }">unit</label>
-                <select v-model="selectedUnitId" @change="fetchUnitName">
-                  <option v-for="unit in units" :value="unit.id" :key="unit.id">
-                    {{ unit.name }}
-                  </option>
-                </select>
+              <select v-model="selectedUnitId" @change="fetchUnitName">
+                <option v-for="unit in units" :value="unit.id" :key="unit.id">
+                  {{ unit.name }}
+                </option>
+              </select>
             </div>
           </div>
           <div class="contPrice">
             <div class="price">
-
-              <label :class="{ 'dark-mode-title': getDarkMode }">price Material (sell)</label>
+              <label :class="{ 'dark-mode-title': getDarkMode }"
+                >price Material (sell)</label
+              >
               <ValidationProvider
                 name="Price Material"
                 rules="required|double:1|min_value:0"
                 v-slot="{ errors }"
               >
-                <input v-model="priceMaterial" placeholder="type here" type="text" />
+                <input
+                  v-model="priceMaterial"
+                  placeholder="type here"
+                  type="text"
+                />
                 <span class="error">{{ errors[0] }}</span>
               </ValidationProvider>
-              
-              <label :class="{ 'dark-mode-title': getDarkMode }"> discount </label>
+
+              <label :class="{ 'dark-mode-title': getDarkMode }">
+                discount
+              </label>
               <ValidationProvider
                 name="Price With Labor"
                 rules="required|double:1|min_value:0"
                 v-slot="{ errors }"
               >
-                <input class="valueDiscount discount" v-model="valueDiscountOnBuy" placeholder="type here" type="text" />
-                <select class="kindDiscount discount"  v-model="kindDiscount">
-                  <option value="fixed" >
-                  ثابت
-                  </option>
-                  <option  value="percentage">
-                  نسبة
-                  </option>
-                </select>  
-              <span class="error">{{ errors[0] }}</span>
+                <input
+                  class="valueDiscount discount"
+                  v-model="valueDiscountOnBuy"
+                  placeholder="type here"
+                  type="text"
+                />
+                <select class="kindDiscount discount" v-model="kindDiscount">
+                  <option value="fixed">ثابت</option>
+                  <option value="percentage">نسبة</option>
+                </select>
+                <span class="error">{{ errors[0] }}</span>
               </ValidationProvider>
 
-              <label :class="{ 'dark-mode-title': getDarkMode }" class="branch-label">  quantity - branch</label>
+              <label
+                :class="{ 'dark-mode-title': getDarkMode }"
+                class="branch-label"
+              >
+                quantity - branch</label
+              >
               <ValidationProvider
                 name="branch"
                 rules="required"
                 v-slot="{ errors }"
               >
-              <input class="branch" v-model="quantityInBranch" placeholder="type here" type="text" />
-              <select class="branch" v-model="brancheId"> 
-                <option value="noChoose" >
-                  غير محدد
-                </option>
-                <option v-for="branche in branches" :value="branche.id" :key="branche.id">
-                  {{ branche.nameBranch }}
-                </option>
-              </select>  
+                <input
+                  class="branch"
+                  v-model="quantityInBranch"
+                  placeholder="type here"
+                  type="text"
+                />
+                <select class="branch" v-model="brancheId">
+                  <option value="noChoose">غير محدد</option>
+                  <option
+                    v-for="branche in branches"
+                    :value="branche.id"
+                    :key="branche.id"
+                  >
+                    {{ branche.nameBranch }}
+                  </option>
+                </select>
                 <span class="error">{{ errors[0] }}</span>
               </ValidationProvider>
             </div>
             <div class="price offer">
-
-              <label :class="{ 'dark-mode-title': getDarkMode }">offer price (optionally)</label>
+              <label :class="{ 'dark-mode-title': getDarkMode }"
+                >offer price (optionally)</label
+              >
               <ValidationProvider
                 name="Offer Price"
                 rules="double:1|min_value:0"
                 v-slot="{ errors }"
               >
-                <input v-model="offerPrice" placeholder="type here" type="text" />
+                <input
+                  v-model="offerPrice"
+                  placeholder="type here"
+                  type="text"
+                />
                 <span class="error">{{ errors[0] }}</span>
               </ValidationProvider>
 
-              <label :class="{ 'dark-mode-title': getDarkMode }">buy price </label>
+              <label :class="{ 'dark-mode-title': getDarkMode }"
+                >buy price
+              </label>
               <ValidationProvider
                 name="buy Price"
                 rules="double:1|min_value:0"
                 v-slot="{ errors }"
-              > 
+              >
                 <input v-model="buyPrice" placeholder="type here" type="text" />
                 <span class="error">{{ errors[0] }}</span>
               </ValidationProvider>
 
-              <label :class="{ 'dark-mode-title': getDarkMode }">price With Labor </label>
+              <label :class="{ 'dark-mode-title': getDarkMode }"
+                >price With Labor
+              </label>
               <ValidationProvider
                 name="Price With Labor"
                 rules="required|double:1|min_value:0"
                 v-slot="{ errors }"
               >
-                <input v-model="priceWithLabor" placeholder="type here" type="text" />
+                <input
+                  v-model="priceWithLabor"
+                  placeholder="type here"
+                  type="text"
+                />
                 <span class="error">{{ errors[0] }}</span>
               </ValidationProvider>
-
             </div>
           </div>
 
           <div class="puplish-allCont">
-            <div class="price-options">
-             
-            </div>
+            <div class="price-options"></div>
             <div class="display-options">
               <label>
                 <input type="checkbox" v-model="displayOnSite" />
@@ -186,68 +230,77 @@
             </div>
           </div>
 
-          <div v-if="displayOnSite" class="puplish-allCont" style="margin-left: 10px;" >
+          <div
+            v-if="displayOnSite"
+            class="puplish-allCont"
+            style="margin-left: 10px"
+          >
             <div class="price-options">
               <label>
                 <input type="checkbox" v-model="showLaborPrice" />
-                Show Labor Price 
+                Show Labor Price
               </label>
             </div>
             <div class="display-options">
               <label>
                 <input type="checkbox" v-model="showMatrialPrice" />
-                Show Material price 
+                Show Material price
               </label>
             </div>
           </div>
-         
+
           <div class="submit_cont">
-            <button class="submit" :class="{ 'disabled-btn': invalid }" :disabled="invalid" @click="creatNewProduct">submit item</button>
+            <button
+              class="submit"
+              :class="{ 'disabled-btn': invalid }"
+              :disabled="invalid"
+              @click="creatNewProduct"
+            >
+              submit item
+            </button>
           </div>
         </form>
       </div>
       <CircleLoader :show="isLoading" />
-
     </div>
   </ValidationObserver>
 </template>
 
 <script>
-
-import { required, double, min_value, image } from 'vee-validate/dist/rules';
-import { extend } from 'vee-validate';
+import { required, double, min_value, image } from "vee-validate/dist/rules";
+import { extend } from "vee-validate";
 
 // Register rules with custom messages
-    extend('required', {
-      ...required,
-      message: '{_field_} is required to create a product.'
-    });
-    extend('double', {
-      ...double,
-      message: '{_field_} must be a number.'
-    });
-    extend('min_value', {
-      ...min_value,
-      message: '{_field_} must be at least {min}.'
-    });
-    extend('image', {
-      ...image,
-      message: '{_field_} must be a valid image file.'
-    });
+extend("required", {
+  ...required,
+  message: "{_field_} is required to create a product.",
+});
+extend("double", {
+  ...double,
+  message: "{_field_} must be a number.",
+});
+extend("min_value", {
+  ...min_value,
+  message: "{_field_} must be at least {min}.",
+});
+extend("image", {
+  ...image,
+  message: "{_field_} must be a valid image file.",
+});
 
-// actions 
-import { mapActions , mapState } from 'pinia'
+// actions
+import { mapActions, mapState } from "pinia";
 
 // CircleLoader
-import CircleLoader from '@/shared/components/loading/CircleLoader.vue';
+import CircleLoader from "@/shared/components/loading/CircleLoader.vue";
 
 //store
-import { useProductsStore } from '@/store/products/products.js'
-import { useCategoriesStore } from '@/store/categories/categories.js';
-import { useUnitsStore } from '@/store/products/units/units.js';
-import { useBranchesStore } from '@/store/branches/branches.js';
+import { useProductsStore } from "@/store/products/products.js";
+import { useCategoriesStore } from "@/store/categories/categories.js";
+import { useUnitsStore } from "@/store/products/units/units.js";
+import { useBranchesStore } from "@/store/branches/branches.js";
 
-// sweetalert 
+// sweetalert
 import sweetalert from "sweetalert";
 
 export default {
@@ -263,22 +316,21 @@ export default {
       tags: "",
       priceMaterial: "",
       priceWithLabor: "",
-      offerPrice:"",
-      buyPrice:"",
-      valueDiscountOnBuy:0,
-      kindDiscount:"fixed",
-      brancheId:"noChoose",
-      quantityInBranch:0,
-      
+      offerPrice: "",
+      buyPrice: "",
+      valueDiscountOnBuy: 0,
+      kindDiscount: "fixed",
+      brancheId: "noChoose",
+      quantityInBranch: 0,
+
       showLaborPrice: false,
       showMatrialPrice: true,
       displayOnSite: false,
-      selectedCategoryId:'',
-      selectedUnitId:'',
-      unitName:'',
-      // loading 
-      isLoading: false
-
+      selectedCategoryId: "",
+      selectedUnitId: "",
+      unitName: "",
+      // loading
+      isLoading: false,
     };
   },
   computed: {
@@ -286,47 +338,43 @@ export default {
       return this.$store.state.darkMode;
     },
 
-    ...mapState(useCategoriesStore, ['categories']),
-    ...mapState(useUnitsStore, ['units']),
-    ...mapState(useBranchesStore, ['branches']),
-
-
+    ...mapState(useCategoriesStore, ["categories"]),
+    ...mapState(useUnitsStore, ["units"]),
+    ...mapState(useBranchesStore, ["branches"]),
   },
   async created() {
     await this.fetchCategories();
-    this.selectedCategoryId =  this.categories[0].id
+    this.selectedCategoryId = this.categories[0].id;
     await this.fetchUnits();
-    this.selectedUnitId =  this.units[0].id
-    this.unitName =  this.units[0]
-    await this.fetchBranches()
+    this.selectedUnitId = this.units[0].id;
+    this.unitName = this.units[0];
+    await this.fetchBranches();
 
-      // why ? maybe he dosnt wanna add it to any branch
+    // why ? maybe he dosnt wanna add it to any branch
     // this.brancheId =  this.branches[0].id
     // this.branchInfo =  this.branches[0]
-    console.log("brancheId", this.brancheId, )
+    console.log("brancheId", this.brancheId);
     // console.log("branchInfo", this.branchInfo, )
-    
-
   },
   methods: {
     // ============ my actions => start =============================================
 
-    ...mapActions( useProductsStore, ['addProduct', 'uploadImage']),
-    ...mapActions(useCategoriesStore, ['fetchCategories']),
-    ...mapActions(useUnitsStore, ['fetchUnits']), 
-    ...mapActions(useBranchesStore, ['fetchBranches','updateBranch','fetchBranchById']),
- 
-
+    ...mapActions(useProductsStore, ["addProduct", "uploadImage"]),
+    ...mapActions(useCategoriesStore, ["fetchCategories"]),
+    ...mapActions(useUnitsStore, ["fetchUnits"]),
+    ...mapActions(useBranchesStore, [
+      "fetchBranches",
+      "updateBranch",
+      "fetchBranchById",
+    ]),
 
     // ============ my actions => end ==============================================
-   
 
-    fetchUnitName(){
-      const unit = this.units.find(unit => unit.id === this.selectedUnitId);
-        if(unit){
-
-          this.unitName= unit
-        }
+    fetchUnitName() {
+      const unit = this.units.find((unit) => unit.id === this.selectedUnitId);
+      if (unit) {
+        this.unitName = unit;
+      }
     },
     // fetchBrancheName(){
     //   const branchInfo = this.branches.find(branche => branche.id === this.brancheId);
@@ -337,101 +385,90 @@ export default {
     // },
 
     // ============ FileReader  for show the selected image localy before upload => start =============================================
-      pushOnArray: function () {
-
-
+    pushOnArray: function () {
       const file = event.target.files[0];
       if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const imageUrll = e.target.result;
-        this.imageUrl.push(imageUrll);
-      };
-      reader.readAsDataURL(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageUrll = e.target.result;
+          this.imageUrl.push(imageUrll);
+        };
+        reader.readAsDataURL(file);
       }
+    },
 
-
-
-      },
-
-
-
-// ============ push On Array after make url from file => end=============================================
-
+    // ============ push On Array after make url from file => end=============================================
 
     // ============ FileReader for show the selected image localy before upload => end ==============================================
 
     uploadFile() {
       document.getElementById("inputField").click();
     },
-    
+
     // ============ creat New Product => start =====================================
-    
+
     // ============ add the product to the branch  => start =====================================
-   async addToBranch(productId) {
+    async addToBranch(productId) {
+      if (this.brancheId !== "noChoose") {
+        const branchData = await this.fetchBranchById(this.brancheId);
+        branchData.products.push({
+          id: productId,
+          name: this.productTitle,
+          quantity: this.quantityInBranch,
+          alert: 0,
+        });
 
-    if(this.brancheId !=="noChoose"){
-
-       const branchData = await this.fetchBranchById(this.brancheId);
-       branchData.products.push({
-                    id: productId,
-                    name: this.productTitle,
-                    quantity: this.quantityInBranch,
-                    alert: 0,
-                });
-
-      await this.updateBranch({ products: branchData.products , id:branchData.id })
-    }
-
+        await this.updateBranch({
+          products: branchData.products,
+          id: branchData.id,
+        });
+      }
     },
-    
+
     // ============ add the product to the branch  => end =====================================
-    
+
     async creatNewProduct(e) {
       e.preventDefault();
       try {
-
         this.isLoading = true;
 
-        var downloadURL="";
+        var downloadURL = "";
         if (this.imageUrl.length > 0) {
-          console.log(this.imageUrl[0])
-           downloadURL = await this.uploadImage(this.imageUrl[0]);
-          console.log(downloadURL)
+          console.log(this.imageUrl[0]);
+          downloadURL = await this.uploadImage(this.imageUrl[0]);
+          console.log(downloadURL);
         }
-          let obj = {
-            // info
-            name: this.productTitle,
-            description: this.description,
-            // pricing
-            priceMaterial: parseFloat(this.priceMaterial),
-            priceWithLabor: parseFloat(this.priceWithLabor),
-            offerPrice: parseFloat(this.offerPrice),
-            buyPrice: parseFloat(this.buyPrice),
-            valueDiscountOnBuy: parseFloat(this.valueDiscountOnBuy),
-            kindDiscount: this.kindDiscount,
-            // other
-            categoryId: this.selectedCategoryId,
-            unitId: this.selectedUnitId,
-            unitName: this.unitName,
-            imageUrl: downloadURL,
-            showLaborPrice: this.showLaborPrice,
-            showMatrialPrice: this.showMatrialPrice,
-            displayOnSite: this.displayOnSite,
-          };
+        let obj = {
+          // info
+          name: this.productTitle,
+          description: this.description,
+          // pricing
+          priceMaterial: parseFloat(this.priceMaterial),
+          priceWithLabor: parseFloat(this.priceWithLabor),
+          offerPrice: parseFloat(this.offerPrice),
+          buyPrice: parseFloat(this.buyPrice),
+          valueDiscountOnBuy: parseFloat(this.valueDiscountOnBuy),
+          kindDiscount: this.kindDiscount,
+          // other
+          categoryId: this.selectedCategoryId,
+          unitId: this.selectedUnitId,
+          unitName: this.unitName,
+          imageUrl: downloadURL,
+          showLaborPrice: this.showLaborPrice,
+          showMatrialPrice: this.showMatrialPrice,
+          displayOnSite: this.displayOnSite,
+        };
 
-          const productId= await this.addProduct(obj);
-          
-          // add to branch
-          this.addToBranch(productId)
+        const productId = await this.addProduct(obj);
 
-          sweetalert({
-            text: "created",
-            icon: "success",
-          });
-          this.isLoading = false;
+        // add to branch
+        this.addToBranch(productId);
 
-       
+        sweetalert({
+          text: "created",
+          icon: "success",
+        });
+        this.isLoading = false;
       } catch (error) {
         sweetalert({
           text: "uncreated",
@@ -439,16 +476,11 @@ export default {
         });
         console.log(error);
         this.isLoading = false;
-
       }
     },
 
     // ============ creat New Product => end =======================================
-    
-
-
   },
-
 };
 </script>
 <style scoped lang="scss">
@@ -496,15 +528,14 @@ export default {
   }
   > div:nth-child(7),
   div:nth-child(8),
-  
- .submit_cont {
+  .submit_cont {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     width: 100%;
     height: 40px !important;
     button {
-      width: 30% ;
+      width: 30%;
       height: 90%;
       background-color: blue;
       text-transform: capitalize;
@@ -517,7 +548,7 @@ export default {
   > div:nth-child(6) {
     height: 19% !important;
     //background-color: aqua;
-    
+
     .type {
       height: 50%;
       select {
@@ -531,14 +562,14 @@ export default {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-     div {
+    div {
       display: flex;
       flex-wrap: wrap;
       align-content: space-evenly;
       width: 49%;
       height: 90%;
-       select,
-       input {
+      select,
+      input {
         width: 90%;
         border-radius: 5px;
       }
@@ -573,16 +604,15 @@ export default {
 }
 .description {
   input {
-    height: 45px  !important;
+    height: 45px !important;
   }
 }
-.puplish-allCont{
+.puplish-allCont {
   width: 100% !important;
   padding-left: 10px;
   height: 40px;
-  >div{
-  margin-left: 10px;
-
+  > div {
+    margin-left: 10px;
   }
 }
 .name,
@@ -642,9 +672,9 @@ input[type="file"] {
   height: 40%;
 }
 
-.disabled-btn{
-opacity: 0.4;
-cursor:not-allowed;
+.disabled-btn {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 #up {
   width: 100%;
@@ -654,15 +684,15 @@ cursor:not-allowed;
 .upUnderImge {
   text-transform: capitalize;
 }
-.branch{
+.branch {
   width: 45% !important;
   // background-color: red;
 }
-.branch-label{
+.branch-label {
   width: 80%;
   // background-color: red;
 }
-.discount{
+.discount {
   width: 45% !important;
   // background-color: red;
 }
@@ -677,20 +707,20 @@ cursor:not-allowed;
   .allContentt {
     width: 370px !important;
   }
-  .puplish-allCont,.price{
-  font-size: 14px;
-}
+  .puplish-allCont,
+  .price {
+    font-size: 14px;
+  }
 }
 // phone max-width:365px
-@media(max-width:365px){
-      
-      .allContentt {
-        width: 350px !important;
-        }
-        .title {
-          width: 350px;
-      }    
-      .allContentt form {
-      }                                     
-      }                                     
+@media (max-width: 365px) {
+  .allContentt {
+    width: 350px !important;
+  }
+  .title {
+    width: 350px;
+  }
+  .allContentt form {
+  }
+}
 </style>

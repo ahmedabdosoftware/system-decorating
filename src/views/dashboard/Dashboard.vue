@@ -10,35 +10,34 @@
             />
           </div>
           <p :class="{ 'dark-mode-title': getDarkMode }">dashboard grid</p>
-        </div>  
+        </div>
       </div>
-      <WelcomeMessage  />
+      <WelcomeMessage />
     </div>
-    <StatisticsInfo  />
-    <TodayOrder  />
-    <StockAlert  />
+    <StatisticsInfo />
+    <TodayOrder />
+    <StockAlert />
     <PurchasesUnpaid />
   </div>
 </template>
 
 <script>
-
 // components
 
-  // statistics
-  import StatisticsInfo from "@/components/dashboard/statistics/StatisticsInfo.vue";
+// statistics
+import StatisticsInfo from "@/components/dashboard/statistics/StatisticsInfo.vue";
 
-  // todayOrder
-  import TodayOrder from "@/components/dashboard/TodayOrder.vue";
-  
-  // StockAlert
-  import StockAlert from "@/components/dashboard/StockAlert.vue";
-  
-  // WelcomeMessage
-  import WelcomeMessage from "@/components/dashboard/WelcomeMessage.vue";
+// todayOrder
+import TodayOrder from "@/components/dashboard/TodayOrder.vue";
 
-  //Purchases
-  import PurchasesUnpaid from "@/components/dashboard/PurchasesUnpaid.vue";
+// StockAlert
+import StockAlert from "@/components/dashboard/StockAlert.vue";
+
+// WelcomeMessage
+import WelcomeMessage from "@/components/dashboard/WelcomeMessage.vue";
+
+//Purchases
+import PurchasesUnpaid from "@/components/dashboard/PurchasesUnpaid.vue";
 
 export default {
   name: "dashboard",
@@ -50,36 +49,19 @@ export default {
     PurchasesUnpaid,
   },
   computed: {
-
     getDarkMode() {
       return this.$store.state.darkMode;
     },
-
-
-  
   },
-  async created(){
-    
- 
-  },
-  methods: {
-    
- 
-  },
+  async created() {},
+  methods: {},
   data() {
-    return {
-     
-      
-    };
+    return {};
   },
- 
- 
 };
 </script>
 
 <style scoped lang="scss">
-
-
 .dashboard_title {
   width: 100%;
   height: 100px;
@@ -123,32 +105,27 @@ export default {
         margin-right: 10px;
       }
     }
-   
   }
-  
 }
-
-
 
 @media (max-width: 477px) {
   .title {
     > div:nth-of-type(2) {
-      div:first-child{
+      div:first-child {
         width: 170px;
         select {
-        width: 60px;
+          width: 60px;
+        }
+        input {
+          width: 100px;
+        }
       }
-      input {
-        width: 100px;
-      }
-      }
-      div:nth-child(2){
+      div:nth-child(2) {
         // background-color: aqua;
         width: 180px;
         div {
-        width: 80px;
-      }
-
+          width: 80px;
+        }
       }
     }
   }
@@ -169,6 +146,4 @@ export default {
     }
   }
 }
-
-
 </style>

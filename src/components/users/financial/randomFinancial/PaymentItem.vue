@@ -16,14 +16,14 @@
     <!-- DropdownMenu-->
     <DropdownMenu
       :transaction="data"
-      @closeOthers="openDropdownHandle(data.id)" 
+      @closeOthers="openDropdownHandle(data.id)"
       ref="dropdownMenu"
     />
   </div>
 </template>
 
 <script>
-import DropdownMenu from '@/components/users/financial/randomFinancial/DropdownMenu.vue';
+import DropdownMenu from "@/components/users/financial/randomFinancial/DropdownMenu.vue";
 
 export default {
   name: "PaymentItem",
@@ -35,22 +35,21 @@ export default {
     },
   },
   data() {
-      return {
-        openDropdownProp: null,
-      };
+    return {
+      openDropdownProp: null,
+    };
+  },
+  methods: {
+    openDropdownHandle(index) {
+      console.log("enter", this.openDropdownProp, index);
+      if (this.openDropdownProp !== null && this.openDropdownProp !== index) {
+        console.log("enter condition", this.openDropdownProp, index);
+        this.$refs.dropdownMenu[this.openDropdownProp].closeDropdown();
+      }
+      this.openDropdownProp = index;
+      console.log("openDropdown Prop", this.openDropdownProp);
     },
-    methods: {
-      openDropdownHandle(index) {
-        console.log("enter",this.openDropdownProp, index )
-        if (this.openDropdownProp !== null && this.openDropdownProp !== index) {
-          console.log("enter condition", this.openDropdownProp, index)
-          this.$refs.dropdownMenu[this.openDropdownProp].closeDropdown();
-        }
-        this.openDropdownProp = index;
-        console.log("openDropdown Prop", this.openDropdownProp)
-      },
-    },
- 
+  },
 };
 </script>
 

@@ -22,9 +22,9 @@ export default {
     breadcrumbs: {
       type: Array,
       required: true,
-      default: () => []
-    }
-  }
+      default: () => [],
+    },
+  },
 };
 </script>
 
@@ -38,7 +38,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-left:20px;
+  margin-left: 20px;
 }
 
 .breadcrumb ul {

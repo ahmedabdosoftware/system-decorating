@@ -1,166 +1,188 @@
 <template>
   <div class="financial-transaction-container">
-   <ValidationObserver ref="observer" v-slot="{ invalid }">
-    <div class="financial-transaction">
-      <!-- Title Section -->
-      <div class="header">
-        <h1 class="header_title">Transaction Information</h1>
-        <h2 class="header_subtitle">💳 Amount Owed</h2>
-      </div>
-      <!-- Values Section -->
-      <div class="values-section">
-        <div class="value">
-          <label for="total-amount" class="label-payment">💰 Total Amount</label>
-          <div class="amount-cont">
-            <ValidationProvider name="total Amount " rules="required|numeric|min_value:1" v-slot="{ errors }">
+    <ValidationObserver ref="observer" v-slot="{ invalid }">
+      <div class="financial-transaction">
+        <!-- Title Section -->
+        <div class="header">
+          <h1 class="header_title">Transaction Information</h1>
+          <h2 class="header_subtitle">💳 Amount Owed</h2>
+        </div>
+        <!-- Values Section -->
+        <div class="values-section">
+          <div class="value">
+            <label for="total-amount" class="label-payment"
+              >💰 Total Amount</label
+            >
+            <div class="amount-cont">
+              <ValidationProvider
+                name="total Amount "
+                rules="required|numeric|min_value:1"
+                v-slot="{ errors }"
+              >
+                <input
+                  id="total-amount"
+                  class="amount-input"
+                  type="text"
+                  v-model="selectedTypeData.totalAmount"
+                  @input="
+                    updateSelectedTypeValues('totalAmount', $event.target.value)
+                  "
+                  placeholder="Enter amount"
+                />
+                <span class="error">{{ errors[0] }}</span>
+              </ValidationProvider>
+              <font-awesome-icon icon="edit" class="icon" />
+            </div>
+          </div>
+
+          <div class="value">
+            <label for="remaining-value" class="label-payment"
+              >📉 Remaining Value</label
+            >
+            <div class="amount-cont">
               <input
-                id="total-amount"
+                id="remaining-value"
                 class="amount-input"
                 type="text"
-                v-model="selectedTypeData.totalAmount"
-                @input="updateSelectedTypeValues('totalAmount', $event.target.value)"
-                placeholder="Enter amount"
+                v-model="selectedTypeData.remainingValue"
+                @input="
+                  updateSelectedTypeValues(
+                    'remainingValue',
+                    $event.target.value
+                  )
+                "
+                placeholder="Enter remaining value"
+              />
+              <font-awesome-icon icon="edit" class="icon" />
+            </div>
+          </div>
+
+          <div class="value">
+            <label for="used-values" class="label-payment"
+              >🔄 Type Values</label
+            >
+            <select
+              class="amount-input"
+              v-model="formData.selectedType"
+              @change="emitFormDataUpdate"
+            >
+              <option value="materials">Materials</option>
+              <option value="manufacturing">Manufacturing</option>
+              <option value="both">Both</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-section">
+        <h3 class="section-title">📝 Additional Information</h3>
+        <div class="form-container">
+          <!-- Location -->
+          <div class="form-group">
+            <label for="location" class="form-label">📍 Location</label>
+            <input
+              id="location"
+              type="text"
+              v-model="formData.location"
+              @input="emitFormDataUpdate"
+              class="form-input"
+              placeholder="Enter location"
+            />
+          </div>
+
+          <!-- Link to Order -->
+          <div class="form-group">
+            <label for="orderLink" class="form-label">🔗 Link to Order</label>
+            <input
+              id="orderLink"
+              type="text"
+              v-model="formData.orderLink"
+              @input="emitFormDataUpdate"
+              class="form-input"
+              placeholder="Enter order number"
+            />
+          </div>
+
+          <!-- Date -->
+          <div class="form-group">
+            <label for="date" class="form-label">📅 Date</label>
+            <ValidationProvider
+              name="date"
+              rules="required"
+              v-slot="{ errors }"
+            >
+              <input
+                id="date"
+                type="date"
+                v-model="formData.date"
+                @change="emitFormDataUpdate"
+                class="form-input"
               />
               <span class="error">{{ errors[0] }}</span>
             </ValidationProvider>
-            <font-awesome-icon icon="edit" class="icon" />
+          </div>
+
+          <!-- Status -->
+          <div class="form-group">
+            <label for="status" class="form-label">📂 Status</label>
+            <select
+              class="form-input"
+              v-model="formData.status"
+              @change="emitFormDataUpdate"
+            >
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+
+          <!-- Note -->
+          <div class="form-group">
+            <label for="note" class="form-label">🖋️ Note</label>
+            <textarea
+              id="note"
+              v-model="formData.note"
+              @input="emitFormDataUpdate"
+              class="form-textarea"
+              placeholder="Enter notes"
+            ></textarea>
           </div>
         </div>
 
-        <div class="value">
-          <label for="remaining-value" class="label-payment">📉 Remaining Value</label>
-          <div class="amount-cont">
-            <input
-              id="remaining-value"
-              class="amount-input"
-              type="text"
-              v-model="selectedTypeData.remainingValue"
-              @input="updateSelectedTypeValues('remainingValue', $event.target.value)"
-              placeholder="Enter remaining value"
-            />
-            <font-awesome-icon icon="edit" class="icon" />
-          </div>
-        </div>
-
-        <div class="value">
-          <label for="used-values" class="label-payment">🔄 Type Values</label>
-          <select
-            class="amount-input"
-            v-model="formData.selectedType"
-            @change="emitFormDataUpdate"
+        <div class="button-container">
+          <button
+            class="save-btn"
+            :class="{ 'disabled-btn': invalid }"
+            :disabled="invalid"
+            @click="emitSaveEvent"
           >
-            <option value="materials">Materials</option>
-            <option value="manufacturing">Manufacturing</option>
-            <option value="both">Both</option>
-          </select>
+            💾 Save Transaction
+          </button>
         </div>
       </div>
-    </div>
-
-    <div class="payment-section">
-      <h3 class="section-title">📝 Additional Information</h3>
-      <div class="form-container">
-        <!-- Location -->
-        <div class="form-group">
-          <label for="location" class="form-label">📍 Location</label>
-          <input
-            id="location"
-            type="text"
-            v-model="formData.location"
-            @input="emitFormDataUpdate"
-            class="form-input"
-            placeholder="Enter location"
-          />
-        </div>
-
-        <!-- Link to Order -->
-        <div class="form-group">
-          <label for="orderLink" class="form-label">🔗 Link to Order</label>
-          <input
-            id="orderLink"
-            type="text"
-            v-model="formData.orderLink"
-            @input="emitFormDataUpdate"
-            class="form-input"
-            placeholder="Enter order number"
-          />
-        </div>
-
-        <!-- Date -->
-        <div class="form-group">
-          <label for="date" class="form-label">📅 Date</label>
-          <ValidationProvider name="date" rules="required" v-slot="{ errors }">
-          <input
-            id="date"
-            type="date"
-            v-model="formData.date"
-            @change="emitFormDataUpdate"
-            class="form-input"
-          />
-          <span class="error">{{ errors[0] }}</span>
-        </ValidationProvider>
-        </div>
-
-        <!-- Status -->
-        <div class="form-group">
-          <label for="status" class="form-label">📂 Status</label>
-          <select
-            class="form-input"
-            v-model="formData.status"
-            @change="emitFormDataUpdate"
-          >
-            <option value="open">Open</option>
-            <option value="closed">Closed</option>
-          </select>
-        </div>
-
-        <!-- Note -->
-        <div class="form-group">
-          <label for="note" class="form-label">🖋️ Note</label>
-          <textarea
-            id="note"
-            v-model="formData.note"
-            @input="emitFormDataUpdate"
-            class="form-textarea"
-            placeholder="Enter notes"
-          ></textarea>
-        </div>
-      </div>
-
-      <div class="button-container">
-        <button class="save-btn" :class="{ 'disabled-btn': invalid }" :disabled="invalid" @click="emitSaveEvent">💾 Save Transaction</button>
-      </div>
-      
-    </div>
-  </ValidationObserver>
+    </ValidationObserver>
   </div>
 </template>
 
 <script>
+import { extend } from "vee-validate";
+import { required, numeric, min_value } from "vee-validate/dist/rules";
 
-  import { extend } from 'vee-validate';
-  import { required , numeric , min_value  } from 'vee-validate/dist/rules';
+// Register rules with custom messages
 
-  // Register rules with custom messages
-
-  extend('required', {
+extend("required", {
   ...required,
-  message: '{_field_} مطلوب'
-  
-  });
+  message: "{_field_} مطلوب",
+});
 
-  extend('numeric', {
+extend("numeric", {
   ...numeric,
-  message: '{_field_} يجب أن يكون رقمًا'
-  });
+  message: "{_field_} يجب أن يكون رقمًا",
+});
 
-  extend('min_value', {
+extend("min_value", {
   ...min_value,
-  message: '{_field_} يجب أن يكون على الأقل {min}'
-  });
-
- 
- 
+  message: "{_field_} يجب أن يكون على الأقل {min}",
+});
 
 export default {
   props: {
@@ -196,42 +218,40 @@ export default {
     },
   },
   watch: {
-  initialFormData: {
-    handler(newValue) {
-      this.formData = newValue;
+    initialFormData: {
+      handler(newValue) {
+        this.formData = newValue;
+      },
+      immediate: true,
     },
-    immediate: true,
   },
-},
 };
 </script>
 
-  
-  <style scoped lang="scss">
-  
-  .financial-transaction-container {
-    // background-color: #f7f9fc;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
+<style scoped lang="scss">
+.financial-transaction-container {
+  // background-color: #f7f9fc;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
 }
 .financial-transaction {
-    // background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    // box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-    max-width: 550px;
-    margin: auto;
-  }
-  .header {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    min-height: 70px;
-    // background-color: #007bff;
+  // background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  // box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+  max-width: 550px;
+  margin: auto;
+}
+.header {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 70px;
+  // background-color: #007bff;
 }
 
 .header_title {
@@ -246,45 +266,44 @@ export default {
 }
 
 .values-section {
-    display: flex;
-    flex-wrap: wrap;
-    // background-color: red;
-    justify-content: flex-start; 
-    margin-top: 35px;
-
+  display: flex;
+  flex-wrap: wrap;
+  // background-color: red;
+  justify-content: flex-start;
+  margin-top: 35px;
 }
-.value{
-    position: relative;
-    // background-color: red;
-    width: 160px;
-    margin-right: 10px;
+.value {
+  position: relative;
+  // background-color: red;
+  width: 160px;
+  margin-right: 10px;
 }
-.amount-cont{
-    display: flex;
-    width: 100%;
-    // background-color: red;
-    justify-content: flex-start;
-    align-items: flex-end;
+.amount-cont {
+  display: flex;
+  width: 100%;
+  // background-color: red;
+  justify-content: flex-start;
+  align-items: flex-end;
 }
 .icon {
-//   color: #007bff; 
-  cursor: pointer; 
+  //   color: #007bff;
+  cursor: pointer;
   transition: transform 0.2s;
   margin-right: 30px;
   margin-bottom: 4px;
 }
 
 .icon:hover {
-  transform: scale(1.1); 
+  transform: scale(1.1);
 }
 .value:not(.value:last-of-type)::after {
-    content: "";
-    position: absolute;
-    right: 15px;
-    top: 0px;
-    width: 2px;
-    height: 100%;
-    background-color: #6c757d;
+  content: "";
+  position: absolute;
+  right: 15px;
+  top: 0px;
+  width: 2px;
+  height: 100%;
+  background-color: #6c757d;
 }
 
 .label-payment {
@@ -293,15 +312,15 @@ export default {
 }
 
 .amount-input {
-    font-size: 20px;
-    font-weight: bold;
-    color: #2d2d2d;
-    border: none;
-    background: transparent;
-    width: 100%;
-    outline: none;
-    cursor: text;
-    margin-top: 14px !important;
+  font-size: 20px;
+  font-weight: bold;
+  color: #2d2d2d;
+  border: none;
+  background: transparent;
+  width: 100%;
+  outline: none;
+  cursor: text;
+  margin-top: 14px !important;
 }
 
 .amount-input:focus {
@@ -310,10 +329,10 @@ export default {
 }
 
 .payment-section {
-//   background-color: #ffffff;
+  //   background-color: #ffffff;
   border-radius: 10px;
   padding: 20px;
-//   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  //   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   font-family: Arial, sans-serif;
   max-width: 550px;
   margin: auto;
@@ -357,10 +376,11 @@ export default {
   outline: none;
   transition: border-color 0.3s;
 }
-select, input{
-    width: 200px;
+select,
+input {
+  width: 200px;
 }
-select{
+select {
   font-size: 16px !important;
 }
 .form-input:focus,
@@ -377,7 +397,7 @@ select{
 .button-container {
   text-align: start;
   margin-top: 40px;
-  display: flex ;
+  display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
@@ -401,38 +421,36 @@ select{
   color: white;
 }
 
-@media (max-width: 477px) {  
-    .financial-transaction-container{
-        width: 88%;
-    }    
-    .value{
-        margin-top: 20px;
-        width: 250px;
-    } 
-    .header{
-        min-height: 30px;
-    }
-    .header_title {
-        font-size: 18px;
-        
-    }
-    .header_subtitle {
-        font-size: 16px;
-    } 
-    .value:not(.value:last-of-type)::after {
-        width: 0px;
-    }
-    
-    .form-textarea {
-        width: 250px;
-    }
-    .save-btn {
-        margin: auto;
-        margin-top: 22px;
-    }
-    .section-title {
-     font-size: 16px;
-   
-    }
+@media (max-width: 477px) {
+  .financial-transaction-container {
+    width: 88%;
+  }
+  .value {
+    margin-top: 20px;
+    width: 250px;
+  }
+  .header {
+    min-height: 30px;
+  }
+  .header_title {
+    font-size: 18px;
+  }
+  .header_subtitle {
+    font-size: 16px;
+  }
+  .value:not(.value:last-of-type)::after {
+    width: 0px;
+  }
+
+  .form-textarea {
+    width: 250px;
+  }
+  .save-btn {
+    margin: auto;
+    margin-top: 22px;
+  }
+  .section-title {
+    font-size: 16px;
+  }
 }
 </style>

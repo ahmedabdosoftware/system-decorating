@@ -2,9 +2,9 @@
   <!-- /* eslint-disable */ -->
   <div class="page technichal">
     <div class="title">
+      <div>
         <div>
-          <div>
-             <Breadcrumb :breadcrumbs="breadcrumbs" />
+          <Breadcrumb :breadcrumbs="breadcrumbs" />
           <!-- <div class="contTitle">
             <div>
               <img
@@ -13,8 +13,8 @@
             </div>
             <p :class="{ 'dark-mode-title': getDarkMode }">order technichal</p>
           </div> -->
-         </div> 
-         <div>
+        </div>
+        <div>
           <div>
             <div class="export">
               <img
@@ -26,63 +26,60 @@
               <button class="add font_sm">+ add technichal</button>
             </router-link>
           </div>
-          </div>
         </div>
-  
-        <div :class="{ 'dark-mode-box': getDarkMode }" class="filter_by_search">
-          <div class="">
-            <input
+      </div>
+
+      <div :class="{ 'dark-mode-box': getDarkMode }" class="filter_by_search">
+        <div class="">
+          <input
             :class="{ 'dark-mode-search': getDarkMode }"
             placeholder="search"
             type="search"
-            v-model="searchQuery" 
+            v-model="searchQuery"
           />
-          
-          </div>
-          <div :class="{ 'dark-mode-box': getDarkMode }">
-            <div>
-             
-            </div>
-            <div>
-              <button>last aded</button>
-              <img
-                class="arroow aded"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_HHn9uGD0sPLHcGzdjI_WX8Au22ap-x1b1Q&usqp=CAU"
-              />
-            </div>
+        </div>
+        <div :class="{ 'dark-mode-box': getDarkMode }">
+          <div></div>
+          <div>
+            <button>last aded</button>
+            <img
+              class="arroow aded"
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_HHn9uGD0sPLHcGzdjI_WX8Au22ap-x1b1Q&usqp=CAU"
+            />
           </div>
         </div>
       </div>
-    
-    
+    </div>
+
     <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
       <TableSkeleton v-if="isLoading" :rows="5" :columns="6" />
 
-      <UsersList v-else-if="filteredUsers.length > 0" :users="filteredUsers" ></UsersList>
+      <UsersList
+        v-else-if="filteredUsers.length > 0"
+        :users="filteredUsers"
+      ></UsersList>
 
       <NoData v-else context="users"></NoData>
-
     </div>
-   
   </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'pinia';
+import { mapState, mapActions } from "pinia";
 //  store
-import { useGetUserStore } from '@/store/users/users.js';
+import { useGetUserStore } from "@/store/users/users.js";
 
-  // NoData
- import NoData from "@/shared/components/noData/NoData.vue";
+// NoData
+import NoData from "@/shared/components/noData/NoData.vue";
 
-  // Skeleton Box
-  import TableSkeleton from '@/shared/components/loading/skeletonLoader/TableSkeleton.vue';
- 
-  // UsersList
- import UsersList from "@/components/users/UsersList.vue";
+// Skeleton Box
+import TableSkeleton from "@/shared/components/loading/skeletonLoader/TableSkeleton.vue";
 
-  // Breadcrumb
-  import Breadcrumb from "@/shared/components/breadcrumb/Breadcrumb.vue"; 
+// UsersList
+import UsersList from "@/components/users/UsersList.vue";
+
+// Breadcrumb
+import Breadcrumb from "@/shared/components/breadcrumb/Breadcrumb.vue";
 
 export default {
   name: "Category",
@@ -91,22 +88,20 @@ export default {
     UsersList,
     TableSkeleton,
     Breadcrumb,
-
   },
   data() {
     return {
-      searchQuery: '',
+      searchQuery: "",
       isLoading: true,
       breadcrumbs: [
         { label: "Dashboard", link: "/dashboard" },
         { label: "Technical", link: "users/technical/AddTechnical" },
         // { label: "Create Order", link: "/dashboard/AddNewOrder" }
-      ]
-
+      ],
     };
   },
   computed: {
-    ...mapState(useGetUserStore, ['technicalUsers']),
+    ...mapState(useGetUserStore, ["technicalUsers"]),
     getDarkMode() {
       return this.$store.state.darkMode;
     },
@@ -116,28 +111,22 @@ export default {
       if (!query) {
         return this.technicalUsers;
       }
-      return this.technicalUsers.filter(technicalUser =>
-      technicalUser.name.toLowerCase().includes(query)
+      return this.technicalUsers.filter((technicalUser) =>
+        technicalUser.name.toLowerCase().includes(query)
       );
     },
   },
   methods: {
-    ...mapActions(useGetUserStore, ['fetchUsers']),
-    
+    ...mapActions(useGetUserStore, ["fetchUsers"]),
   },
- async created() {
-  await this.fetchUsers();
-  this.isLoading = false;
-
+  async created() {
+    await this.fetchUsers();
+    this.isLoading = false;
   },
 };
 </script>
 
 <style scoped lang="scss">
-
-
-
-
 .allContent {
   margin-top: 2px;
 }
@@ -155,61 +144,53 @@ export default {
     }
   }
 
-  
-.title--noFilterSearch {
+  .title--noFilterSearch {
+    > div:first-child {
+      height: 70%;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: flex-start;
 
-> div:first-child {
-  height: 70%;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: flex-start;
-
-   >div:first-child {
-    width: 196px;
-    p {
-      margin-left: 10px;
-      font-size: 16px;
-      margin-right: 0px;
-    }
-  }
-  > div:nth-of-type(2) {
-    display: flex;
-    justify-content: flex-end;
-    a{
-      margin-left: 20px;
-      button {
-        
-        width: 140px;
-        font-size: 15px;
+      > div:first-child {
+        width: 196px;
+        p {
+          margin-left: 10px;
+          font-size: 16px;
+          margin-right: 0px;
+        }
       }
-      
-    }
-    align-items: flex-end;
-    > div {
-      width: 70px;
-      button {
-        width: 40px;
-      }
-      img {
-        width: 16px;
-        height: 16px;
-        margin-left: 3px;
-        margin-right: 3px;
+      > div:nth-of-type(2) {
+        display: flex;
+        justify-content: flex-end;
+        a {
+          margin-left: 20px;
+          button {
+            width: 140px;
+            font-size: 15px;
+          }
+        }
+        align-items: flex-end;
+        > div {
+          width: 70px;
+          button {
+            width: 40px;
+          }
+          img {
+            width: 16px;
+            height: 16px;
+            margin-left: 3px;
+            margin-right: 3px;
+          }
+        }
       }
     }
+    > div:nth-of-type(2) {
+      margin-left: 4%;
+
+      input {
+        margin-left: 4px;
+      }
+    }
   }
-}
-> div:nth-of-type(2) {
-  margin-left: 4%;
-
-  input {
-    margin-left: 4px;
-
-  }
-
-}
-}
-
- 
 }
 </style>

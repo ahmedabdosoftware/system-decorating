@@ -3,8 +3,8 @@
   <div class="page product">
     <div class="title">
       <div>
-          <div>
-             <Breadcrumb :breadcrumbs="breadcrumbs" />
+        <div>
+          <Breadcrumb :breadcrumbs="breadcrumbs" />
           <!-- <div class="contTitle">
             <div>
               <img
@@ -13,8 +13,8 @@
             </div>
             <p :class="{ 'dark-mode-title': getDarkMode }">product grid</p>
           </div> -->
-         </div> 
-         <div>
+        </div>
+        <div>
           <div>
             <div class="export">
               <img
@@ -26,29 +26,37 @@
               <button class="add">+ add product</button>
             </router-link>
           </div>
-          </div>
         </div>
-      
-      <div :class="{ 'dark-mode-box': getDarkMode }"  class="filter_by_search">
+      </div>
+
+      <div :class="{ 'dark-mode-box': getDarkMode }" class="filter_by_search">
         <div class="">
           <input
-          :class="{ 'dark-mode-search': getDarkMode }"
-          placeholder="search"
-          type="search"
-          v-model="searchQuery" 
-        />
-        <select placeholder="filter"  class="filter" v-model="selectedFilter">
-          <option value="name">title</option>
-          <option value="priceMaterial">priceMaterial</option>
-          <option value="priceWithLabor">priceWithLabor</option>
-        </select>
+            :class="{ 'dark-mode-search': getDarkMode }"
+            placeholder="search"
+            type="search"
+            v-model="searchQuery"
+          />
+          <select placeholder="filter" class="filter" v-model="selectedFilter">
+            <option value="name">title</option>
+            <option value="priceMaterial">priceMaterial</option>
+            <option value="priceWithLabor">priceWithLabor</option>
+          </select>
         </div>
         <div :class="{ 'dark-mode-box': getDarkMode }">
           <div>
-            <select placeholder="filter"  class="filter productsFilter"  v-model="selectedCategory">
+            <select
+              placeholder="filter"
+              class="filter productsFilter"
+              v-model="selectedCategory"
+            >
               <option>all</option>
-              <option v-for="category in categories" :value="category.id" :key="category.id">
-                 {{ category.name }}
+              <option
+                v-for="category in categories"
+                :value="category.id"
+                :key="category.id"
+              >
+                {{ category.name }}
               </option>
             </select>
           </div>
@@ -63,96 +71,85 @@
       </div>
     </div>
     <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
-
       <div v-if="isLoading">
         <BoxSkeletonLoader v-for="n in 6" :key="n" />
       </div>
       <div v-if="!isLoading">
-        <ProductList
-          :products="getProduct"
-        >
-        </ProductList>
+        <ProductList :products="getProduct"> </ProductList>
       </div>
 
       <NoData v-if="getProduct.length == 0" context="products"></NoData>
-
-
     </div>
-    
   </div>
 </template>
 <script>
-
-// actions 
-import {  mapState , mapActions } from 'pinia'
+// actions
+import { mapState, mapActions } from "pinia";
 //store
-import { useProductsStore } from '@/store/products/products.js'
-import { useCategoriesStore } from '@/store/categories/categories.js';
+import { useProductsStore } from "@/store/products/products.js";
+import { useCategoriesStore } from "@/store/categories/categories.js";
 
 //  CategoryList
 import ProductList from "@/components/products/ProductList.vue";
 // Skeleton Box
-import BoxSkeletonLoader from '@/shared/components/loading/skeletonLoader/BoxSkeletonLoader.vue';
-  // NoData
+import BoxSkeletonLoader from "@/shared/components/loading/skeletonLoader/BoxSkeletonLoader.vue";
+// NoData
 import NoData from "@/shared/components/noData/NoData.vue";
 
 // Breadcrumb
-import Breadcrumb from "@/shared/components/breadcrumb/Breadcrumb.vue"; 
+import Breadcrumb from "@/shared/components/breadcrumb/Breadcrumb.vue";
 
 export default {
   name: "Product",
   components: {
-   NoData,
-   BoxSkeletonLoader,
-   ProductList,
-   Breadcrumb,
+    NoData,
+    BoxSkeletonLoader,
+    ProductList,
+    Breadcrumb,
   },
   computed: {
     getDarkMode() {
       return this.$store.state.darkMode;
     },
-    ...mapState(useProductsStore, ['products']),
-    ...mapState(useCategoriesStore, ['categories']),
+    ...mapState(useProductsStore, ["products"]),
+    ...mapState(useCategoriesStore, ["categories"]),
 
-  // ============ filter => start=======================================
-        
-        getProduct() {
-          let filteredProducts = this.products;
-          
-          // فلترة حسب الفئة
-          if (this.selectedCategory !== 'all') {
-            filteredProducts = filteredProducts.filter(
-              product => product.categoryId === this.selectedCategory
-            );
-          }
-          
-          // البحث
-          if (this.searchQuery) {
-            filteredProducts = filteredProducts.filter(product => {
-              const valueToSearch = product[this.selectedFilter].toString().toLowerCase();
-              return valueToSearch.includes(this.searchQuery.toLowerCase());
-            });
-          }
-          
-          return filteredProducts;
-        }
-  // ============ filter => end=======================================
-   
+    // ============ filter => start=======================================
+
+    getProduct() {
+      let filteredProducts = this.products;
+
+      // فلترة حسب الفئة
+      if (this.selectedCategory !== "all") {
+        filteredProducts = filteredProducts.filter(
+          (product) => product.categoryId === this.selectedCategory
+        );
+      }
+
+      // البحث
+      if (this.searchQuery) {
+        filteredProducts = filteredProducts.filter((product) => {
+          const valueToSearch = product[this.selectedFilter]
+            .toString()
+            .toLowerCase();
+          return valueToSearch.includes(this.searchQuery.toLowerCase());
+        });
+      }
+
+      return filteredProducts;
+    },
+    // ============ filter => end=======================================
   },
-  async created(){
-     await this.fetchProducts()
-     this.isLoading = false;
-     this.fetchCategories();
-
-
+  async created() {
+    await this.fetchProducts();
+    this.isLoading = false;
+    this.fetchCategories();
   },
   methods: {
-    
     // ============ my actions => start=======================================
 
-    ...mapActions(useProductsStore, ['fetchProducts']),
-    ...mapActions(useCategoriesStore, ['fetchCategories']),
-
+    ...mapActions(useProductsStore, ["fetchProducts"]),
+    ...mapActions(useCategoriesStore, ["fetchCategories"]),
 
     // ============ my actions => end==========================================
 
@@ -179,35 +176,27 @@ export default {
         }
       };
     },
-  
-    // ===========show posts filter => start================================================
-   
-    // ===========show posts filter => end================================================
 
+    // ===========show posts filter => start================================================
+
+    // ===========show posts filter => end================================================
   },
   data() {
     return {
-      searchQuery: '',
-      selectedCategory: 'all',
-      selectedFilter: 'name',
+      searchQuery: "",
+      selectedCategory: "all",
+      selectedFilter: "name",
       isLoading: true,
       breadcrumbs: [
         { label: "Dashboard", link: "/dashboard" },
         { label: "Products", link: "/dashboard/Product" },
         // { label: "Create Order", link: "/dashboard/AddNewOrder" }
-      ]
-
-      
+      ],
     };
   },
- 
- 
 };
 </script>
 <style scoped lang="scss">
-
-
-
 .allContent > div {
   display: flex;
   flex-wrap: wrap;
@@ -215,10 +204,7 @@ export default {
   width: 100%;
   min-height: 380px;
 }
-.productsFilter{
+.productsFilter {
   width: 100% !important;
 }
-
-
-
 </style>

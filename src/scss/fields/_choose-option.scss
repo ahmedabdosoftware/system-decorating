@@ -1,37 +1,63 @@
 .choose-option {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 10px 15px;
-    font-family: Arial, sans-serif;
-    // background-color: red; 
-    height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-family: Arial, sans-serif;
+  // background-color: red;
+  height: 60px;
+}
+.choose-option {
+  margin-top: 10px;
+}
+.m-top {
+  margin-top: 40px;
+}
+.choose-text {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  /* background-color: green; */
+}
+
+.choose-text .icon {
+  margin-right: 8px;
+  color: #888;
+}
+
+.check-button {
+  cursor: pointer;
+  position: relative;
+}
+.selectOnePlace {
+  border-radius: 10px;
+  margin-left: 10px;
+}
+.choose-option-autoSaveTransaction {
+  display: flex;
+  justify-content: space-between;
+}
+.check-button--autoSave {
+  margin-left: 10px;
+}
+@media (max-width: 477px) {
+  .autoSaveTransaction span {
+    font-size: 12px;
   }
-  .choose-option{
-    margin-top: 10px;
+  .hideResponsive {
+    display: none;
   }
-  .m-top{
-    margin-top: 40px ;
+  .selectOnePlace {
+    margin-left: 10px;
+    // font-size: 10px;
   }
-  .choose-text {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
-    /* background-color: green; */
+
+  .check-button--autoSave {
+    margin-left: 4px;
   }
-  
- .choose-text .icon{
-    margin-right: 8px;
-    color: #888;
-  }
-  
-   .check-button{
-    cursor: pointer;
-    position: relative;
-  }
-  
+}

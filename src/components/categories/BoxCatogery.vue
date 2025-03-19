@@ -1,32 +1,19 @@
 <template>
   <div class="contPro">
-    <div :class=" { 'dark-mode': getDarkMode }">
+    <div :class="{ 'dark-mode': getDarkMode }">
       <div>
-        <img :src="category.imgUrl "  />
+        <img :src="category.imgUrl || defaultImage" alt="Category Image" />
       </div>
       <div>
-        <span> {{ category.name }}  </span>
-        <p >{{ category.desc }}</p>
+        <span> {{ category.name }} </span>
+        <p>{{ category.desc }}</p>
         <div class="cont-star">
           <img
+            v-for="n in 5"
+            :key="n"
             class="star"
             src="https://img.freepik.com/free-vector/start_53876-25533.jpg"
-          />
-          <img
-            class="star"
-            src="https://img.freepik.com/free-vector/start_53876-25533.jpg"
-          />
-          <img
-            class="star"
-            src="https://img.freepik.com/free-vector/start_53876-25533.jpg"
-          />
-          <img
-            class="star"
-            src="https://img.freepik.com/free-vector/start_53876-25533.jpg"
-          />
-          <img
-            class="star"
-            src="https://img.freepik.com/free-vector/start_53876-25533.jpg"
+            alt="star"
           />
         </div>
         <span>.....</span>
@@ -35,33 +22,40 @@
         >
           <button class="edit">edit</button>
         </router-link>
-        <button @click="delette(category.id)" class= "delete" > delete </button>
+        <button @click="delette(category.id)" class="delete">delete</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'pinia';
-import { useCategoriesStore } from '@/store/categories/categories.js'
+import { mapActions } from "pinia";
+import { useCategoriesStore } from "@/store/categories/categories.js";
 import sweetalert from "sweetalert";
 
 export default {
   name: "BoxCatogery",
-  props: [ "category"],
+  props: ["category"],
+  data() {
+    return {
+      defaultImage: require("@/assets/images/Products/No-products/noPic1.jpg"), //  Default Image
+    };
+  },
   computed: {
     getDarkMode() {
       return this.$store.state.darkMode;
     },
   },
-  created(){
-    console.log(this.category)
-
+  created() {
+    console.log(this.category);
   },
-  
+
   methods: {
-    ...mapActions(useCategoriesStore, ['deleteCategory', 'deleteImageFromStorage']),
-    
+    ...mapActions(useCategoriesStore, [
+      "deleteCategory",
+      "deleteImageFromStorage",
+    ]),
+
     async delette(id) {
       try {
         await this.deleteCategory(id);
@@ -74,10 +68,10 @@ export default {
         });
       } catch (error) {
         console.error("Deletion failed", error);
-        sweetalert( {
+        sweetalert({
           text: `Error: ${error.message}`,
           icon: "error",
-        } );
+        });
       }
     },
   },
@@ -127,7 +121,7 @@ export default {
 .contPro > div > div:first-child {
   width: 90%;
   height: 59%;
-  background-color: rgb(194, 191, 191);
+  /* background-color: rgb(194, 191, 191); */
   /* background-color:rgb(141, 28, 28); */
   border-radius: 15px;
   position: relative;

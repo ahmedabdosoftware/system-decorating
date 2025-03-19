@@ -2,22 +2,31 @@
   <div class="contPro">
     <div :class="{ 'dark-mode': getDarkMode }">
       <div>
-        
-        <img :src="oneProduct.imageUrl" />
+        <img :src="oneProduct.imageUrl || defaultImage" alt="Product Image" />
       </div>
       <div>
         <span> {{ oneProduct.name | subName }}</span>
         <p class="descrption">{{ oneProduct.description | sub }}</p>
         <div class="cont-star">
-          <img class="star" src="https://img.freepik.com/free-vector/start_53876-25533.jpg" />
-          <img class="star" src="https://img.freepik.com/free-vector/start_53876-25533.jpg" />
-          <img class="star" src="https://img.freepik.com/free-vector/start_53876-25533.jpg" />
-          <img class="star" src="https://img.freepik.com/free-vector/start_53876-25533.jpg" />
-          <img class="star" src="https://img.freepik.com/free-vector/start_53876-25533.jpg" />
+          <img
+            v-for="n in 5"
+            :key="n"
+            class="star"
+            src="https://img.freepik.com/free-vector/start_53876-25533.jpg"
+            alt="star"
+          />
         </div>
-        <span>{{ oneProduct.priceMaterial }} :  سعرال{{ oneProduct.unitName.name }}</span>
-        <span v-if="oneProduct.priceWithLabor">{{ oneProduct.priceWithLabor }} : مصنعية</span>
-        <router-link :to="{ name: 'EditProduct', params: { id: oneProduct.id } }">
+        <span
+          >{{ oneProduct.priceMaterial }} : سعرال{{
+            oneProduct.unitName.name
+          }}</span
+        >
+        <span v-if="oneProduct.priceWithLabor"
+          >{{ oneProduct.priceWithLabor }} : مصنعية</span
+        >
+        <router-link
+          :to="{ name: 'EditProduct', params: { id: oneProduct.id } }"
+        >
           <button class="edit">edit</button>
         </router-link>
         <button class="delete" @click="delette(oneProduct.id)">delete</button>
@@ -27,17 +36,21 @@
 </template>
 
 <script>
+// actions
+import { mapActions } from "pinia";
+import { useProductsStore } from "@/store/products/products.js";
 
-// actions 
-import { mapActions } from 'pinia';
-import { useProductsStore } from '@/store/products/products.js'
-
-// sweetalert 
+// sweetalert
 import sweetalert from "sweetalert";
 
 export default {
   name: "BoxProduct",
   props: ["oneProduct"],
+  data() {
+    return {
+      defaultImage: require("@/assets/images/Products/No-products/noPic1.jpg"), //  Default Image
+    };
+  },
   computed: {
     getDarkMode() {
       return this.$store.state.darkMode;
@@ -45,14 +58,17 @@ export default {
   },
   methods: {
     // ============ my actions => start =============================================
-    ...mapActions(useProductsStore, ['deleteProduct', 'deleteImageFromStorage']),
+    ...mapActions(useProductsStore, [
+      "deleteProduct",
+      "deleteImageFromStorage",
+    ]),
     // ============ my actions => end ==============================================
 
     async delette(id) {
       try {
         await this.deleteProduct(id);
         console.log("Product deleted from database");
-        
+
         await this.deleteImageFromStorage(this.oneProduct.imageUrl);
         console.log("Product image deleted from storage");
 
@@ -71,7 +87,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 * {
@@ -107,7 +122,7 @@ export default {
 .contPro > div > div:first-child {
   width: 90%;
   height: 59%;
-  background-color: rgb(194, 191, 191);
+  /* background-color: rgb(194, 191, 191); */
   /* background-color:rgb(141, 28, 28); */
   border-radius: 15px;
   position: relative;
@@ -138,13 +153,13 @@ export default {
 }
 /* price and  short descrption */
 .contPro > div > div:nth-child(2) span:nth-of-type(2),
-.contPro > div > div:nth-child(2) span:nth-of-type(3)  {
+.contPro > div > div:nth-child(2) span:nth-of-type(3) {
   text-transform: capitalize;
   color: #088178;
   font-size: 18px;
 }
-.contPro > div > div:nth-child(2) span:nth-of-type(3){
-  margin: 5px 0px 0px 15px ;
+.contPro > div > div:nth-child(2) span:nth-of-type(3) {
+  margin: 5px 0px 0px 15px;
 }
 .cont-star {
   margin-left: 15px;

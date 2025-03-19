@@ -1,10 +1,10 @@
 <template>
-    <!-- /* eslint-disable */ -->
-    <div class="page oredrs">
-      <div class="title">
+  <!-- /* eslint-disable */ -->
+  <div class="page oredrs">
+    <div class="title">
+      <div>
         <div>
-          <div>
-             <Breadcrumb :breadcrumbs="breadcrumbs" />
+          <Breadcrumb :breadcrumbs="breadcrumbs" />
           <!-- <div class="contTitle">
             <div>
               <img
@@ -13,8 +13,8 @@
             </div>
             <p :class="{ 'dark-mode-title': getDarkMode }">order grid</p>
           </div> -->
-         </div> 
-         <div>
+        </div>
+        <div>
           <div>
             <div class="export">
               <img
@@ -26,232 +26,216 @@
               <button class="add">+ add order</button>
             </router-link>
           </div>
-          </div>
         </div>
-  
-        <div :class="{ 'dark-mode-box': getDarkMode }" class="filter_by_search">
-          <div class="">
-            <input
+      </div>
+
+      <div :class="{ 'dark-mode-box': getDarkMode }" class="filter_by_search">
+        <div class="">
+          <input
             :class="{ 'dark-mode-search': getDarkMode }"
             placeholder="search"
             type="search"
-            v-model="searchQuery" 
+            v-model="searchQuery"
           />
-          <select placeholder="filter"  class="filter" v-model="selectedFilter">
+          <select placeholder="filter" class="filter" v-model="selectedFilter">
             <option value="date">date</option>
             <option value="customerName">customer</option>
             <option value="numberOfOrder">order number</option>
             <option value="Group">Invoice Group</option>
           </select>
+        </div>
+        <div :class="{ 'dark-mode-box': getDarkMode }">
+          <div>
+            <select placeholder="filter" class="filter" v-model="selectStatus">
+              <option value="all">الكل</option>
+              <option value="0">معلق</option>
+              <option value="1">مؤكد</option>
+              <option value="2">منتهى</option>
+            </select>
           </div>
-          <div :class="{ 'dark-mode-box': getDarkMode }">
-            <div>
-              <select placeholder="filter"  class="filter"  v-model="selectStatus">
-                <option  value="all">الكل</option>
-                <option value="0">معلق</option>
-                <option value="1">مؤكد</option>
-                <option value="2">منتهى </option>
-               
-              </select>
-            </div>
-            <div>
-              <button>last aded</button>
+          <!-- <div>
+              <button class="lastAdded">last added</button>
               <img
                 class="arroow aded"
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_HHn9uGD0sPLHcGzdjI_WX8Au22ap-x1b1Q&usqp=CAU"
               />
-            </div>
-          </div>
+            </div> -->
         </div>
       </div>
-
-      
-      <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
-        
-        <TableSkeleton v-if="isLoading" :rows="5" :columns="6" />
-        <ListTable v-else-if="getOrders.length > 0" :orders="getOrders"  class="ListTable_cont"></ListTable>
-        <NoData v-else  context="orders"></NoData>
-     
-      </div>
-      <div id="scrollUp" class="scrollUp">
-        <!-- <img
-        /> -->
-      </div>
     </div>
-  </template>
-  <script>
-  
-  // actions 
-  import {  mapState , mapActions } from 'pinia'
-  //store
-  import { useOrdersStore } from '@/store/order/orders.js';
 
-  // ListTable
-  import ListTable from "@/components/orders/table/ListTable.vue";
-  
-  // Skeleton Table
-  import TableSkeleton from '@/shared/components/loading/skeletonLoader/TableSkeleton.vue';
- 
-  // NoData
-  import NoData from "@/shared/components/noData/NoData.vue";
+    <div :class="{ 'dark-mode-box': getDarkMode }" class="allContent">
+      <TableSkeleton v-if="isLoading" :rows="5" :columns="6" />
+      <ListTable
+        v-else-if="getOrders.length > 0"
+        :orders="getOrders"
+        class="ListTable_cont"
+      ></ListTable>
+      <NoData v-else context="orders"></NoData>
+    </div>
+    <div id="scrollUp" class="scrollUp">
+      <!-- <img
+        /> -->
+    </div>
+  </div>
+</template>
+<script>
+// actions
+import { mapState, mapActions } from "pinia";
+//store
+import { useOrdersStore } from "@/store/order/orders.js";
 
-  // Breadcrumb
-  import Breadcrumb from "@/shared/components/breadcrumb/Breadcrumb.vue"; 
+// ListTable
+import ListTable from "@/components/orders/table/ListTable.vue";
 
-  export default {
-    name: "Order",
-    components: {
-      ListTable,
-      NoData,
-      TableSkeleton,
-      Breadcrumb,
+// Skeleton Table
+import TableSkeleton from "@/shared/components/loading/skeletonLoader/TableSkeleton.vue";
+
+// NoData
+import NoData from "@/shared/components/noData/NoData.vue";
+
+// Breadcrumb
+import Breadcrumb from "@/shared/components/breadcrumb/Breadcrumb.vue";
+
+export default {
+  name: "Order",
+  components: {
+    ListTable,
+    NoData,
+    TableSkeleton,
+    Breadcrumb,
+  },
+  computed: {
+    getDarkMode() {
+      return this.$store.state.darkMode;
     },
-    computed: {
 
-      getDarkMode() {
-        return this.$store.state.darkMode;
-      },
+    ...mapState(useOrdersStore, ["orders"]),
 
-      ...mapState(useOrdersStore, ['orders']),
-  
     // ============ filter => start=======================================
-          
-          getOrders() {
-            let filteredOrders = this.orders;
-            
-            // فلترة حسب الحالة
-            if (this.selectStatus !== 'all') {
-              filteredOrders = filteredOrders.filter(
-                order => order.status == this.selectStatus
-              );
-            }
-            
-              // البحث
-          if (this.searchQuery) {
-            filteredOrders = filteredOrders.filter(order => {
-              // Check First If THere Is this Property That U search By
-              if (order[this.selectedFilter] === undefined || order[this.selectedFilter] === null) {
-                return false;
-              }
-              const valueToSearch = order[this.selectedFilter].toString().toLowerCase();
-              console.log(order[this.selectedFilter].toString().toLowerCase())
-              return valueToSearch.includes(this.searchQuery.toLowerCase());
-            });
+
+    getOrders() {
+      let filteredOrders = this.orders;
+
+      // فلترة حسب الحالة
+      if (this.selectStatus !== "all") {
+        filteredOrders = filteredOrders.filter(
+          (order) => order.status == this.selectStatus
+        );
+      }
+
+      // البحث
+      if (this.searchQuery) {
+        filteredOrders = filteredOrders.filter((order) => {
+          // Check First If There Is this Property That U search By
+          if (
+            order[this.selectedFilter] === undefined ||
+            order[this.selectedFilter] === null
+          ) {
+            return false;
           }
-                       
-            return filteredOrders;
-          }
+          const valueToSearch = order[this.selectedFilter]
+            .toString()
+            .toLowerCase();
+          console.log(order[this.selectedFilter].toString().toLowerCase());
+          return valueToSearch.includes(this.searchQuery.toLowerCase());
+        });
+      }
+
+      return filteredOrders;
+    },
     // ============ filter => end=======================================
-     
-    },
-    async created(){
-      
-      await this.fetchOrders()
-       this.isLoading = false;
+  },
+  async created() {
+    await this.fetchOrders();
+    this.isLoading = false;
+  },
+  methods: {
+    // ============ my actions => start=======================================
 
+    ...mapActions(useOrdersStore, ["fetchOrders"]),
 
-  
-    },
-    methods: {
-      
-      // ============ my actions => start=======================================
-  
-      ...mapActions(useOrdersStore, ['fetchOrders']),
+    // ============ my actions => end==========================================
 
-
-  
-      // ============ my actions => end==========================================
-
-  
-      // ===========show posts => start========================================
-      // show scroll up
-      showScrollUp: function () {
-        let Buttom = document.getElementById("scrollUp");
-        window.onscroll = function () {
-          if (scrollY >= 500) {
-            Buttom.style.visibility = "visible";
-          } else {
-            Buttom.style.visibility = "hidden";
-          }
-        };
-      },
-    
-      // ===========show posts filter => start================================================
-     
-      // ===========show posts filter => end================================================
-  
-    },
-    data() {
-      return {
-        searchQuery: '',
-        selectStatus: 'all',
-        selectedFilter: 'date',
-        isLoading: true,
-
-        breadcrumbs: [
-        { label: "Dashboard", link: "/dashboard" },
-        { label: "Orders", link: "/dashboard/Order" },
-        { label: "Invoice System", link: "/dashboard/Order" },
-        // { label: "Create Order", link: "/dashboard/AddNewOrder" }
-      ]
+    // ===========show posts => start========================================
+    // show scroll up
+    showScrollUp: function () {
+      let Buttom = document.getElementById("scrollUp");
+      window.onscroll = function () {
+        if (scrollY >= 500) {
+          Buttom.style.visibility = "visible";
+        } else {
+          Buttom.style.visibility = "hidden";
+        }
       };
     },
-   
-   
-  };
-  </script>
-  <style scoped lang="scss">
-  
-  
-  /* scrollUp => start */
-  .scrollUp {
-    width: 60px;
-    height: 60px;
-    //   background-color: blue;
-    position: fixed;
-    right: 20px;
-    bottom: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 30px;
-    /* border: 2px solid white; */
-    cursor: pointer;
-    //   visibility: hidden;
-    img {
-      width: 100%;
-      height: 100%;
-    }
+
+    // ===========show posts filter => start================================================
+
+    // ===========show posts filter => end================================================
+  },
+  data() {
+    return {
+      searchQuery: "",
+      selectStatus: "all",
+      selectedFilter: "date",
+      isLoading: true,
+
+      breadcrumbs: [
+        { label: "Dashboard", link: "/dashboard" },
+        { label: "Orders", link: "/dashboard/Order" },
+        { label: "Invoice", link: "/dashboard/Order" },
+        // { label: "Create Order", link: "/dashboard/AddNewOrder" }
+      ],
+    };
+  },
+};
+</script>
+<style scoped lang="scss">
+/* scrollUp => start */
+.scrollUp {
+  width: 60px;
+  height: 60px;
+  //   background-color: blue;
+  position: fixed;
+  right: 20px;
+  bottom: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30px;
+  /* border: 2px solid white; */
+  cursor: pointer;
+  //   visibility: hidden;
+  img {
+    width: 100%;
+    height: 100%;
   }
-  
-  // .scrollUp::after {
-  //   content: "^";
-  //   width: 50%;
-  //   height: 50%;
-  // //   background-color: darkorange;
-  //   position: absolute;
-  //   top: 10%;
-  //   font-weight: 500;
-  //   font-size: 40px;
-  //   text-align: center;
-  //   color: white;
-  // }
-  // .scrollUp::before {
-  //   content: "^";
-  //   color: white;
-  //   position: absolute;
-  //   top: 35%;
-  //   width: 50%;
-  //   height: 50%;
-  // //   background-color: darkorange;
-  //   font-weight: 500;
-  //   font-size: 40px;
-  //   text-align: center;
-  // }
-  /* scrollUp => end */
+}
 
-
-
-  
-  </style>
-  
+// .scrollUp::after {
+//   content: "^";
+//   width: 50%;
+//   height: 50%;
+// //   background-color: darkorange;
+//   position: absolute;
+//   top: 10%;
+//   font-weight: 500;
+//   font-size: 40px;
+//   text-align: center;
+//   color: white;
+// }
+// .scrollUp::before {
+//   content: "^";
+//   color: white;
+//   position: absolute;
+//   top: 35%;
+//   width: 50%;
+//   height: 50%;
+// //   background-color: darkorange;
+//   font-weight: 500;
+//   font-size: 40px;
+//   text-align: center;
+// }
+/* scrollUp => end */
+</style>

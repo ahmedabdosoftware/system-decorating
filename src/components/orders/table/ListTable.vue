@@ -5,10 +5,10 @@
         <thead>
           <tr>
             <th>تاريخ</th>
-            <th>رقم الطلب </th>
-            <th> العميل </th>
+            <th>رقم الطلب</th>
+            <th>العميل</th>
             <!-- <th>نوع الفاتورة</th> -->
-            <th> المكان </th>
+            <th>المكان</th>
             <th>الحالة</th>
             <th>الخيارات</th>
           </tr>
@@ -17,12 +17,18 @@
           <tr v-for="(order, index) in orders" :key="order.id">
             <td>{{ order.date }}</td>
             <td>{{ order.numberOfOrder }}</td>
-            <td >{{ order.customerName ? order.customerName :'غير محدد' }}</td>
+            <td>{{ order.customerName ? order.customerName : "غير محدد" }}</td>
             <!-- <td>{{order.invoiceType}}</td> -->
-            <td class="SoMoreSmall"> {{ order.adress ? order.adress:'غير محدد' }}</td>
+            <td class="SoMoreSmall">
+              {{ order.adress ? order.adress : "غير محدد" }}
+            </td>
             <td>{{ getStatusText(order.status) }}</td>
             <td class="actions">
-              <DropdownMenu ref="dropdownMenu" :order="order" @closeOthers="openDropdownHandel(index)" />
+              <DropdownMenu
+                ref="dropdownMenu"
+                :order="order"
+                @closeOthers="openDropdownHandel(index)"
+              />
             </td>
           </tr>
         </tbody>
@@ -32,7 +38,7 @@
 </template>
 
 <script>
-  import DropdownMenu from "@/components/orders/table/DropdownMenu.vue";
+import DropdownMenu from "@/components/orders/table/DropdownMenu.vue";
 
 export default {
   name: "ListTable",
@@ -53,14 +59,14 @@ export default {
   methods: {
     getStatusText(status) {
       switch (status) {
-        case '0':
-          return 'معلق';
-        case '3':
-            return 'منتهى';
-        case '1':
-            return 'مؤكد';
+        case "0":
+          return "معلق";
+        case "3":
+          return "منتهى";
+        case "1":
+          return "مؤكد";
         default:
-          return 'غير معروف';
+          return "غير معروف";
       }
     },
     openDropdownHandel(index) {
@@ -74,12 +80,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-          // global style in path =>  src/scss/global/_globalStyle.scss
+// global style in path =>  src/scss/global/_globalStyle.scss
 @media (max-width: 477px) {
-
-  .SoMoreSmall{
-  font-size: 10px;
+  .SoMoreSmall {
+    font-size: 10px;
+  }
 }
-}  
 </style>
