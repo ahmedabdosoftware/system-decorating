@@ -59,6 +59,7 @@
               :initialDisplayInstallation="displayInstallation"
               :initialFixedInstallation="fixedInstallation"
               :initialFile="file"
+              :showAutoSaveTransactionType="autoSaveTransactionType"
               @details-updated="handleDetailsUpdate"
             />
           </div>
@@ -179,6 +180,10 @@ export default {
       displaySale: true,
       displayInstallation: false,
       fixedInstallation: 0,
+
+      // Auto Save Transaction clinte
+      autoSaveTransactionType: "",
+      autoSaveTransactionId: "",
     };
   },
 
@@ -309,9 +314,11 @@ export default {
         this.displayTowInvoice = order.displayTowInvoice || false;
         this.displayInstallation = order.displayInstallation || false;
         this.fixedInstallation = order.fixedInstallation || 0;
-        console.log("displaySale:-", this.displaySale);
-        console.log("displayTowInvoice:-", this.displayTowInvoice);
-        console.log("this.displayInstallation:-", this.displayInstallation);
+       
+        this.autoSaveTransactionType = order.transactionInfo.type || "";
+        this.autoSaveTransaction = order.transactionInfo.transactionId || "" ;
+      
+
       }
     },
     goBack() {
@@ -486,6 +493,33 @@ export default {
         console.log("تم تحديث عملية السحب:", this.addedOrders);
       }
     },
+
+
+
+// handle Transaction Update
+    // async handleTransactionUpdate() {
+    //   const { transactionType, lastAmount, transactionId, remainingValue } = this.transactionData;
+    //   let newAmount = this.calculateTotalPrice();
+      
+    //   // تحديث قيمة الباقي بناءً على الفرق بين السعر القديم والجديد
+    //   let updatedRemainingValue = remainingValue - lastAmount + newAmount;
+
+    //   console.log(`📌 تعديل المعاملة ${transactionType}, المبلغ السابق: ${lastAmount}, المبلغ الجديد: ${newAmount}, الباقي الجديد: ${updatedRemainingValue}`);
+
+    //   if (transactionType === "MoreThan") {
+    //     // await this.updateMoreThanTransaction({ transactionId, lastAmount, newAmount, updatedRemainingValue });
+    //   } else if (transactionType === "OnePlace") {
+    //     // await this.updateOnePlaceTransaction({ transactionId, lastAmount, newAmount, updatedRemainingValue });
+    //   }
+    // },
+    // calculateTotalPrice() {
+    //   return this.addedOrders.reduce(
+    //     (total, product) => total + parseFloat(product.price_offer) * parseInt(product.quantity),
+    //     0
+    //   );
+    // },
+
+
 
     // ============ update the oredr => start =====================================
 

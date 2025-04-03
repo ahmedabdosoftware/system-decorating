@@ -15,9 +15,9 @@
       </div>
       <div class="shop">
         <button class="shop-btn">
-          <a href="https://ahmedabdosoftware.github.io/websiteUpdated-DSD/"
-            >Show Shop</a
-          >
+          <router-link to="/portfolio">
+               Show shop
+            </router-link>
         </button>
       </div>
       <div class="ddetails">

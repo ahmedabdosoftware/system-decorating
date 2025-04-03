@@ -73,6 +73,7 @@ import UserProject from "../views/UserProfile/projects/UserProject.vue";
 import UserSetting from "../views/UserProfile/settings/UserSetting.vue";
 
 import Login from "../views/auth/Login.vue";
+import portfolio from "../views/portfolio/portfolio.vue";
 
 Vue.use(VueRouter);
 const routes = [
@@ -537,6 +538,11 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login,
+  },
+  {
+    path: "/portfolio",
+    name: "portfolio",
+    component: portfolio,
   },
   {
     path: "/profile/:profileId",

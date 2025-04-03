@@ -25,10 +25,14 @@ import { mapActions } from "pinia";
 
 // store
 import { useTransactionsStore } from "@/store/transactions/transactions.js";
+
+// components
 import TransictionInfo from "@/components/users/financial/specificTransaction/TransictionInfo.vue";
 import PaymentsContainer from "@/components/users/financial/specificTransaction/PaymentsContainer.vue";
+
 // CircleLoader
 import CircleLoader from "@/shared/components/loading/CircleLoader.vue";
+
 // sweetalert
 import sweetalert from "sweetalert";
 

@@ -91,30 +91,37 @@
       />
       <!-- @input="updatemanualLaborCost" -->
     </div>
-    <div class="choose-option-autoSaveTransaction">
-      <div class="choose-option autoSaveTransaction">
+    <div v-if="shouldShowOptions" class="choose-option-autoSaveTransaction">
+      <div v-if="showOnePlace"  class="choose-option autoSaveTransaction" :class="{ 'edit-mode': isEditPage }" >
         <div class="choose-text">
           <font-awesome-icon icon="file-invoice" class="icon" />
           <span> One <span class="hideResponsive">Place</span></span>
         </div>
-        <select v-model="autoSaveTransactionOnePlace" class="selectOnePlace">
-          <option value="1">معاملة جديده</option>
-          <option value="">الباتيو</option>
-          <option value="">الفيلا</option>
+        <select v-if="isCreatePage"  v-model="selectedOptionOnePlace" class="selectOnePlace">
+          <option value="newTransaction">New</option>
+          <option v-for="item in specificUserTransactions" :key="item.id" :value="item">
+            {{ item.location || item.date }}
+          </option>
         </select>
-        <label class="check-button check-button--autoSave">
+        <span 
+        v-else 
+        class="edit-mode"
+      >
+        ---
+      </span>
+        <label v-if="!isEditPage" class="check-button check-button--autoSave">
           <!-- <span>---</span> -->
-          <input value="OnePlace" type="radio" v-model="autoSaveTransaction" />
+          <input value="OnePlace" type="radio" v-model="autoSaveTransactionType" />
         </label>
       </div>
-      <div class="choose-option autoSaveTransaction">
+      <div v-if="showMoreThanPlace" class="choose-option autoSaveTransaction" :class="{ 'edit-mode': isEditPage }">
         <div class="choose-text">
           <font-awesome-icon icon="file-invoice" class="icon" />
           <span> More <span class="hideResponsive">Than Place</span></span>
         </div>
-        <label class="check-button check-button--autoSave">
+        <label v-if="!isEditPage" class="check-button check-button--autoSave">
           <!-- <span>---</span> -->
-          <input value="MoreThan" type="radio" v-model="autoSaveTransaction" />
+          <input  value="MoreThan" type="radio" v-model="autoSaveTransactionType" />
         </label>
       </div>
     </div>
@@ -133,6 +140,12 @@
 </template>
 
 <script>
+import { mapState, mapActions } from "pinia";
+
+  //store
+  import { useTransactionsStore } from "@/store/transactions/transactions.js";
+  // import { useUserStore } from "@/store/auth/auth.js";
+
 export default {
   name: "OrderDetailsComponent",
   props: {
@@ -175,6 +188,10 @@ export default {
     customerInfo: {
       default: null,
     },
+    showAutoSaveTransactionType: {
+      default: null,
+    },
+    
   },
   data() {
     return {
@@ -187,8 +204,8 @@ export default {
       displayInstallation: this.initialDisplayInstallation,
       fixedInstallation: this.initialFixedInstallation,
       file: this.initialFile,
-      autoSaveTransaction: "OnePlace",
-      autoSaveTransactionOnePlace: "1",
+      autoSaveTransactionType: "MoreThan",
+      selectedOptionOnePlace: "newTransaction",
     };
   },
   watch: {
@@ -252,11 +269,22 @@ export default {
     file() {
       this.emitDetails();
     },
-    customerInfo() {
-      console.log("customerInfo", this.customerInfo);
+    autoSaveTransactionType() {
+      this.emitDetails();
     },
+    selectedOptionOnePlace() {
+      this.emitDetails();
+    },
+    async customerInfo() {
+        console.log("customerInfo", this.customerInfo);
+        await this.fetchSpecificTransactionByUserId(this.customerInfo.id);
+        console.log("userTransactions", this.specificUserTransactions)
+
+      },
   },
   methods: {
+    ...mapActions(useTransactionsStore, ["fetchSpecificTransactionByUserId"]),
+
     handleFileUpload(event) {
       const file = event.target.files[0];
       if (file) {
@@ -275,10 +303,43 @@ export default {
         displayInstallation: this.displayInstallation,
         fixedInstallation: this.fixedInstallation,
         file: this.file,
+        autoSaveTransactionType: this.autoSaveTransactionType,
+        selectedOptionOnePlace: this.selectedOptionOnePlace,
       };
       this.$emit("details-updated", details);
+      console.log("showAutoSaveTransactionType",this.showAutoSaveTransactionType)
     },
   },
+  computed: {
+      ...mapState(useTransactionsStore, ["specificUserTransactions"]),
+
+    isCreatePage() {
+      return this.$route.name === "AddNewOrder"; 
+    },
+
+    isEditPage() {
+      return this.$route.name === "EditOrderNewDesign"; 
+    },
+    shouldShowOptions() {
+      console.log("shouldShowOptions",this.$route.name, this.showAutoSaveTransactionType)
+      // show with create page
+      if (this.isCreatePage) return true;
+      // Edit page but if there is transaction Type
+      return this.isEditPage && this.showAutoSaveTransactionType;
+    },
+    
+    showMoreThanPlace() {
+      return this.isCreatePage || (this.isEditPage && this.showAutoSaveTransactionType === "MoreThan");
+    },
+
+    showOnePlace() {
+      return this.isCreatePage || (this.isEditPage && this.showAutoSaveTransactionType === "OnePlace");
+    },
+    },
+
+   
+
+  
 };
 </script>
 
@@ -416,6 +477,14 @@ export default {
   font-weight: 700;
   margin-top: 10px;
   margin-left: 7px;
+}
+.edit-mode {
+  background-color: #f3f3f3;
+  padding: 5px 10px;
+  margin-left:5px;
+  border-radius: 5px;
+  font-weight: bold;
+  color: #777;
 }
 @media (max-width: 477px) {
   .order-details-container {

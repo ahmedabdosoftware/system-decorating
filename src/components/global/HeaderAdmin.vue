@@ -1,5 +1,5 @@
 <template>
-  <header :class="[{ scrolled: isScrolled, 'dark-mode-header': getDarkMode }]">
+  <header class="header-app" :class="[{ scrolled: isScrolled, 'dark-mode-header': getDarkMode }]">
     <div :class="{ 'dark-mode': getDarkMode }">
       <div class="cont-threeLines">
         <img
@@ -87,7 +87,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-header {
+.header-app {
   width: 100%;
   height: 63px;
   background-color: #f7f7f9;
@@ -102,12 +102,12 @@ header {
 
   // border-bottom: 2px solid rgb(215, 213, 213);
 }
-header.scrolled {
+.header-app.scrolled {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
 }
-header > div:nth-child(1) {
+.header-app > div:nth-child(1) {
   min-width: 28%;
   height: 40px;
   // background-color: black;
@@ -147,7 +147,7 @@ header > div:nth-child(1) {
     }
   }
 }
-header > div:nth-child(2) {
+.header-app > div:nth-child(2) {
   width: 170px;
   height: 100%;
   // background-color: red;
@@ -230,14 +230,14 @@ header > div:nth-child(2) {
 }
 
 @media print {
-  header {
+  .header-app {
     display: none;
   }
 }
 
 /* media => ipad */
 @media (max-width: 821px) {
-  header {
+  .header-app {
     width: 100%;
     right: 0%;
   }
@@ -250,7 +250,7 @@ header > div:nth-child(2) {
 }
 // phone
 @media (max-width: 477px) {
-  header {
+  .header-app {
     > div:first-child {
       // background-color: darkcyan;
       > div:nth-child(2) {

@@ -58,6 +58,8 @@ import {
   faCubes,
   faQuestionCircle,
   faWallet,
+  faPlus,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
@@ -120,7 +122,9 @@ library.add(
   faGlobe,
   faCubes,
   faQuestionCircle,
-  faWallet
+  faWallet,
+  faPlus,
+  faTimes,
 );
 
 export default FontAwesomeIcon;

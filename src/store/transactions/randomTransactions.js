@@ -153,7 +153,19 @@ export const useRandomTransactionsStore = defineStore("randomTransactions", {
       }
     },
 
-    // fetch Transactions By Profile
+    async autoSaveTransactionOrder(transaction) {
+      if (transaction.type !== "Add") {
+        throw new Error("هذه الفانكشن تدعم فقط إضافة المعاملات");
+      }
+
+      const docRef = await db.collection("AddRandomTransaction").add(transaction);
+      transaction.id = docRef.id;
+
+      return transaction.id;
+    },
+
+
+      // fetch Transactions By Profile
     async fetchTransactionsByProfile(profileId) {
       try {
         // جلب معاملات Add
