@@ -115,7 +115,7 @@ export default {
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
   width: 100%;
-  height: 300px;
+  height: 550px;
   /* background-color: white; */
   display: grid;
   grid-template-areas:
@@ -124,11 +124,7 @@ export default {
     "backgroundd backgroundd backgroundd backgroundd "
     "backgroundd backgroundd backgroundd backgroundd "
     "backgroundd backgroundd backgroundd backgroundd "
-    "backgroundd backgroundd backgroundd backgroundd "
-    "backgroundd backgroundd backgroundd backgroundd "
-    "backgroundd backgroundd backgroundd backgroundd "
-    ". . . setting"
-    " ddetails  . . ."
+    ". . . shop"
     " ddetails  . . ."
     "trans trans trans trans ";
 }
@@ -140,9 +136,9 @@ export default {
 .background {
   position: relative;
   grid-area: backgroundd;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-  background-image: url("file:///C:/Users/Black%20Horse/Downloads/Medical%20Travel%20International.jpg");
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  background-image: url("https://public.readdy.ai/ai/img_res/aca82fdb2552f347a383c1f283945aa7.jpg");
 }
 .ddetails {
   grid-area: ddetails;
@@ -175,7 +171,7 @@ export default {
   color: black;
 }
 .shop {
-  grid-area: setting;
+  grid-area: shop;
   display: flex;
   align-items: flex-end;
 }
@@ -195,6 +191,7 @@ export default {
   /* background-color: firebrick; */
   grid-area: trans;
   display: flex;
+  height: 60px;
   /* justify-content: space-evenly; */
 }
 .trans a {
@@ -207,6 +204,8 @@ export default {
   text-transform: capitalize;
   cursor: pointer;
   padding: 10px;
+  color: rgb(121, 120, 120);
+
 }
 
 .trans .router-link-active {

@@ -2,7 +2,8 @@
     <nav class="navbar">
       <!-- اللوجو -->
       <div class="logo logo-portfolio">
-        <img src="@/assets/images/logo.svg" alt="Craftsman" />
+        <!-- <img src="@/assets/images/logo.svg" alt="Craftsman" /> -->
+         <span style="font-weight: bold; font-size: 19px;">Logo</span>
       </div>
   
       <!-- زر القائمة (يظهر فقط في الشاشات الصغيرة) -->
@@ -102,7 +103,7 @@
   }
   
   .request-catalog {
-    background-color: red;
+    background-color: #f57c00  ;
     color: white;
     border-radius: 20px;
     border: none;

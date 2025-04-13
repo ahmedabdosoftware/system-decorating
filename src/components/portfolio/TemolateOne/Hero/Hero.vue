@@ -5,12 +5,12 @@
         <v-col cols="12" md="6" class="hero-text">
           <h1 >Exquisite Décor, Perfect Details</h1>
           <p>We bring artistic touches that blend creativity with quality, using the finest materials like Viotech, wood alternatives, marble, and GRP. With precision and expertise, we turn your vision into a stunning </p>
-        <div class="action-container">
-          <v-btn class="catalog-btn">Catalog</v-btn>
-          <v-avatar size="50" class="avatar">
-            <img src="https://i.pravatar.cc/300" alt="User Avatar">
-          </v-avatar>
-        </div>
+          <div class="action-container">
+            <v-btn class="catalog-btn">Catalog</v-btn>
+            <v-avatar size="50" class="avatar">
+              <img src="https://i.pravatar.cc/300" alt="User Avatar">
+            </v-avatar>
+          </div>
         </v-col>
         <v-col cols="12" md="6" class="cont-imag-hero-res">
         </v-col>
@@ -22,7 +22,7 @@
   .hero-section {
     min-height: 80vh;
     width: 100%;
-    background: url('../../assets/portfolio/bci.png') no-repeat;
+    background: url('../../../../assets/portfolio/bci.png') no-repeat;
     background-size: cover;
     background-size: 100% 100% !important; 
     padding: 40px;
@@ -61,7 +61,7 @@
         padding: 10px 20px;
         font-size: 1rem;
         font-weight: bold;
-        background-color: red;
+        background-color: #f57c00 ;
         border: none;
         border-radius: 30px;
         color: white;
@@ -78,7 +78,7 @@
     // width: 100%;
     display: none;
     height: 300px;
-    background: url('../../assets/portfolio/bci.png') no-repeat;
+    background: url('../../../../assets/portfolio/bci.png') no-repeat;
     background-size: cover;
     background-size: 100% 100% !important; 
   }
