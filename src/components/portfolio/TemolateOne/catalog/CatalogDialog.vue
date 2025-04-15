@@ -21,7 +21,7 @@
                 class="filter-btn"
                 large
                 rounded
-                :color="selectedFilter === option.value ? 'primary' : 'grey lighten-1'"
+                :color="selectedFilter === option.value ? 'orange darken-2' : 'grey lighten-1'"
                 @click="selectedFilter = option.value"
                 >
                 {{ option.label }}
@@ -37,7 +37,7 @@
                     <v-text-field
                         v-if="selectedFilter !== 'category'"
                         v-model="filterText"
-                        label="Search"
+                        label="write here"
                         class="full-width-input search-input"
                         hide-details
                         solo
@@ -180,13 +180,15 @@
 }
 
 .search-input {
-  background-color: #f2f2f2;
+  /* background-color: #f2f2f2; */
   border-radius: 12px;
   padding-left: 12px;
+  font-size: 14px;
 }
 
 .catalog-item {
   transition: box-shadow 0.2s ease;
+  margin-top: 10px;
 }
 
 .catalog-item:hover {
@@ -195,10 +197,12 @@
 
 .filter-btn {
   font-size: 13px !important;
-  min-width: 100px !important;
-  background-color: #eee !important;
+  min-width: 110px !important;
+  /* background-color: #eee !important; */
   border-radius: 999px !important;
   text-transform: none !important;
+  margin-top: 10px;
+  color: white !important;
 }
 
 
