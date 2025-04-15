@@ -28,7 +28,7 @@
                     <span class="error">{{ errors[0] }}</span>
                   </ValidationProvider>
                 </div>
-                <div>
+                <div style="margin-left: 7px;">
                   <label for="date">Date</label>
                   <input id="date" type="date" v-model="form.date" required />
                 </div>
@@ -103,6 +103,17 @@
 import { useRandomTransactionsStore } from "@/store/transactions/randomTransactions.js";
 import { useGetUserStore } from "@/store/users/users.js";
 import { mapActions } from "pinia";
+
+import { extend } from "vee-validate";
+import { required } from "vee-validate/dist/rules";
+
+// Register rules with custom messages
+
+
+extend("required", {
+  ...required,
+  message: "{_field_} is Requered",
+});
 
 export default {
   name: "AddPayment",

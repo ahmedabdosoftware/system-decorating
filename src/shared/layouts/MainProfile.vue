@@ -15,9 +15,7 @@
       </div>
       <div class="shop">
         <button class="shop-btn">
-          <router-link to="/portfolio">
-               Show shop
-            </router-link>
+          <router-link to="/portfolio"> Show shop </router-link>
         </button>
       </div>
       <div class="ddetails">
@@ -205,7 +203,6 @@ export default {
   cursor: pointer;
   padding: 10px;
   color: rgb(121, 120, 120);
-
 }
 
 .trans .router-link-active {

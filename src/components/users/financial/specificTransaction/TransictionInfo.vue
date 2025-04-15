@@ -28,10 +28,13 @@
                     updateSelectedTypeValues('totalAmount', $event.target.value)
                   "
                   placeholder="Enter amount"
-                />
+                  :readonly="formData.orderLink.length > 0"
+                  :class="{ 'readonly-input': formData.orderLink.length > 0 }"
+
+                  />
                 <span class="error">{{ errors[0] }}</span>
               </ValidationProvider>
-              <font-awesome-icon icon="edit" class="icon" />
+              <font-awesome-icon  v-show="formData.orderLink.length == 0" icon="edit" class="icon" />
             </div>
           </div>
 
@@ -52,8 +55,11 @@
                   )
                 "
                 placeholder="Enter remaining value"
+                :readonly="formData.orderLink.length > 0"
+                :class="{ 'readonly-input': formData.orderLink.length > 0 }"
+
               />
-              <font-awesome-icon icon="edit" class="icon" />
+              <font-awesome-icon  v-show="formData.orderLink.length == 0" icon="edit" class="icon" />
             </div>
           </div>
 
@@ -66,8 +72,8 @@
               v-model="formData.selectedType"
               @change="emitFormDataUpdate"
             >
-              <option value="materials">Materials</option>
-              <option value="manufacturing">Manufacturing</option>
+              <option v-show="formData.orderLink.length == 0" value="materials">Materials</option>
+              <option v-show="formData.orderLink.length == 0" value="manufacturing">Manufacturing</option>
               <option value="both">Both</option>
             </select>
           </div>
@@ -91,16 +97,20 @@
           </div>
 
           <!-- Link to Order -->
+          <!-- Link to Order -->
           <div class="form-group">
-            <label for="orderLink" class="form-label">🔗 Link to Order</label>
-            <input
-              id="orderLink"
-              type="text"
-              v-model="formData.orderLink"
-              @input="emitFormDataUpdate"
-              class="form-input"
-              placeholder="Enter order number"
-            />
+            <label class="form-label">🔗 الفواتير المرتبطة</label>
+            <div class="invoice-list">
+              <div
+                class="invoice-item"
+                v-for="(orderId, index) in formData.orderLink"
+                :key="orderId"
+                @click="goToInvoice(orderId)"
+              >
+                <font-awesome-icon icon="file-invoice" class="icon" />
+                <span class="order-text">فاتورة رقم {{ index + 1 }}</span>
+              </div>
+            </div>
           </div>
 
           <!-- Date -->
@@ -216,6 +226,21 @@ export default {
     emitSaveEvent() {
       this.$emit("save");
     },
+    goToInvoice(id) {
+      console.log("enter go",id)
+      const section = 'Fatora'; 
+      const profileId = this.$route.params.profileId;
+      const layout = this.$route.meta.layout;
+      console.log("enter go layout",layout)
+
+    if (layout === "DashboardLayout") {
+      this.$router.push(`/dashboard/${section}/${id}/"true"`);
+    } else if (layout === "profileInDashboardLayout") {
+      this.$router.push(`/dashboard/profile/${profileId}/${section}/${id}/"true"`);
+    } else if (layout === "profileOutDashboardLayout") {
+      this.$router.push(`/profile/${profileId}/${section}/${id}/"true"`);
+    }
+  }
   },
   watch: {
     initialFormData: {
@@ -420,6 +445,43 @@ select {
   background-color: #0056b3;
   color: white;
 }
+.amount-input.readonly-input {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+  border-color: #ccc;
+  color: #888;
+}
+.invoice-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.invoice-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #f8f9fa;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.invoice-item:hover {
+  background-color: #e2e6ea;
+}
+
+.invoice-item .icon {
+  color: #007bff;
+}
+
+.order-text {
+  font-weight: 500;
+  color: #333;
+}
 
 @media (max-width: 477px) {
   .financial-transaction-container {
@@ -453,4 +515,6 @@ select {
     font-size: 16px;
   }
 }
+
+
 </style>

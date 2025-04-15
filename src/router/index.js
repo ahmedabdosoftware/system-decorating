@@ -459,6 +459,11 @@ const routes = [
             path: "EditTransaction/:transactionId",
             name: "EditTransaction",
             component: EditFinancial,
+            meta: {
+              requiresAuth: true,
+              roles: ["admin"],
+              layout: "profileInDashboardLayout",
+            },
           },
 
           //old

@@ -92,36 +92,55 @@
       <!-- @input="updatemanualLaborCost" -->
     </div>
     <div v-if="shouldShowOptions" class="choose-option-autoSaveTransaction">
-      <div v-if="showOnePlace"  class="choose-option autoSaveTransaction" :class="{ 'edit-mode': isEditPage }" >
+      <div
+        v-if="showOnePlace"
+        class="choose-option autoSaveTransaction"
+        :class="{ 'edit-mode': isEditPage }"
+      >
         <div class="choose-text">
           <font-awesome-icon icon="file-invoice" class="icon" />
           <span> One <span class="hideResponsive">Place</span></span>
         </div>
-        <select v-if="isCreatePage"  v-model="selectedOptionOnePlace" class="selectOnePlace">
+        <select
+          v-if="isCreatePage"
+          v-model="selectedOptionOnePlace"
+          class="selectOnePlace"
+        >
           <option value="newTransaction">New</option>
-          <option v-for="item in specificUserTransactions" :key="item.id" :value="item">
-            {{ item.location || item.date }}
+          <option
+            v-for="item in specificUserTransactions"
+            :key="item.id"
+            :value="item"
+          >
+            {{ item.location || item.date | formatDate }}
           </option>
         </select>
-        <span 
-        v-else 
-        class="edit-mode"
-      >
-        ---
-      </span>
+        <span v-else class="edit-mode"> --- </span>
         <label v-if="!isEditPage" class="check-button check-button--autoSave">
           <!-- <span>---</span> -->
-          <input value="OnePlace" type="radio" v-model="autoSaveTransactionType" />
+          <input
+            value="OnePlace"
+            type="radio"
+            v-model="autoSaveTransactionType"
+          />
         </label>
       </div>
-      <div v-if="showMoreThanPlace" class="choose-option autoSaveTransaction" :class="{ 'edit-mode': isEditPage }">
+      <div
+        v-if="showMoreThanPlace"
+        class="choose-option autoSaveTransaction"
+        :class="{ 'edit-mode': isEditPage }"
+      >
         <div class="choose-text">
           <font-awesome-icon icon="file-invoice" class="icon" />
           <span> More <span class="hideResponsive">Than Place</span></span>
         </div>
         <label v-if="!isEditPage" class="check-button check-button--autoSave">
           <!-- <span>---</span> -->
-          <input  value="MoreThan" type="radio" v-model="autoSaveTransactionType" />
+          <input
+            value="MoreThan"
+            type="radio"
+            v-model="autoSaveTransactionType"
+          />
         </label>
       </div>
     </div>
@@ -142,9 +161,9 @@
 <script>
 import { mapState, mapActions } from "pinia";
 
-  //store
-  import { useTransactionsStore } from "@/store/transactions/transactions.js";
-  // import { useUserStore } from "@/store/auth/auth.js";
+//store
+import { useTransactionsStore } from "@/store/transactions/transactions.js";
+// import { useUserStore } from "@/store/auth/auth.js";
 
 export default {
   name: "OrderDetailsComponent",
@@ -191,7 +210,6 @@ export default {
     showAutoSaveTransactionType: {
       default: null,
     },
-    
   },
   data() {
     return {
@@ -276,11 +294,10 @@ export default {
       this.emitDetails();
     },
     async customerInfo() {
-        console.log("customerInfo", this.customerInfo);
-        await this.fetchSpecificTransactionByUserId(this.customerInfo.id);
-        console.log("userTransactions", this.specificUserTransactions)
-
-      },
+      console.log("customerInfo", this.customerInfo);
+      await this.fetchSpecificTransactionByUserId(this.customerInfo.id);
+      console.log("userTransactions", this.specificUserTransactions);
+    },
   },
   methods: {
     ...mapActions(useTransactionsStore, ["fetchSpecificTransactionByUserId"]),
@@ -307,39 +324,48 @@ export default {
         selectedOptionOnePlace: this.selectedOptionOnePlace,
       };
       this.$emit("details-updated", details);
-      console.log("showAutoSaveTransactionType",this.showAutoSaveTransactionType)
+      console.log(
+        "showAutoSaveTransactionType",
+        this.showAutoSaveTransactionType
+      );
     },
   },
   computed: {
-      ...mapState(useTransactionsStore, ["specificUserTransactions"]),
+    ...mapState(useTransactionsStore, ["specificUserTransactions"]),
 
     isCreatePage() {
-      return this.$route.name === "AddNewOrder"; 
+      return this.$route.name === "AddNewOrder";
     },
 
     isEditPage() {
-      return this.$route.name === "EditOrderNewDesign"; 
+      return this.$route.name === "EditOrderNewDesign";
     },
     shouldShowOptions() {
-      console.log("shouldShowOptions",this.$route.name, this.showAutoSaveTransactionType)
+      console.log(
+        "shouldShowOptions",
+        this.$route.name,
+        this.showAutoSaveTransactionType
+      );
       // show with create page
       if (this.isCreatePage) return true;
       // Edit page but if there is transaction Type
       return this.isEditPage && this.showAutoSaveTransactionType;
     },
-    
+
     showMoreThanPlace() {
-      return this.isCreatePage || (this.isEditPage && this.showAutoSaveTransactionType === "MoreThan");
+      return (
+        this.isCreatePage ||
+        (this.isEditPage && this.showAutoSaveTransactionType === "MoreThan")
+      );
     },
 
     showOnePlace() {
-      return this.isCreatePage || (this.isEditPage && this.showAutoSaveTransactionType === "OnePlace");
+      return (
+        this.isCreatePage ||
+        (this.isEditPage && this.showAutoSaveTransactionType === "OnePlace")
+      );
     },
-    },
-
-   
-
-  
+  },
 };
 </script>
 
@@ -481,10 +507,14 @@ export default {
 .edit-mode {
   background-color: #f3f3f3;
   padding: 5px 10px;
-  margin-left:5px;
+  margin-left: 5px;
   border-radius: 5px;
   font-weight: bold;
   color: #777;
+}
+.choose-option-autoSaveTransaction >div{
+  max-width: 50%;
+  overflow-x: hidden;
 }
 @media (max-width: 477px) {
   .order-details-container {

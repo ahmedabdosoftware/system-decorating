@@ -1,7 +1,7 @@
 <template>
   <div class="payment-item">
     <!-- date -->
-    <div class="payment-date">{{ data.date }}</div>
+    <div class="payment-date">{{ data.date | formatDate }}</div>
 
     <!-- amount -->
     <div class="payment-amount">

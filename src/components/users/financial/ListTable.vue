@@ -16,8 +16,8 @@
             v-for="(transaction, index) in transactionsWithCalculatedTotal"
             :key="transaction.id"
           >
-            <td>{{ transaction.date }}</td>
-            <td>{{ transaction.location }}</td>
+            <td>{{ transaction.date | formatDate }}</td>
+            <td>{{ transaction.location || "---"}}</td>
             <td>{{ transaction.totalAmount }}</td>
             <td>{{ transaction.status }}</td>
             <td class="actions">

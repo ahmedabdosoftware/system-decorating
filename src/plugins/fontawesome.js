@@ -124,7 +124,7 @@ library.add(
   faQuestionCircle,
   faWallet,
   faPlus,
-  faTimes,
+  faTimes
 );
 
 export default FontAwesomeIcon;

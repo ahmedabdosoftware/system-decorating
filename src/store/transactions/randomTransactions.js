@@ -158,14 +158,15 @@ export const useRandomTransactionsStore = defineStore("randomTransactions", {
         throw new Error("هذه الفانكشن تدعم فقط إضافة المعاملات");
       }
 
-      const docRef = await db.collection("AddRandomTransaction").add(transaction);
+      const docRef = await db
+        .collection("AddRandomTransaction")
+        .add(transaction);
       transaction.id = docRef.id;
 
       return transaction.id;
     },
 
-
-      // fetch Transactions By Profile
+    // fetch Transactions By Profile
     async fetchTransactionsByProfile(profileId) {
       try {
         // جلب معاملات Add
@@ -320,6 +321,17 @@ export const useRandomTransactionsStore = defineStore("randomTransactions", {
         console.log(`تم حذف المعاملة ${id}`);
       } catch (error) {
         console.error("خطأ أثناء حذف المعاملة:", error);
+      }
+    },
+
+    async justUpdateAutoTransaction(id, amount) {
+      try {
+        await db.collection("AddRandomTransaction").doc(id).update({
+          amount: amount,
+        });
+        console.log(`تم تعديل المعاملة ${id}`);
+      } catch (error) {
+        console.error("خطأ أثناء تعديل المعاملة:", error);
       }
     },
 

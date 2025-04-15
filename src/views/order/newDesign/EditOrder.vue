@@ -125,9 +125,17 @@ import FormActions from "@/components/orders/shared/FormActions.vue";
 //stores
 import { useOrdersStore } from "@/store/order/orders.js";
 import { useBranchesStore } from "@/store/branches/branches.js";
+import { useRandomTransactionsStore } from "@/store/transactions/randomTransactions.js";
+import { useTransactionsStore } from "@/store/transactions/transactions.js";
 
 // sweetalert
 import sweetalert from "sweetalert";
+
+// Helpers
+import {
+  calculateGrandTotal,
+  calculateTotalInstallation,
+} from "@/helpers/orderCalculations";
 
 export default {
   name: "EditOrder",
@@ -184,6 +192,7 @@ export default {
       // Auto Save Transaction clinte
       autoSaveTransactionType: "",
       autoSaveTransactionId: "",
+      transactionData: "",
     };
   },
 
@@ -212,9 +221,24 @@ export default {
       "deleteImageFromStorage",
       "generateOrderNumber",
     ]),
+    ...mapActions(useTransactionsStore, [
+    
+      "fetchSpecificTransactionById",
+      "updateSpecificTransaction",
+    ]),
     ...mapActions(useBranchesStore, ["fetchBranches", "updateBranch"]),
 
+    ...mapActions(useRandomTransactionsStore, ["justUpdateAutoTransaction"]),
+
     // ============ my actions => end ==============================================
+
+    // calculate Total Cost
+    calculateTotalCost(orderInfo) {
+      return (
+        Number(calculateGrandTotal(orderInfo, "true")) +
+        Number(calculateTotalInstallation(orderInfo, "true"))
+      );
+    },
 
     handleCustomerUpdate({ customerId, customerInfo, selectedCustomer }) {
       this.customerId = customerId;
@@ -314,11 +338,10 @@ export default {
         this.displayTowInvoice = order.displayTowInvoice || false;
         this.displayInstallation = order.displayInstallation || false;
         this.fixedInstallation = order.fixedInstallation || 0;
-       
-        this.autoSaveTransactionType = order.transactionInfo.type || "";
-        this.autoSaveTransaction = order.transactionInfo.transactionId || "" ;
-      
 
+        this.autoSaveTransactionType = order.transactionInfo.type || "";
+        this.autoSaveTransaction = order.transactionInfo.transactionId || "";
+        this.transactionData = order.transactionInfo || "";
       }
     },
     goBack() {
@@ -494,30 +517,97 @@ export default {
       }
     },
 
+    // handle Transaction Update
+    async handleTransactionUpdate(updatedOrderData) {
 
+      if (!this.transactionData) {
+        console.log("NO Transaction Data")
+        return null;
+      }
+      const { lastAmount, transactionId, type } = this.transactionData;
+      console.log("last amount ", lastAmount);
+      if (type === "MoreThan") {
+        console.log("enter MoreThan with transactionId", transactionId);
 
-// handle Transaction Update
-    // async handleTransactionUpdate() {
-    //   const { transactionType, lastAmount, transactionId, remainingValue } = this.transactionData;
-    //   let newAmount = this.calculateTotalPrice();
-      
-    //   // تحديث قيمة الباقي بناءً على الفرق بين السعر القديم والجديد
-    //   let updatedRemainingValue = remainingValue - lastAmount + newAmount;
+        await this.justUpdateAutoTransaction(
+          transactionId,
+          this.calculateTotalCost(updatedOrderData).toFixed(2)
+        );
+        console.log("after MoreThan with transactionId", transactionId);
 
-    //   console.log(`📌 تعديل المعاملة ${transactionType}, المبلغ السابق: ${lastAmount}, المبلغ الجديد: ${newAmount}, الباقي الجديد: ${updatedRemainingValue}`);
+        return {
+          type: "MoreThan",
+          transactionId,
+          lastAmount: this.calculateTotalCost(updatedOrderData).toFixed(2),
+        };
+      } else if (type === "OnePlace") {
+       
+          // Fetch Existing Transaction ID
+          if (!transactionId) return null;
 
-    //   if (transactionType === "MoreThan") {
-    //     // await this.updateMoreThanTransaction({ transactionId, lastAmount, newAmount, updatedRemainingValue });
-    //   } else if (transactionType === "OnePlace") {
-    //     // await this.updateOnePlaceTransaction({ transactionId, lastAmount, newAmount, updatedRemainingValue });
-    //   }
-    // },
-    // calculateTotalPrice() {
-    //   return this.addedOrders.reduce(
-    //     (total, product) => total + parseFloat(product.price_offer) * parseInt(product.quantity),
-    //     0
-    //   );
-    // },
+          console.log("Fetching existing OnePlace transaction:", transactionId);
+          const existingTransaction = await this.fetchSpecificTransactionById(
+            transactionId
+          );
+
+          if (!existingTransaction) {
+            console.error("Transaction not found!");
+            return null;
+          }
+
+          // Update Total
+          existingTransaction.typesData.forEach((typeData) => {
+            typeData.totalAmount -=Number(lastAmount) ;
+          });
+          
+          existingTransaction.typesData.forEach((typeData) => {
+            typeData.totalAmount += this.calculateTotalCost(updatedOrderData);
+          });
+         
+
+          // ReCalc`remainingValue`
+          this.calculateRemainingValue(
+            existingTransaction.typesData,
+            existingTransaction.payments
+          );
+
+          console.log(
+            "Updating existing OnePlace transaction:",
+            existingTransaction
+          );
+          await this.updateSpecificTransaction({
+            ...existingTransaction,
+            userId: this.customerId,
+            id: transactionId,
+          });
+
+          return {
+            type: "OnePlace",
+            transactionId,
+            lastAmount: this.calculateTotalCost(updatedOrderData).toFixed(2),
+          };
+        }
+
+  
+    },
+    calculateRemainingValue(typesData, payments) {
+      //  `remainingValue`
+      typesData.forEach((typeData) => {
+        typeData.remainingValue = typeData.totalAmount;
+      });
+
+      // Cut Payments`remainingValue`
+      payments.forEach((payment) => {
+        const typeData = typesData.find(
+          (type) => type.type === payment.paymentType
+        );
+        if (typeData) {
+          typeData.remainingValue -= parseFloat(payment.amount || 0);
+        }
+      });
+
+      console.log("Updated Types Data with Remaining Values:", typesData);
+    },
 
 
 
@@ -591,6 +681,18 @@ export default {
         console.log("before send");
 
         await this.updateOrder(updatedOrderData);
+
+        // 🔴**Update AutoSave Transction**
+        const transactionData = await this.handleTransactionUpdate(
+          updatedOrderData
+        );
+        if (transactionData) {
+          console.log("transactionData", transactionData);
+          await this.updateOrder({
+            ...updatedOrderData,
+            transactionInfo: transactionData,
+          });
+        }
 
         console.log("after send");
         this.isLoading = false;

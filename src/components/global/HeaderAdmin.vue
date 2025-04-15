@@ -1,5 +1,8 @@
 <template>
-  <header class="header-app" :class="[{ scrolled: isScrolled, 'dark-mode-header': getDarkMode }]">
+  <header
+    class="header-app"
+    :class="[{ scrolled: isScrolled, 'dark-mode-header': getDarkMode }]"
+  >
     <div :class="{ 'dark-mode': getDarkMode }">
       <div class="cont-threeLines">
         <img

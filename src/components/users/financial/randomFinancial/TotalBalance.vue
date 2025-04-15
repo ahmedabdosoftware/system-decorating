@@ -4,9 +4,7 @@
     <div class="random__title">
       <div class="random__title__text">
         <p v-if="userInfo">
-          {{
-            userInfo.role == "technical" ? "workers's" : "clint's"
-          }}
+          {{ userInfo.role == "technical" ? "workers's" : "clint's" }}
           accounting
           <span>{{
             userInfo.role == "technical" ? "Transiction" : "More Than Place"

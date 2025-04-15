@@ -126,10 +126,11 @@ import { useTransactionsStore } from "@/store/transactions/transactions.js";
 // sweetalert
 import sweetalert from "sweetalert";
 
-
-// Helpers 
-import { calculateGrandTotal, calculateTotalInstallation } from "@/helpers/orderCalculations";
-
+// Helpers
+import {
+  calculateGrandTotal,
+  calculateTotalInstallation,
+} from "@/helpers/orderCalculations";
 
 export default {
   name: "AddNewOrder",
@@ -183,7 +184,6 @@ export default {
       displayInstallation: false,
       fixedInstallation: 0,
 
-
       // Auto Save Transaction clinte
       autoSaveTransactionType: "MoreThan",
       selectedOptionOnePlace: "",
@@ -197,7 +197,6 @@ export default {
       return this.$store.state.darkMode;
     },
     ...mapState(useBranchesStore, ["branches"]),
-    
   },
 
   methods: {
@@ -219,8 +218,10 @@ export default {
     ...mapActions(useBranchesStore, ["fetchBranches", "updateBranch"]),
     ...mapActions(useRandomTransactionsStore, ["autoSaveTransactionOrder"]),
     calculateTotalCost(orderInfo) {
-      return Number(calculateGrandTotal(orderInfo,"true")) + 
-           Number(calculateTotalInstallation(orderInfo,"true"));
+      return (
+        Number(calculateGrandTotal(orderInfo, "true")) +
+        Number(calculateTotalInstallation(orderInfo, "true"))
+      );
     },
     // ============ my actions => end ==============================================
 
@@ -288,7 +289,7 @@ export default {
       this.displayInstallation = details.displayInstallation;
       this.fixedInstallation = details.fixedInstallation;
       this.autoSaveTransactionType = details.autoSaveTransactionType;
-      this.selectedOptionOnePlace = details.selectedOptionOnePlace
+      this.selectedOptionOnePlace = details.selectedOptionOnePlace;
       console.log(details);
     },
 
@@ -347,8 +348,8 @@ export default {
     },
 
     // auto Save Transaction
-    async autoTransaction(orderId,orderInfo) {
-      console.log("enter auto transaction", orderId)
+    async autoTransaction(orderId, orderInfo) {
+      console.log("enter auto transaction", orderId);
 
       //Check clinte selected First
       if (!this.customerId) {
@@ -356,9 +357,9 @@ export default {
       }
       if (this.autoSaveTransactionType === "MoreThan") {
         const transaction = {
-          userId: this.customerId, // 
-          role: this.customerInfo.role || "", 
-          amount: this.calculateTotalCost(orderInfo).toFixed(2), 
+          userId: this.customerId, //
+          role: this.customerInfo.role || "",
+          amount: this.calculateTotalCost(orderInfo).toFixed(2),
           date: new Date().toISOString(),
           notes: ``,
           orderId: orderId,
@@ -366,11 +367,21 @@ export default {
           category: "orderRandom",
         };
 
-      console.log("before auto transaction",this.calculateTotalCost(orderInfo).toFixed(2))
-      const transactionId = await this.autoSaveTransactionOrder(transaction, this.customerId);
-      console.log("after auto transaction")
-        return { type: "MoreThan", transactionId, lastAmount: this.calculateTotalCost(orderInfo).toFixed(2) };
-      } 
+        console.log(
+          "before auto transaction",
+          this.calculateTotalCost(orderInfo).toFixed(2)
+        );
+        const transactionId = await this.autoSaveTransactionOrder(
+          transaction,
+          this.customerId
+        );
+        console.log("after auto transaction");
+        return {
+          type: "MoreThan",
+          transactionId,
+          lastAmount: this.calculateTotalCost(orderInfo).toFixed(2),
+        };
+      }
       if (this.autoSaveTransactionType === "OnePlace") {
         if (this.selectedOptionOnePlace === "newTransaction") {
           // Case : New Transaction
@@ -385,7 +396,11 @@ export default {
             typesData: [
               { type: "materials", totalAmount: 0, remainingValue: 0 },
               { type: "manufacturing", totalAmount: 0, remainingValue: 0 },
-              { type: "both", totalAmount: this.calculateTotalCost(orderInfo), remainingValue: this.calculateTotalCost(orderInfo) },
+              {
+                type: "both",
+                totalAmount: this.calculateTotalCost(orderInfo),
+                remainingValue: this.calculateTotalCost(orderInfo),
+              },
             ],
             payments: [],
           };
@@ -394,52 +409,66 @@ export default {
           // this.calculateRemainingValue(newTransaction.typesData, newTransaction.payments);
 
           console.log("Creating new OnePlace transaction:", newTransaction);
-          const transactionId = await this.addSpecificTransaction(newTransaction);
-          return { type: "OnePlace", transactionId, lastAmount: this.calculateTotalCost(orderInfo).toFixed(2) };
-
+          const transactionId = await this.addSpecificTransaction(
+            newTransaction
+          );
+          return {
+            type: "OnePlace",
+            transactionId,
+            lastAmount: this.calculateTotalCost(orderInfo).toFixed(2),
+          };
         } else {
-
           // Fetch Existing Transaction ID
           const transactionId = this.selectedOptionOnePlace.id;
           if (!transactionId) return null;
 
           console.log("Fetching existing OnePlace transaction:", transactionId);
-          const existingTransaction = await this.fetchSpecificTransactionById(transactionId);
-          
+          const existingTransaction = await this.fetchSpecificTransactionById(
+            transactionId
+          );
+
           if (!existingTransaction) {
             console.error("Transaction not found!");
             return null;
           }
 
           // Update Total
-          existingTransaction.typesData.forEach(typeData => {
+          existingTransaction.typesData.forEach((typeData) => {
             typeData.totalAmount += this.calculateTotalCost(orderInfo);
           });
 
           if (Array.isArray(existingTransaction.orderLink)) {
-           existingTransaction.orderLink.push(orderId);
+            existingTransaction.orderLink.push(orderId);
           }
-           //  else {
+          //  else {
           //   existingTransaction.orderLink = [existingTransaction.orderLink, orderId].filter(Boolean);
-         // }
+          // }
 
           // ReCalc`remainingValue`
-          this.calculateRemainingValue(existingTransaction.typesData, existingTransaction.payments);
+          this.calculateRemainingValue(
+            existingTransaction.typesData,
+            existingTransaction.payments
+          );
 
-          console.log("Updating existing OnePlace transaction:", existingTransaction);
+          console.log(
+            "Updating existing OnePlace transaction:",
+            existingTransaction
+          );
           await this.updateSpecificTransaction({
             ...existingTransaction,
             userId: this.customerId,
             id: transactionId,
           });
 
-          return { type: "OnePlace", transactionId , lastAmount: this.calculateTotalCost(orderInfo).toFixed(2)};
+          return {
+            type: "OnePlace",
+            transactionId,
+            lastAmount: this.calculateTotalCost(orderInfo).toFixed(2),
+          };
         }
       }
 
       return null;
-
-
     },
     calculateRemainingValue(typesData, payments) {
       //  `remainingValue`
@@ -449,7 +478,9 @@ export default {
 
       // Cut Payments`remainingValue`
       payments.forEach((payment) => {
-        const typeData = typesData.find((type) => type.type === payment.paymentType);
+        const typeData = typesData.find(
+          (type) => type.type === payment.paymentType
+        );
         if (typeData) {
           typeData.remainingValue -= parseFloat(payment.amount || 0);
         }
@@ -525,11 +556,15 @@ export default {
         const orderId = await this.addOrder(newOrder);
 
         // 🔴**AutoSave Transction**
-        const transactionData =  await this.autoTransaction(orderId,newOrder);       
-          if (transactionData) {
-            console.log("transactionData", transactionData)
-            await this.updateOrder({ ...newOrder, id: orderId,transactionInfo: transactionData });
-          }
+        const transactionData = await this.autoTransaction(orderId, newOrder);
+        if (transactionData) {
+          console.log("transactionData", transactionData);
+          await this.updateOrder({
+            ...newOrder,
+            id: orderId,
+            transactionInfo: transactionData,
+          });
+        }
 
         console.log("after send");
         this.isLoading = false;

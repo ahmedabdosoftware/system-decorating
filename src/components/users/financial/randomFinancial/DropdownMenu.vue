@@ -7,11 +7,15 @@
           <span>تعديل</span>
           <font-awesome-icon class="icon" :icon="['fas', 'edit']" />
         </a> -->
-        <!-- فاتوره -->
-      <a v-if="transaction.orderId" href="#" @click.prevent="generateRoute('Fatora', transaction.orderId)">
-          <span>فاتوره</span>
-          <font-awesome-icon class="icon" :icon="['fas', 'file-invoice']" />
-        </a>
+      <!-- فاتوره -->
+      <a
+        v-if="transaction.orderId"
+        href="#"
+        @click.prevent="generateRoute('Fatora', transaction.orderId)"
+      >
+        <span>فاتوره</span>
+        <font-awesome-icon class="icon" :icon="['fas', 'file-invoice']" />
+      </a>
       <!-- حذف -->
       <a href="#" @click.prevent="deleteSingleTransaction()">
         <span>حذف</span>
@@ -85,13 +89,14 @@ export default {
       );
     },
 
-
     generateRoute(section, id) {
       const profileId = this.$route.params.profileId;
       const layout = this.$route.meta.layout;
 
       if (layout === "profileInDashboardLayout") {
-        this.$router.push(`/dashboard/profile/${profileId}/${section}/${id}/"true"`);
+        this.$router.push(
+          `/dashboard/profile/${profileId}/${section}/${id}/"true"`
+        );
       } else if (layout === "profileOutDashboardLayout") {
         this.$router.push(`/profile/${profileId}/${section}/${id}`);
       }
