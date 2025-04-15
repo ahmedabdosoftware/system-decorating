@@ -1,18 +1,16 @@
 <!-- MainPage.vue -->
 <template>
-  
   <v-app>
-  <div class="portfolio-view">
-    <HeaderComponent />
-    <HeroSection />
-    <Services />
-    <PortfolioContainer />
-    <Baner />
-    <InspectionReques />
-    <Footer />
-  </div>
+    <div class="portfolio-view">
+      <HeaderComponent />
+      <HeroSection />
+      <Services />
+      <PortfolioContainer />
+      <Baner />
+      <InspectionReques />
+      <Footer />
+    </div>
   </v-app>
-
 </template>
 
 <script>

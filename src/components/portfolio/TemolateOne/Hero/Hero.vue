@@ -10,16 +10,32 @@
           With precision and expertise, we turn your vision into a stunning
         </p>
         <div class="action-container">
-          <v-btn class="catalog-btn">Catalog</v-btn>
+          <v-btn @click="dialog = true" class="catalog-btn">Catalog</v-btn>
           <v-avatar size="50" class="avatar">
             <img src="https://i.pravatar.cc/300" alt="User Avatar" />
           </v-avatar>
         </div>
+        <Catalog-dialog :visible="dialog" @close="dialog = false" />
       </v-col>
       <v-col cols="12" md="6" class="cont-imag-hero-res"> </v-col>
     </v-row>
   </v-container>
 </template>
+<script>
+import CatalogDialog from "@/components/portfolio/TemolateOne/catalog/CatalogDialog.vue";
+
+export default {
+  props: {},
+  components: {
+    CatalogDialog,
+  },
+  data() {
+    return {
+      dialog: false,
+    };
+  },
+};
+</script>
 
 <style scoped lang="scss">
 .hero-section {

@@ -222,7 +222,6 @@ export default {
       "generateOrderNumber",
     ]),
     ...mapActions(useTransactionsStore, [
-    
       "fetchSpecificTransactionById",
       "updateSpecificTransaction",
     ]),
@@ -519,9 +518,8 @@ export default {
 
     // handle Transaction Update
     async handleTransactionUpdate(updatedOrderData) {
-
       if (!this.transactionData) {
-        console.log("NO Transaction Data")
+        console.log("NO Transaction Data");
         return null;
       }
       const { lastAmount, transactionId, type } = this.transactionData;
@@ -541,54 +539,50 @@ export default {
           lastAmount: this.calculateTotalCost(updatedOrderData).toFixed(2),
         };
       } else if (type === "OnePlace") {
-       
-          // Fetch Existing Transaction ID
-          if (!transactionId) return null;
+        // Fetch Existing Transaction ID
+        if (!transactionId) return null;
 
-          console.log("Fetching existing OnePlace transaction:", transactionId);
-          const existingTransaction = await this.fetchSpecificTransactionById(
-            transactionId
-          );
+        console.log("Fetching existing OnePlace transaction:", transactionId);
+        const existingTransaction = await this.fetchSpecificTransactionById(
+          transactionId
+        );
 
-          if (!existingTransaction) {
-            console.error("Transaction not found!");
-            return null;
-          }
-
-          // Update Total
-          existingTransaction.typesData.forEach((typeData) => {
-            typeData.totalAmount -=Number(lastAmount) ;
-          });
-          
-          existingTransaction.typesData.forEach((typeData) => {
-            typeData.totalAmount += this.calculateTotalCost(updatedOrderData);
-          });
-         
-
-          // ReCalc`remainingValue`
-          this.calculateRemainingValue(
-            existingTransaction.typesData,
-            existingTransaction.payments
-          );
-
-          console.log(
-            "Updating existing OnePlace transaction:",
-            existingTransaction
-          );
-          await this.updateSpecificTransaction({
-            ...existingTransaction,
-            userId: this.customerId,
-            id: transactionId,
-          });
-
-          return {
-            type: "OnePlace",
-            transactionId,
-            lastAmount: this.calculateTotalCost(updatedOrderData).toFixed(2),
-          };
+        if (!existingTransaction) {
+          console.error("Transaction not found!");
+          return null;
         }
 
-  
+        // Update Total
+        existingTransaction.typesData.forEach((typeData) => {
+          typeData.totalAmount -= Number(lastAmount);
+        });
+
+        existingTransaction.typesData.forEach((typeData) => {
+          typeData.totalAmount += this.calculateTotalCost(updatedOrderData);
+        });
+
+        // ReCalc`remainingValue`
+        this.calculateRemainingValue(
+          existingTransaction.typesData,
+          existingTransaction.payments
+        );
+
+        console.log(
+          "Updating existing OnePlace transaction:",
+          existingTransaction
+        );
+        await this.updateSpecificTransaction({
+          ...existingTransaction,
+          userId: this.customerId,
+          id: transactionId,
+        });
+
+        return {
+          type: "OnePlace",
+          transactionId,
+          lastAmount: this.calculateTotalCost(updatedOrderData).toFixed(2),
+        };
+      }
     },
     calculateRemainingValue(typesData, payments) {
       //  `remainingValue`
@@ -608,8 +602,6 @@ export default {
 
       console.log("Updated Types Data with Remaining Values:", typesData);
     },
-
-
 
     // ============ update the oredr => start =====================================
 

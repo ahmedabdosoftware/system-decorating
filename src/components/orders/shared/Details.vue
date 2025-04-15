@@ -512,7 +512,7 @@ export default {
   font-weight: bold;
   color: #777;
 }
-.choose-option-autoSaveTransaction >div{
+.choose-option-autoSaveTransaction > div {
   max-width: 50%;
   overflow-x: hidden;
 }

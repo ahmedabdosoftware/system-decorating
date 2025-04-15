@@ -30,11 +30,14 @@
                   placeholder="Enter amount"
                   :readonly="formData.orderLink.length > 0"
                   :class="{ 'readonly-input': formData.orderLink.length > 0 }"
-
-                  />
+                />
                 <span class="error">{{ errors[0] }}</span>
               </ValidationProvider>
-              <font-awesome-icon  v-show="formData.orderLink.length == 0" icon="edit" class="icon" />
+              <font-awesome-icon
+                v-show="formData.orderLink.length == 0"
+                icon="edit"
+                class="icon"
+              />
             </div>
           </div>
 
@@ -57,9 +60,12 @@
                 placeholder="Enter remaining value"
                 :readonly="formData.orderLink.length > 0"
                 :class="{ 'readonly-input': formData.orderLink.length > 0 }"
-
               />
-              <font-awesome-icon  v-show="formData.orderLink.length == 0" icon="edit" class="icon" />
+              <font-awesome-icon
+                v-show="formData.orderLink.length == 0"
+                icon="edit"
+                class="icon"
+              />
             </div>
           </div>
 
@@ -72,8 +78,15 @@
               v-model="formData.selectedType"
               @change="emitFormDataUpdate"
             >
-              <option v-show="formData.orderLink.length == 0" value="materials">Materials</option>
-              <option v-show="formData.orderLink.length == 0" value="manufacturing">Manufacturing</option>
+              <option v-show="formData.orderLink.length == 0" value="materials">
+                Materials
+              </option>
+              <option
+                v-show="formData.orderLink.length == 0"
+                value="manufacturing"
+              >
+                Manufacturing
+              </option>
               <option value="both">Both</option>
             </select>
           </div>
@@ -227,20 +240,22 @@ export default {
       this.$emit("save");
     },
     goToInvoice(id) {
-      console.log("enter go",id)
-      const section = 'Fatora'; 
+      console.log("enter go", id);
+      const section = "Fatora";
       const profileId = this.$route.params.profileId;
       const layout = this.$route.meta.layout;
-      console.log("enter go layout",layout)
+      console.log("enter go layout", layout);
 
-    if (layout === "DashboardLayout") {
-      this.$router.push(`/dashboard/${section}/${id}/"true"`);
-    } else if (layout === "profileInDashboardLayout") {
-      this.$router.push(`/dashboard/profile/${profileId}/${section}/${id}/"true"`);
-    } else if (layout === "profileOutDashboardLayout") {
-      this.$router.push(`/profile/${profileId}/${section}/${id}/"true"`);
-    }
-  }
+      if (layout === "DashboardLayout") {
+        this.$router.push(`/dashboard/${section}/${id}/"true"`);
+      } else if (layout === "profileInDashboardLayout") {
+        this.$router.push(
+          `/dashboard/profile/${profileId}/${section}/${id}/"true"`
+        );
+      } else if (layout === "profileOutDashboardLayout") {
+        this.$router.push(`/profile/${profileId}/${section}/${id}/"true"`);
+      }
+    },
   },
   watch: {
     initialFormData: {
@@ -515,6 +530,4 @@ select {
     font-size: 16px;
   }
 }
-
-
 </style>

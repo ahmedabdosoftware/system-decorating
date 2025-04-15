@@ -17,7 +17,7 @@
             :key="transaction.id"
           >
             <td>{{ transaction.date | formatDate }}</td>
-            <td>{{ transaction.location || "---"}}</td>
+            <td>{{ transaction.location || "---" }}</td>
             <td>{{ transaction.totalAmount }}</td>
             <td>{{ transaction.status }}</td>
             <td class="actions">

@@ -28,7 +28,7 @@
                     <span class="error">{{ errors[0] }}</span>
                   </ValidationProvider>
                 </div>
-                <div style="margin-left: 7px;">
+                <div style="margin-left: 7px">
                   <label for="date">Date</label>
                   <input id="date" type="date" v-model="form.date" required />
                 </div>
@@ -108,7 +108,6 @@ import { extend } from "vee-validate";
 import { required } from "vee-validate/dist/rules";
 
 // Register rules with custom messages
-
 
 extend("required", {
   ...required,
