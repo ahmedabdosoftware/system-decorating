@@ -19,7 +19,7 @@
     <!-- الأزرار -->
     <div class="buttons-catalog">
       <button class="request-catalog">Catalog</button>
-      <button class="add-button">
+      <button @click="dialog = true" class="add-button">
         <font-awesome-icon :icon="['fas', 'plus']" />
       </button>
       <v-avatar size="50" class="avatar">
@@ -48,16 +48,25 @@
 
     <!-- الـ Overlay عند فتح السايدبار -->
     <div class="overlay" v-if="isSidebarOpen" @click="toggleSidebar"></div>
+    <dashboard-tem :visible="dialog" @close="dialog = false" />
+
   </nav>
 </template>
 
 <script>
+import dashboardTem from "@/components/portfolio/TemolateOne/dashboard/dashboardTem.vue";
+
 export default {
   data() {
     return {
       links: ["Moonst", "Cuotioos", "Faltcos", "Bolps", "Doctiors"],
       isSidebarOpen: false,
+      dialog: false,
+
     };
+  },
+  components: {
+    dashboardTem,
   },
   methods: {
     toggleSidebar() {
