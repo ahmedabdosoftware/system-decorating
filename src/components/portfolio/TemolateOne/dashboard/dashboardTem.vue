@@ -58,6 +58,7 @@
   
   <script>
   import HandelCatalog from "@/components/portfolio/TemolateOne/dashboard/HandelCatalog.vue";
+  import HandelService from "@/components/portfolio/TemolateOne/dashboard/HandelService.vue";
 
   export default {
     props: {
@@ -65,6 +66,7 @@
     },
     components: {
         HandelCatalog,
+        HandelService
   },
     data() {
       return {
@@ -74,7 +76,7 @@
         setupOptions: [
           { key: 'HandelCatalog', title: 'الكاتالوج', icon: 'mdi-folder' },
           { key: 'projects', title: 'المشاريع', icon: 'mdi-briefcase' },
-          { key: 'services', title: 'الخدمات', icon: 'mdi-cog' },
+          { key: 'HandelService', title: 'الخدمات', icon: 'mdi-cog' },
           { key: 'template', title: 'إعدادات القالب', icon: 'mdi-tune' }
         ],
         inspectionRequests: [
@@ -102,6 +104,15 @@
   border: 1px solid #1976d2 !important;
   background-color: #e3f2fd !important;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease;
+
+}
+.v-card {
+  transition: all 0.3s ease;
+}
+.v-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
   </style>

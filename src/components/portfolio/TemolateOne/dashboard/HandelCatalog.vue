@@ -15,14 +15,25 @@
         </v-list>
       </div>
   
-      <!-- المنتجات -->
+     <!-- المنتجات -->
       <div>
         <div class="flex justify-between items-center">
           <h3 class="text-right text-lg font-bold">المنتجات</h3>
-          <v-btn color="success" style="width: 120px;" @click="showProductDialog = true">➕ إضافة منتج</v-btn>
+          <div style="display: flex !important; flex-direction: row !important;" class="flex search-products-catalog justify-between items-center gap-2">
+            <v-btn color="success" style="width: 120px;" @click="showProductDialog = true">➕ إضافة منتج</v-btn>
+            <v-text-field style="margin-right: 10px;"
+              v-model="searchQuery"
+              label="بحث عن منتج"
+              outlined
+              dense
+              hide-details
+              clearable
+              class="w-64"
+            />
+          </div>
         </div>
         <v-list>
-          <v-list-item v-for="product in products" :key="product.id">
+          <v-list-item v-for="product in paginatedProducts" :key="product.id">
             <v-list-item-content>
               <v-list-item-title>{{ product.name }}</v-list-item-title>
               <v-list-item-subtitle>{{ product.description }}</v-list-item-subtitle>
@@ -44,10 +55,15 @@
             </v-menu>
           </v-list-item>
         </v-list>
+
+        <div class="text-center mt-4" v-if="filteredProducts.length > visibleCount">
+          <v-btn style="width: 120px;" @click="loadMore" color="primary" outlined>عرض المزيد</v-btn>
+        </div>
       </div>
+
   
       <!-- دايلوج إضافة منتج -->
-      <v-dialog v-model="showProductDialog" max-width="800">
+      <v-dialog class="add-product-dia" v-model="showProductDialog" max-width="800">
         <v-card>
           <v-card-title class="text-right">إضافة منتج جديد</v-card-title>
           <v-card-text>
@@ -88,6 +104,15 @@
               clearable
               chips
             />
+            <v-combobox
+              v-model="productForm.Feature"
+              label="المميزات مثل : مقاوم لرطوبه "
+              multiple
+              outlined
+              dense
+              clearable
+              chips
+            />
           </v-card-text>
           <v-card-actions class="justify-end">
             <v-btn text @click="showProductDialog = false">إلغاء</v-btn>
@@ -117,37 +142,256 @@
     name: "HandelCatalog",
     data() {
       return {
+        searchQuery: "",
+        visibleCount: 5, // عدد المنتجات المبدئي
         products: [
-      {
-        id: 1,
-        name: "دهان بلاستيك أبيض",
-        description: "دهان عالي الجودة يستخدم للأسطح الداخلية.",
-        size: "5 لتر",
-        price: "250",
-        categoryId: 1,
-        unit: "علبة",
-        discount: "10",
-        colors: ["أبيض", "بيج", "رمادي"],
-        images: [
-          { preview: "https://via.placeholder.com/150" },
-          { preview: "https://via.placeholder.com/150/aaaaaa" },
-        ],
-      },
-      {
-        id: 2,
-        name: "ورق حائط مودرن",
-        description: "تصميم عصري مناسب لغرف النوم والمعيشة.",
-        size: "10 متر",
-        price: "600",
-        categoryId: 2,
-        unit: "لفة",
-        discount: "0",
-        colors: ["ذهبي", "أسود", "رمادي"],
-        images: [
-          { preview: "https://via.placeholder.com/150/eeeeee" },
-        ],
-      },
-    ],
+            {
+              id: 1,
+              name: "دهان بلاستيك أبيض",
+              description: "دهان عالي الجودة يستخدم للأسطح الداخلية.",
+              size: "5 لتر",
+              price: "250",
+              categoryId: 1,
+              unit: "علبة",
+              discount: "10",
+              colors: ["أبيض", "بيج", "رمادي"],
+              images: [
+                { preview: "https://via.placeholder.com/150" },
+                { preview: "https://via.placeholder.com/150/aaaaaa" },
+              ],
+            },
+            {
+              id: 2,
+              name: "ورق حائط مودرن",
+              description: "تصميم عصري مناسب لغرف النوم والمعيشة.",
+              size: "10 متر",
+              price: "600",
+              categoryId: 2,
+              unit: "لفة",
+              discount: "0",
+              colors: ["ذهبي", "أسود", "رمادي"],
+              images: [
+                { preview: "https://via.placeholder.com/150/eeeeee" },
+              ],
+            },
+            {
+              id: 3,
+              name: "دهان بلاستيك أزرق",
+              description: "دهان عالي الجودة يستخدم للأسطح الداخلية.",
+              size: "5 لتر",
+              price: "250",
+              categoryId: 1,
+              unit: "علبة",
+              discount: "10",
+              colors: ["أبيض", "بيج", "رمادي"],
+              images: [
+                { preview: "https://via.placeholder.com/150" },
+                { preview: "https://via.placeholder.com/150/aaaaaa" },
+              ],
+            },
+            {
+              id: 4,
+              name: "دهان بلاستيك رمادي",
+              description: "دهان عالي الجودة يستخدم للأسطح الداخلية.",
+              size: "5 لتر",
+              price: "250",
+              categoryId: 1,
+              unit: "علبة",
+              discount: "10",
+              colors: ["أبيض", "بيج", "رمادي"],
+              images: [
+                { preview: "https://via.placeholder.com/150" },
+                { preview: "https://via.placeholder.com/150/aaaaaa" },
+              ],
+            },
+            {
+              id: 5,
+              name: "دهان بلاستيك بيج",
+              description: "دهان عالي الجودة يستخدم للأسطح الداخلية.",
+              size: "5 لتر",
+              price: "250",
+              categoryId: 1,
+              unit: "علبة",
+              discount: "10",
+              colors: ["أبيض", "بيج", "رمادي"],
+              images: [
+                { preview: "https://via.placeholder.com/150" },
+                { preview: "https://via.placeholder.com/150/aaaaaa" },
+              ],
+            },
+            {
+              id: 6,
+              name: "ورق حائط وردي",
+              description: "تصميم عصري مناسب لغرف النوم والمعيشة.",
+              size: "10 متر",
+              price: "600",
+              categoryId: 2,
+              unit: "لفة",
+              discount: "0",
+              colors: ["ذهبي", "أسود", "رمادي"],
+              images: [
+                { preview: "https://via.placeholder.com/150/eeeeee" },
+              ],
+            },
+            {
+              id: 7,
+              name: "ورق حائط كلاسيك",
+              description: "تصميم عصري مناسب لغرف النوم والمعيشة.",
+              size: "10 متر",
+              price: "600",
+              categoryId: 2,
+              unit: "لفة",
+              discount: "0",
+              colors: ["ذهبي", "أسود", "رمادي"],
+              images: [
+                { preview: "https://via.placeholder.com/150/eeeeee" },
+              ],
+            },
+            {
+              id: 8,
+              name: "دهان بلاستيك لامع",
+              description: "دهان عالي الجودة يستخدم للأسطح الداخلية.",
+              size: "5 لتر",
+              price: "250",
+              categoryId: 1,
+              unit: "علبة",
+              discount: "10",
+              colors: ["أبيض", "بيج", "رمادي"],
+              images: [
+                { preview: "https://via.placeholder.com/150" },
+                { preview: "https://via.placeholder.com/150/aaaaaa" },
+              ],
+            },
+            {
+              id: 9,
+              name: "دهان بلاستيك مطفي",
+              description: "دهان عالي الجودة يستخدم للأسطح الداخلية.",
+              size: "5 لتر",
+              price: "250",
+              categoryId: 1,
+              unit: "علبة",
+              discount: "10",
+              colors: ["أبيض", "بيج", "رمادي"],
+              images: [
+                { preview: "https://via.placeholder.com/150" },
+                { preview: "https://via.placeholder.com/150/aaaaaa" },
+              ],
+            },
+            {
+              id: 10,
+              name: "دهان بلاستيك نصف لامع",
+              description: "دهان عالي الجودة يستخدم للأسطح الداخلية.",
+              size: "5 لتر",
+              price: "250",
+              categoryId: 1,
+              unit: "علبة",
+              discount: "10",
+              colors: ["أبيض", "بيج", "رمادي"],
+              images: [
+                { preview: "https://via.placeholder.com/150" },
+                { preview: "https://via.placeholder.com/150/aaaaaa" },
+              ],
+            },
+            {
+              id: 11,
+              name: "ورق حائط أطفال",
+              description: "تصميم عصري مناسب لغرف الأطفال.",
+              size: "10 متر",
+              price: "600",
+              categoryId: 2,
+              unit: "لفة",
+              discount: "0",
+              colors: ["أزرق", "زهري", "أخضر"],
+              images: [
+                { preview: "https://via.placeholder.com/150/eeeeee" },
+              ],
+            },
+            {
+              id: 12,
+              name: "ورق حائط 3D",
+              description: "تصميم ثلاثي الأبعاد مميز.",
+              size: "10 متر",
+              price: "600",
+              categoryId: 2,
+              unit: "لفة",
+              discount: "0",
+              colors: ["ذهبي", "رمادي", "فضي"],
+              images: [
+                { preview: "https://via.placeholder.com/150/eeeeee" },
+              ],
+            },
+            {
+              id: 13,
+              name: "دهان مقاوم للماء",
+              description: "دهان مثالي للأسطح المعرضة للرطوبة.",
+              size: "5 لتر",
+              price: "300",
+              categoryId: 1,
+              unit: "علبة",
+              discount: "5",
+              colors: ["أبيض", "رمادي"],
+              images: [
+                { preview: "https://via.placeholder.com/150" },
+              ],
+            },
+            {
+              id: 14,
+              name: "دهان داخلي فاخر",
+              description: "دهان عالي الجودة للمساحات الداخلية.",
+              size: "5 لتر",
+              price: "270",
+              categoryId: 1,
+              unit: "علبة",
+              discount: "15",
+              colors: ["أبيض", "عاجي"],
+              images: [
+                { preview: "https://via.placeholder.com/150" },
+              ],
+            },
+            {
+              id: 15,
+              name: "دهان مضاد للبكتيريا",
+              description: "دهان خاص للمستشفيات والعيادات.",
+              size: "5 لتر",
+              price: "320",
+              categoryId: 1,
+              unit: "علبة",
+              discount: "20",
+              colors: ["أبيض", "أزرق"],
+              images: [
+                { preview: "https://via.placeholder.com/150" },
+              ],
+            },
+            {
+              id: 16,
+              name: "دهان مطفي فاخر",
+              description: "دهان مطفي بتغطية ممتازة.",
+              size: "5 لتر",
+              price: "280",
+              categoryId: 1,
+              unit: "علبة",
+              discount: "12",
+              colors: ["رمادي", "بيج"],
+              images: [
+                { preview: "https://via.placeholder.com/150" },
+              ],
+            },
+            {
+              id: 17,
+              name: "ورق حائط رخامي",
+              description: "تصميم رخامي أنيق وفاخر.",
+              size: "10 متر",
+              price: "700",
+              categoryId: 2,
+              unit: "لفة",
+              discount: "5",
+              colors: ["رخامي", "رمادي", "ذهبي"],
+              images: [
+                { preview: "https://via.placeholder.com/150/eeeeee" },
+              ],
+            },
+          ],
+
         categories: [
         { id: 1, name: "دهانات" },
         { id: 2, name: "ورق حائط" },
@@ -163,6 +407,7 @@
           categoryId: null,
           unit: "",
           colors: [],
+          Feature: [],
           discount: "",
           images: [],
         },
@@ -171,7 +416,21 @@
         },
       };
     },
+    computed: {
+      filteredProducts() {
+        if (!this.searchQuery) return this.products;
+        return this.products.filter((product) =>
+          product.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+      },
+      paginatedProducts() {
+        return this.filteredProducts.slice(0, this.visibleCount);
+      },
+    },
     methods: {
+      loadMore() {
+        this.visibleCount += 5;
+      },
       saveProduct() {
         // logic للحفظ
         this.showProductDialog = false;
@@ -201,4 +460,6 @@
     },
   };
   </script>
-  
+  <style scoped>
+ 
+</style>
