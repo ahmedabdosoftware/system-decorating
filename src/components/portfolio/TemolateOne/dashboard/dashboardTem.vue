@@ -59,6 +59,8 @@
   <script>
   import HandelCatalog from "@/components/portfolio/TemolateOne/dashboard/HandelCatalog.vue";
   import HandelService from "@/components/portfolio/TemolateOne/dashboard/HandelService.vue";
+  import HandelProjects from "@/components/portfolio/TemolateOne/dashboard/HandelProjects.vue";
+  import HandelTemplate from "@/components/portfolio/TemolateOne/dashboard/HandelTemplate.vue";
 
   export default {
     props: {
@@ -66,7 +68,9 @@
     },
     components: {
         HandelCatalog,
-        HandelService
+        HandelService,
+        HandelProjects,
+        HandelTemplate,
   },
     data() {
       return {
@@ -75,9 +79,9 @@
         selectedSection: null,
         setupOptions: [
           { key: 'HandelCatalog', title: 'الكاتالوج', icon: 'mdi-folder' },
-          { key: 'projects', title: 'المشاريع', icon: 'mdi-briefcase' },
+          { key: 'HandelProjects', title: 'المشاريع', icon: 'mdi-briefcase' },
           { key: 'HandelService', title: 'الخدمات', icon: 'mdi-cog' },
-          { key: 'template', title: 'إعدادات القالب', icon: 'mdi-tune' }
+          { key: 'HandelTemplate', title: 'إعدادات القالب', icon: 'mdi-tune' }
         ],
         inspectionRequests: [
           { name: 'أحمد محمد', date: '2025-04-15', location: 'القاهرة', status: 'جاري' },
