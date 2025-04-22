@@ -1,4 +1,5 @@
 <template>
+  <v-app>
   <v-container>
     <v-card class="mx-auto my-5 elevation-3 rounded-lg" max-width="1000">
       <v-card-title class="primary white--text d-flex align-center py-4">
@@ -129,6 +130,7 @@
       </v-card>
     </v-dialog>
   </v-container>
+</v-app>
 </template>
 
 <script>
