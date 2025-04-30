@@ -43,7 +43,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(useUserStore, ["role", "isAdmin", "isTechnical", "isClint"]),
+    ...mapState(useUserStore, ["role", "isAdmin", "isTechnical", "isClint","MoreUserInfo"]),
     getDarkMode() {
       return this.$store.state.darkMode;
     },
@@ -51,21 +51,58 @@ export default {
 
   methods: {
     ...mapActions(useUserStore, ["login"]),
+    // Before Sass
+    // async handleLogin() {
+    //   try {
+    //     const userId = await this.login(this.email, this.password);
+    //     console.log("MoreUserInfo:", this.MoreUserInfo)
+    //     if (this.isAdmin) {
+    //       this.$router.push("/dashboard");
+    //     } else if (this.isTechnical || this.isClint) {
+    //       console.log(userId);
+    //       this.$router.push(`/profile/${userId}`);
+    //     }
+    //   } catch (error) {
+    //     console.error("Login failed:", error);
+    //     alert("Failed to login. Please check your credentials and try again.");
+    //   }
+    // },
     async handleLogin() {
       try {
         const userId = await this.login(this.email, this.password);
+        console.log("MoreUserInfo:", this.MoreUserInfo);
+        
+        const role = this.MoreUserInfo?.role;
+        const subscriptionType = this.MoreUserInfo?.subscription_type;
+        const companyName = this.MoreUserInfo?.company_name;
 
-        if (this.isAdmin) {
-          this.$router.push("/dashboard");
-        } else if (this.isTechnical || this.isClint) {
-          console.log(userId);
+        if (role === "superAdmin") {
+          this.$router.push("/dashboard/ManageUsers");
+        } 
+        else if (role === "admin") {
+          if (subscriptionType === "full system") {
+            this.$router.push("/dashboard");
+          } else if (subscriptionType === "Portfolio") {
+            this.$router.push(`/portfolio/${companyName}`);
+          } else {
+            console.error("Unknown subscription type for admin:", subscriptionType);
+            alert("Subscription type not supported. Please contact support.");
+          }
+        } 
+        else if (role === "technical" || role === "clint") {
           this.$router.push(`/profile/${userId}`);
+        } 
+        else {
+          console.error("Unknown role:", role);
+          alert("Role not recognized. Please contact support.");
         }
+
       } catch (error) {
         console.error("Login failed:", error);
         alert("Failed to login. Please check your credentials and try again.");
       }
-    },
+    }
+
   },
 };
 </script>

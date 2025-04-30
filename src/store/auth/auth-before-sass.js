@@ -9,97 +9,70 @@ export const useUserStore = defineStore("user", {
   state: () => ({
     user: null,
     role: null,
-    MoreUserInfo:null,
   }),
   actions: {
+    //That 1    *1* insted way for create and givie him permissions by firestore "you will see it in mark '2' "
+    async registerUser({
+      email,
+      password,
+      name,
+      number,
+      role,
+      profileImageURL,
+    }) {
+      // store info for curent user
 
-    async  registerUser(userData) {
-        try {
-          const {
-            company_name,
-            email,
-            name,
-            number,
-            password,
-            role, 
-            subscription_type,
-            subscription_start,
-            subscription_end,
-            subscription_days,
-            notes,
-            profileImageURL,
-          } = userData;
-      console.log(userData)
-          // ✅ حفظ بيانات الإدمن الحالي قبل ما تتغير
-          const adminUser = auth.currentUser;
-          const adminEmail = adminUser.email;
-      
-          const adminDoc = await db.collection("users").doc(adminUser.uid).get();
-          const adminPasswordEncrypted = adminDoc.data().password;
-          const adminPassword = decrypt(adminPasswordEncrypted);
-      
-          // ✅ تسجيل مستخدم جديد
-          const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-          const uid = userCredential.user.uid;
-      
-          // ✅ بيانات أساسية
-          const baseUser = {
-            id: uid,
-            name,
-            email,
-            role,
-            number: number || null,
-            profileImageURL: profileImageURL || null,
-            created_at: new Date().toISOString(),
-          };
-      
-          // ✅ بيانات إضافية لو كان مستاجر و ايضا اضافة مستاجر
-          if (role === "admin") {
-            baseUser.subscription_type = subscription_type || null;
-            baseUser.subscription_start = subscription_start || null;
-            baseUser.subscription_end = subscription_end || null;
-            baseUser.subscription_days = subscription_days || null;
-            baseUser.company_name = company_name || null;
-            baseUser.notes = notes || ""
+      //get email
+      const adminUser = auth.currentUser;
+      const adminEmail = adminUser.email;
 
-            await db.collection("Tenants").doc(uid).set({
-              uid,
-              name,
-              email,
-              number,
-              role,
-              profileImageURL: profileImageURL|| null,
-              subscription_type: subscription_type || null, 
-              subscription_start : subscription_start || null,
-              subscription_end : subscription_end || null,
-              subscription_days : subscription_days || null,
-              company_name: company_name || null,
-              notes:notes || null,
-              createdAt: new Date(),
-            });
-          }
-      
-          // ✅ حفظ بيانات المستخدم الجديد في Firestore
-          await db.collection("users").doc(uid).set(baseUser);
-      
-          // ✅ تسجيل الخروج التلقائي من المستخدم الجديد
-          await auth.signOut();
-      
-          // ✅ الرجوع للإدمن الأصلي
-          if (adminUser) {
-            await this.login(adminEmail, adminPassword);
+      // get pass
+      const adminDoc = await db.collection("users").doc(adminUser.uid).get();
+      const adminPasswordEncrypted = adminDoc.data().password;
+      const adminPassword = decrypt(adminPasswordEncrypted);
 
-          }   
+      // for test => console.log("first : store admin data", auth.currentUser)
 
-          console.log("✅ User registered and admin session restored");
-          return userCredential;
-      
-        } catch (error) {
-          console.error("❌ Error registering user:", error.message);
-          return { success: false, error: error.message };
-        }
-      },
-    
+      // make new account for user
+      const userCredential = await auth.createUserWithEmailAndPassword(
+        email,
+        password
+      );
+
+      // for test => console.log("second : the user data created", userCredential)
+
+      // add user in Firestore for extra enformation
+      await db.collection("users").doc(userCredential.user.uid).set({
+        name,
+        email,
+        role,
+        number,
+        profileImageURL,
+      });
+
+      // for test =>  console.log("third : add to collection to id", userCredential.user.uid)
+
+      // its made auto login so signOut
+      await auth.signOut();
+
+      // for test => console.log("four : sing out")
+
+      // sign in as admin again
+
+      if (adminUser) {
+        // for test => console.log("five :before  sing in",adminUser.email, adminPassword)
+
+        await this.login(adminEmail, adminPassword);
+
+        // for test => console.log("six : the control came baack to admin")
+      }
+
+      return userCredential;
+
+      // this  *1* insted way for creat user and givie him permissions by custom claims "you will see it in mark '2' "
+      //const createUserWithClaims = functions.httpsCallable('createUserWithClaims');
+      //await createUserWithClaims({ email, password, name, role });
+    },
     async login(email, password) {
       console.log("before signInWithEmailAndPassword", email, password);
 
@@ -116,14 +89,8 @@ export const useUserStore = defineStore("user", {
       // add pass  in firestore after encrypt
       console.log("before update docment with pass");
       const userDoc = await db.collection("users").doc(this.user.uid).get();
-      
-      // Add Full Data
-      this.MoreUserInfo = userDoc.data()
-      if (
-        userDoc.exists &&
-        ["admin", "superAdmin"].includes(userDoc.data().role)
-      ){
-        console.log("yes, he is :- ", userDoc.data().role);
+      if (userDoc.exists && userDoc.data().role === "admin") {
+        console.log("yes, he is admin");
         const passwordEncrypted = encrypt(password);
         await db
           .collection("users")
@@ -334,7 +301,7 @@ export const useUserStore = defineStore("user", {
   },
   getters: {
     isAdmin() {
-      return this.role === "admin" || this.role === "superAdmin";
+      return this.role === "admin";
     },
     isTechnical() {
       return this.role === "technical";

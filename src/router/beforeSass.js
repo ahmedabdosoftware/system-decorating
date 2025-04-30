@@ -75,19 +75,9 @@ import UserSetting from "../views/UserProfile/settings/UserSetting.vue";
 
 import Login from "../views/auth/Login.vue";
 import portfolio from "../views/portfolio/portfolio.vue";
-// Error acces 
-import accessDenied from "../views/Error/access-denied.vue";
 
 Vue.use(VueRouter);
 const routes = [
-  // Error
-  {
-    path: '/access-denied/:reason',
-    name: 'AccessDenied',
-    component: accessDenied,
-    
-  },
-  // Dashboard
   {
     path: "/",
     redirect: "/dashboard", // توجيه المسار الجذري إلى "/dashboard"
@@ -100,11 +90,7 @@ const routes = [
         path: "",
         name: "Dashboard",
         component: Dashboard,
-        meta: {
-            requiresAuth: true,
-            roles: ["admin","superAdmin"] ,
-            subscription_type: ["Full System"] ,
-          },
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "ManageUsers",
@@ -116,91 +102,55 @@ const routes = [
         path: "Product",
         name: "Product",
         component: Product,
-        meta: {
-           requiresAuth: true,
-           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-        },
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "AddNewProduct",
         name: "AddNewProduct",
         component: AddNewProduct,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },      
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "addcatagory",
         name: "AddCatagory",
         component: AddCatagory,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },        
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "Category",
         name: "Category",
         component: Category,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },  
-        },
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
+      },
       {
         path: "EditCategory/:id",
         name: "EditCategory",
         component: EditCategory,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },          
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "EditProduct/:id",
         name: "EditProduct",
         component: EditProduct,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },          
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "EditUnit/:unitId",
         name: "EditUnit",
         component: EditUnit,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },          
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "Units",
         name: "Units",
         component: Units,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },          
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "AddUnit",
         name: "AddUnit",
         component: AddUnit,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },          
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "Order",
@@ -210,7 +160,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -218,42 +167,26 @@ const routes = [
         path: "AddNewOrder",
         name: "AddNewOrder",
         component: AddNewOrder,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },          
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       // new design
       {
         path: "v1/AddNewOrder",
         name: "AddNewOrder",
         component: AddNewOrderNewDesign,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },          
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "EditOrder/:orderId",
         name: "EditOrder",
         component: EditOrder,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },          
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "v1/EditOrder/:orderId",
         name: "EditOrderNewDesign",
         component: EditOrderNewDesign,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },          
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "DetailsOrder/:orderId",
@@ -262,7 +195,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -273,7 +205,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -284,7 +215,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -296,7 +226,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -307,7 +236,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -318,7 +246,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -329,7 +256,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -340,7 +266,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -351,7 +276,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -362,9 +286,7 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
-
         },
       },
       {
@@ -374,7 +296,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -385,7 +306,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -396,7 +316,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -407,7 +326,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -418,7 +336,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -429,7 +346,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -440,7 +356,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -451,7 +366,6 @@ const routes = [
         meta: {
           requiresAuth: true,
           roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
           layout: "DashboardLayout",
         },
       },
@@ -466,61 +380,37 @@ const routes = [
         path: "Reviews",
         name: "Reviews",
         component: Reviews,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       }, 
+        meta: { requiresAuth: true, roles: ["admin"] },
       },
       {
         path: "users/technicalPages/Technical",
         name: "Technical",
         component: Technical,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },         
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "users/technical/AddTechnical",
         name: "AddTechnical",
         component: AddTechnical,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },         
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "users/clintPages/Clint",
         name: "Clint",
         component: Clint,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },         
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "users/clint/AddClint",
         name: "AddClint",
         component: AddClint,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },         
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "users/clint/deleteUser/:profileId",
         name: "deleteUser",
         component: deleteUser,
-        meta: {
-          requiresAuth: true,
-          roles: ["admin","superAdmin"],
-          subscription_type: ["Full System"] ,
-       },         
+        meta: { requiresAuth: true, roles: ["admin","superAdmin"] },
       },
       {
         path: "profile/:profileId",
@@ -538,7 +428,6 @@ const routes = [
             meta: {
               requiresAuth: true,
               roles: ["admin","superAdmin"],
-              subscription_type: ["Full System"] ,
               layout: "profileInDashboardLayout",
             },
           },
@@ -549,7 +438,6 @@ const routes = [
             meta: {
               requiresAuth: true,
               roles: ["admin","superAdmin"],
-              subscription_type: ["Full System"] ,
               layout: "profileInDashboardLayout",
             },
           },
@@ -560,7 +448,6 @@ const routes = [
             meta: {
               requiresAuth: true,
               roles: ["admin","superAdmin"],
-              subscription_type: ["Full System"] ,
               layout: "profileInDashboardLayout",
             },
           },
@@ -571,7 +458,6 @@ const routes = [
             meta: {
               requiresAuth: true,
               roles: ["admin","superAdmin"],
-              subscription_type: ["Full System"] ,
               layout: "profileInDashboardLayout",
             },
           },
@@ -583,7 +469,6 @@ const routes = [
             meta: {
               requiresAuth: true,
               roles: ["admin","superAdmin"],
-              subscription_type: ["Full System"] ,
               layout: "profileInDashboardLayout",
             },
           },
@@ -614,7 +499,6 @@ const routes = [
             meta: {
               requiresAuth: true,
               roles: ["admin","superAdmin"],
-              subscription_type: ["Full System"] ,
               layout: "profileInDashboardLayout",
             },
           },
@@ -625,7 +509,6 @@ const routes = [
             meta: {
               requiresAuth: true,
               roles: ["admin","superAdmin"],
-              subscription_type: ["Full System"] ,
               layout: "profileInDashboardLayout",
             },
           },
@@ -636,7 +519,6 @@ const routes = [
             meta: {
               requiresAuth: true,
               roles: ["admin","superAdmin"],
-              subscription_type: ["Full System"] ,
               layout: "profileInDashboardLayout",
             },
           },
@@ -647,7 +529,6 @@ const routes = [
             meta: {
               requiresAuth: true,
               roles: ["admin","superAdmin"],
-              subscription_type: ["Full System"] ,
               layout: "profileInDashboardLayout",
             },
           },
@@ -658,7 +539,6 @@ const routes = [
             meta: {
               requiresAuth: true,
               roles: ["admin","superAdmin"],
-              subscription_type: ["Full System"] ,
               layout: "profileInDashboardLayout",
             },
           },
@@ -672,7 +552,7 @@ const routes = [
     component: Login,
   },
   {
-    path: "/portfolio/:companyName",
+    path: "/portfolio",
     name: "portfolio",
     component: portfolio,
   },
@@ -715,10 +595,6 @@ const routes = [
         path: "/transactions/edit/:transactionId/:profileId",
         name: "EditFinancial",
         component: EditFinancial,
-        meta: {
-           requiresAuth: true, 
-           roles: ['technical', 'clint', 'admin'] ,
-           layout: 'profileOutDashboardLayout'},
       },
       // old
       // {
@@ -793,66 +669,32 @@ router.beforeEach((to, from, next) => {
     });
   };
 
-checkAuthState().then(async (user) => {
-  let isUserExist = false;
-  let role = null;
-  let subscriptionType = null;
-  let subscriptionStart = null;
-  let subscriptionEnd = null;
-  let isActive = false;
+  checkAuthState().then(async (user) => {
+    let isUserExist = false;
+    let role = null;
 
-  if (user) {
-    isUserExist = true;
-    const userDoc = await db.collection("users").doc(user.uid).get();
-    if (userDoc.exists) {
-      const userData = userDoc.data();
-      role = userData.role;
-      subscriptionType = userData.subscription_type;
-      subscriptionStart = userData.subscription_start;
-      subscriptionEnd = userData.subscription_end;
-      isActive = userData.isActive;  // Assuming you have an `isActive` field
-    }
-  }
-
-  const requiresAuth = to.meta.requiresAuth;
-  const roles = to.meta.roles || [];
-  const requiredSubscriptionType = to.meta.subscription_type || [];
-  const now = new Date();
-
-    // THANKS CONSOLE : -
-    // console.log(isUserExist);
-    // console.log("role", role);
-    // console.log("subscriptionType", subscriptionType);
-    // console.log("subscriptionStart", subscriptionStart);
-    // console.log("subscriptionEnd", subscriptionEnd);
-    // console.log("isActive", isActive);
-    // console.log("requiredSubscriptionType", requiredSubscriptionType);
-    // console.log("now", now);
-    
-    // First check: Super Admin
-    if (role === "superAdmin" && isUserExist) {
-      return next(); 
-    }
-    // Second check: If authentication is required but user doesn't exist
-    if (requiresAuth && !isUserExist) {
-      console.log("go login");
-      return next("/login"); 
-    }
-    // Third check: Other validations for authenticated users
-    if (requiresAuth && isUserExist) {
-      if (
-      (roles.length && !roles.includes(role)) || // دور مش صح
-      (requiredSubscriptionType.length && !requiredSubscriptionType.includes(subscriptionType)) || // نوع اشتراك مش صح
-      (subscriptionStart && new Date(subscriptionStart) > now) || // الاشتراك لسه مبدأش
-      (subscriptionEnd && new Date(subscriptionEnd) < now) || // الاشتراك انتهى
-      (!isActive) // الحساب مش Active
-      ) {
-          return next(`/access-denied/no-permission`); // ✅
+    if (user) {
+      isUserExist = true;
+      const userDoc = await db.collection("users").doc(user.uid).get();
+      if (userDoc.exists) {
+        role = userDoc.data().role;
       }
     }
-    return next();
 
-  
+    const requiresAuth = to.meta.requiresAuth;
+    const roles = to.meta.roles || [];
+
+    console.log(isUserExist);
+    console.log("finally", role);
+
+    if (requiresAuth && !isUserExist) {
+      next("/login");
+    } else if (requiresAuth && roles.length && !roles.includes(role)) {
+      console.log("you are not admin or superadmin to go to this page ya ailk", role);
+      next("/profile");
+    } else {
+      next();
+    }
   });
 });
 

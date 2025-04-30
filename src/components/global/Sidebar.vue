@@ -8,6 +8,20 @@
         <span v-on:click="disappear()" class="x">x</span>
       </div>
       <div class="links">
+        <!-- ManageUsers Section -->
+        <div :class="{ 'dark-mode-content': getDarkMode }">
+          <router-link to="/dashboard/ManageUsers">
+            <img
+              class="iconAwesome"
+              :src="require('@/assets/icons/ManageUsers.png')"
+            />
+            <!-- <font-awesome-icon class="iconAwesome" icon="house" /> -->
+          </router-link>
+          <router-link to="/dashboard/ManageUsers" v-if="!isCollapsed">
+            <p class="link">Manage users</p>
+          </router-link>
+          <font-awesome-icon class="arrow" />
+        </div>
         <!-- dashboard Section -->
         <div :class="{ 'dark-mode-content': getDarkMode }">
           <router-link to="/dashboard">
@@ -416,9 +430,9 @@
         </div>
 
         <!-- reviews Section -->
-        <div :class="{ 'dark-mode-content': getDarkMode }" class="reviews">
+        <!-- <div :class="{ 'dark-mode-content': getDarkMode }" class="reviews">
           <router-link to="/dashboard/Reviews">
-            <!-- <font-awesome-icon class="iconAwesome" icon="comments" /> -->
+             // <font-awesome-icon class="iconAwesome" icon="comments" /> //
             <img
               class="iconAwesome"
               :src="require('@/assets/icons/review.png')"
@@ -427,7 +441,7 @@
           <router-link v-if="!isCollapsed" to="/dashboard/Reviews">
             <p class="link">reviews</p>
           </router-link>
-        </div>
+        </div> -->
         <div :class="{ 'dark-mode-content': getDarkMode }" class="themeCont">
           <!-- <font-awesome-icon @click="theme()" class="iconAwesome" icon="adjust" /> -->
           <img

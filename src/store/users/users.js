@@ -6,6 +6,7 @@ export const useGetUserStore = defineStore("useGetUserStore", {
     users: [],
     technicalUsers: [],
     clientUsers: [],
+    subscriptionUsers: [],
   }),
   actions: {
     async fetchUsers() {
@@ -20,6 +21,7 @@ export const useGetUserStore = defineStore("useGetUserStore", {
         (user) => user.role === "technical"
       );
       this.clientUsers = this.users.filter((user) => user.role === "clint");
+      this.subscriptionUsers = this.users.filter((user) => user.role === "admin");
     },
     async fetchSingleUser(userId) {
       const doc = await db.collection("users").doc(userId).get();
