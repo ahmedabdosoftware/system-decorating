@@ -558,7 +558,7 @@ export default {
         });
 
         existingTransaction.typesData.forEach((typeData) => {
-          typeData.totalAmount += this.calculateTotalCost(updatedOrderData);
+          typeData.totalAmount += Number(this.calculateTotalCost(updatedOrderData));
         });
 
         // ReCalc`remainingValue`

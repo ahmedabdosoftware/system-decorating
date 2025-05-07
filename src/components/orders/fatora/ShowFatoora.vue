@@ -130,7 +130,7 @@
                     : orderInfo.shipping
                 }}
               </td>
-              <td colspan="4">شحن وتشوين</td>
+              <td colspan="4">شحن </td>
             </tr>
           </tbody>
         </table>

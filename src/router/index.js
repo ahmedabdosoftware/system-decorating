@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import { db, auth } from "@/firebase/firebaseConfig.js";
 
-import ManageUsers from "../views/management/ManageUsers.vue";
+import ManageTenants from "../views/management/ManageTenants.vue";
 import MainDashboard from "@/shared/layouts/MainDashboard.vue";
 import Dashboard from "../views/dashboard/Dashboard.vue";
 import Reviews from "../views/Reviews.vue";
@@ -74,6 +74,8 @@ import UserProject from "../views/UserProfile/projects/UserProject.vue";
 import UserSetting from "../views/UserProfile/settings/UserSetting.vue";
 
 import Login from "../views/auth/Login.vue";
+// Portfolio 
+import ManagePortfolios from "../views/portfolio/manage/ManagePortfolios.vue";
 import portfolio from "../views/portfolio/portfolio.vue";
 // Error acces 
 import accessDenied from "../views/Error/access-denied.vue";
@@ -107,9 +109,15 @@ const routes = [
           },
       },
       {
-        path: "ManageUsers",
-        name: "ManageUsers",
-        component: ManageUsers,
+        path: "ManageTenants",
+        name: "ManageTenants",
+        component: ManageTenants,
+        meta: { requiresAuth: true, roles: ["superAdmin"] },
+      },
+      {
+        path: "ManagePortfolios",
+        name: "ManagePortfolios",
+        component: ManagePortfolios,
         meta: { requiresAuth: true, roles: ["superAdmin"] },
       },
       {

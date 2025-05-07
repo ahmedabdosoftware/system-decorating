@@ -8,17 +8,17 @@
         <span v-on:click="disappear()" class="x">x</span>
       </div>
       <div class="links">
-        <!-- ManageUsers Section -->
+        <!-- ManageTenants Section -->
         <div :class="{ 'dark-mode-content': getDarkMode }">
-          <router-link to="/dashboard/ManageUsers">
+          <router-link to="/dashboard/ManageTenants">
             <img
               class="iconAwesome"
               :src="require('@/assets/icons/ManageUsers.png')"
             />
             <!-- <font-awesome-icon class="iconAwesome" icon="house" /> -->
           </router-link>
-          <router-link to="/dashboard/ManageUsers" v-if="!isCollapsed">
-            <p class="link">Manage users</p>
+          <router-link to="/dashboard/ManageTenants" v-if="!isCollapsed">
+            <p class="link">Manage Tenants</p>
           </router-link>
           <font-awesome-icon class="arrow" />
         </div>
@@ -415,33 +415,73 @@
           </router-link>
         </div>
 
-        <!-- catalog Section -->
-        <div :class="{ 'dark-mode-content': getDarkMode }">
-          <router-link to="/dashboard/catalog">
-            <!-- <font-awesome-icon class="iconAwesome" icon="file-pdf"  /> -->
+
+      <!-- Portfolio Section -->
+       <div
+            @click="toggleSubMenu('Portfolio')"
+            :class="[
+              {
+                'different-color': isPortfolioOpen,
+                'dark-mode-content': getDarkMode,
+              },
+              'Portfolio-sup',
+              
+            ]"
+          >
+            <!-- <font-awesome-icon class="iconAwesome" icon="boxes" /> -->
             <img
               class="iconAwesome"
-              :src="require('@/assets/icons/list.png')"
+              :src="require('@/assets/icons/portfolio-icon.png')"
             />
-          </router-link>
-          <router-link v-if="!isCollapsed" to="/dashboard/catalog">
-            <p class="link">Catalog PDF</p>
+            <p class="link storage_p">Portfolio</p>
+            <font-awesome-icon
+              v-if="!isCollapsed"
+              class="arrow"
+              :icon="isPortfolioOpen ? 'chevron-up' : 'chevron-down'"
+            />
+
+            <DropDownMenuSidebar
+              position="portfolio"
+              v-show="isCollapsed"
+              :getDarkMode="getDarkMode"
+            >
+              <router-link to="/dashboard/ManagePortfolios"> Templates </router-link>
+              <router-link to="/portfolio/companyName"> Your Portfolio </router-link>
+            </DropDownMenuSidebar>
+          </div>
+          <div
+            v-show="isPortfolioOpen && !isCollapsed"
+            :class="[
+              {
+                'different-color': isPortfolioOpen,
+                'dark-mode-content': getDarkMode,
+              },
+              'supMenue',
+            ]"
+          >
+            <font-awesome-icon class="iconAwesome" icon="chevron-right" />
+            <router-link v-if="!isCollapsed" to="/dashboard/ManagePortfolios">
+              <p class="link">Templates</p>
+            </router-link>
+            
+          </div>
+          <div
+            v-show="isPortfolioOpen && !isCollapsed"
+            :class="[
+              {
+                'different-color': isPortfolioOpen,
+                'dark-mode-content': getDarkMode,
+              },
+              'supMenue',
+            ]"
+          >
+          <font-awesome-icon class="iconAwesome" icon="chevron-right" />
+          <router-link v-if="!isCollapsed" to="/portfolio/companyName">
+            <p class="link">Your portfolio</p>
           </router-link>
         </div>
-
-        <!-- reviews Section -->
-        <!-- <div :class="{ 'dark-mode-content': getDarkMode }" class="reviews">
-          <router-link to="/dashboard/Reviews">
-             // <font-awesome-icon class="iconAwesome" icon="comments" /> //
-            <img
-              class="iconAwesome"
-              :src="require('@/assets/icons/review.png')"
-            />
-          </router-link>
-          <router-link v-if="!isCollapsed" to="/dashboard/Reviews">
-            <p class="link">reviews</p>
-          </router-link>
-        </div> -->
+      
+       
         <div :class="{ 'dark-mode-content': getDarkMode }" class="themeCont">
           <!-- <font-awesome-icon @click="theme()" class="iconAwesome" icon="adjust" /> -->
           <img
@@ -515,6 +555,7 @@ export default {
       isProductsOpen: false, // للتحكم في قائمة المنتجات الفرعية
       isStorageOpen: false, // للتحكم في قائمة المخزن الفرعية
       isPurchasesOpen: false, // للتحكم في قائمة المشتريات الفرعية
+      isPortfolioOpen: false, // للتحكم في قائمة المشتريات الفرعية
     };
   },
   components: {
@@ -558,6 +599,8 @@ export default {
         this.isStorageOpen = !this.isStorageOpen;
       } else if (menu === "Purchases") {
         this.isPurchasesOpen = !this.isPurchasesOpen;
+      } else if (menu === "Portfolio") {
+        this.isPortfolioOpen = !this.isPortfolioOpen;
       }
     },
   },
@@ -836,7 +879,9 @@ export default {
 //}
 .product-sup:hover,
 .storage-sup:hover,
-.purchase-sup:hover {
+.purchase-sup:hover
+.Portfolio-sup:hover
+ {
   .dropdown {
     display: block;
   }

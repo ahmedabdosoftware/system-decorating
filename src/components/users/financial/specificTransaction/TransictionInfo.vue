@@ -247,13 +247,13 @@ export default {
       console.log("enter go layout", layout);
 
       if (layout === "DashboardLayout") {
-        this.$router.push(`/dashboard/${section}/${id}/"true"`);
+        this.$router.push(`/dashboard/${section}/${id}/true`);
       } else if (layout === "profileInDashboardLayout") {
         this.$router.push(
-          `/dashboard/profile/${profileId}/${section}/${id}/"true"`
+          `/dashboard/profile/${profileId}/${section}/${id}/true`
         );
       } else if (layout === "profileOutDashboardLayout") {
-        this.$router.push(`/profile/${profileId}/${section}/${id}/"true"`);
+        this.$router.push(`/profile/${profileId}/${section}/${id}/true`);
       }
     },
   },

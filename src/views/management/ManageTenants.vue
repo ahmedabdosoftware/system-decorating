@@ -115,6 +115,16 @@
                     outlined
                   />
                 </v-col>
+                <v-col cols="12">
+                <v-select
+                  v-model="userData.template_id"
+                  :items="templates"
+                  item-value="id"
+                  item-text="name"
+                  label="Choose a Template"
+                  outlined
+                />
+              </v-col>
                 <v-col cols="12" md="6">
                   <v-text-field
                     v-model="userData.subscription_start"
@@ -126,7 +136,7 @@
                 <v-col cols="12" md="6">
                   <v-text-field
                     v-model="userData.subscription_end"
-                    label="Start Date"
+                    label="End Date"
                     type="date"
                     outlined
                   ></v-text-field>
@@ -182,7 +192,7 @@
 import { mapActions, mapState } from "pinia";
 import { useUserStore } from "@/store/auth/auth.js";
 import { useGetUserStore } from "@/store/users/users.js";
-
+import { useTemplateStore } from '@/store/portfolio/templates/templates';
 export default {
   data() {
     return {
@@ -201,6 +211,7 @@ export default {
         { text: "Email", value: "email", align: "center" },
         { text: "Actions", value: "actions", align: "center", sortable: false },
       ],
+
     };
   },
   computed: {
@@ -208,11 +219,13 @@ export default {
       return Math.ceil(this.subscriptionUsers.length / this.itemsPerPage);
     },
     ...mapState(useGetUserStore, ["subscriptionUsers"]),
+    ...mapState(useTemplateStore, ['templates']),
 
   },
   methods: {
     ...mapActions(useUserStore, ['registerUser']),
     ...mapActions(useGetUserStore, ['fetchUsers']),
+    ...mapActions(useTemplateStore, ['fetchTemplates']),
 
     quickRenewUser(user) {
       const today = new Date();
@@ -274,6 +287,8 @@ export default {
   },
   mounted() {
     this.fetchUsers();
+    this.fetchTemplates(); 
+
   },
 };
 </script>

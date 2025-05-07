@@ -26,6 +26,7 @@ export const useUserStore = defineStore("user", {
             subscription_start,
             subscription_end,
             subscription_days,
+            template_id,
             notes,
             profileImageURL,
           } = userData;
@@ -47,6 +48,7 @@ export const useUserStore = defineStore("user", {
             id: uid,
             name,
             email,
+            password,
             role,
             number: number || null,
             profileImageURL: profileImageURL || null,
@@ -59,6 +61,7 @@ export const useUserStore = defineStore("user", {
             baseUser.subscription_start = subscription_start || null;
             baseUser.subscription_end = subscription_end || null;
             baseUser.subscription_days = subscription_days || null;
+            baseUser.template_id = template_id || null;
             baseUser.company_name = company_name || null;
             baseUser.notes = notes || ""
 
@@ -74,6 +77,7 @@ export const useUserStore = defineStore("user", {
               subscription_end : subscription_end || null,
               subscription_days : subscription_days || null,
               company_name: company_name || null,
+              template_id: template_id || null,
               notes:notes || null,
               createdAt: new Date(),
             });
