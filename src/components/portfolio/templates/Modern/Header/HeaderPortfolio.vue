@@ -19,9 +19,14 @@
     <!-- الأزرار -->
     <div class="buttons-catalog">
       <button class="request-catalog">Catalog</button>
-      <button @click="dialog = true" class="add-button">
+     <button
+        v-if="isAdmin"
+        @click="dialog = true"
+        class="add-button"
+      >
         <font-awesome-icon :icon="['fas', 'plus']" />
       </button>
+
       <v-avatar size="50" class="avatar">
         <img src="https://i.pravatar.cc/300" alt="User Avatar" />
       </v-avatar>
@@ -54,7 +59,10 @@
 </template>
 
 <script>
-import dashboardTem from "@/components/portfolio/TemolateOne/dashboard/dashboardTem.vue";
+// Stores
+import { mapState } from "pinia";
+import { useUserStore } from "@/store/auth/auth";
+import dashboardTem from "@/components/portfolio/shared/dashboard/dashboardTem.vue";
 
 export default {
   data() {
@@ -65,6 +73,10 @@ export default {
 
     };
   },
+   computed: {
+      ...mapState(useUserStore, ["isAdmin"]),
+    
+    },
   components: {
     dashboardTem,
   },

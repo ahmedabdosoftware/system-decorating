@@ -10,6 +10,9 @@ export const useUserStore = defineStore("user", {
     user: null,
     role: null,
     MoreUserInfo:null,
+
+    // Tenant Info
+    tenantInfo:null,
   }),
   actions: {
 
@@ -27,6 +30,7 @@ export const useUserStore = defineStore("user", {
             subscription_end,
             subscription_days,
             template_id,
+            is_active,
             notes,
             profileImageURL,
           } = userData;
@@ -62,6 +66,7 @@ export const useUserStore = defineStore("user", {
             baseUser.subscription_end = subscription_end || null;
             baseUser.subscription_days = subscription_days || null;
             baseUser.template_id = template_id || null;
+            baseUser.is_active = is_active || null;
             baseUser.company_name = company_name || null;
             baseUser.notes = notes || ""
 
@@ -78,6 +83,7 @@ export const useUserStore = defineStore("user", {
               subscription_days : subscription_days || null,
               company_name: company_name || null,
               template_id: template_id || null,
+              is_active: is_active|| null,
               notes:notes || null,
               createdAt: new Date(),
             });
@@ -140,6 +146,7 @@ export const useUserStore = defineStore("user", {
 
       return this.user.uid;
     },
+
     async logout() {
       await auth.signOut();
       this.user = null;
@@ -322,6 +329,27 @@ export const useUserStore = defineStore("user", {
         );
       }
     },
+    async fetchTenantByCompanyName(companyName) {
+      try {
+        const snapshot = await db
+          .collection("Tenants")
+          .where("company_name", "==", companyName)
+          .limit(1)
+          .get();
+    
+        if (!snapshot.empty) {
+          const tenantDoc = snapshot.docs[0];
+          this.tenantInfo = { id: tenantDoc.id, ...tenantDoc.data() };
+          return this.tenantInfo;
+        } else {
+          throw new Error("Tenant not found with this company name.");
+        }
+      } catch (error) {
+        console.error("❌ Error fetching tenant:", error.message);
+        return null;
+      }
+    },
+    
     async uploadImage({ uid, file }) {
       const storageRef = storage.ref();
       const fileRef = storageRef.child(`users/${uid}/profile.jpg`);
@@ -335,6 +363,7 @@ export const useUserStore = defineStore("user", {
       });
       console.log("succsed update with pic");
     },
+  
   },
   getters: {
     isAdmin() {

@@ -35,7 +35,7 @@
           <v-tab-item>
             <v-card-text>
               <v-row>
-                <v-col v-for="item in setupOptions" :key="item.title" cols="6" md="3">
+                <v-col v-for="item in filteredSetupOptions" :key="item.title" cols="6" md="3">
                   <v-card class="pa-3"  @click="selectSection(item.key)"   :class="{ 'active-box': selectedSection === item.key }"                  >
                     <v-icon class="mb-2">{{ item.icon }}</v-icon>
                     <div class="text-center font-weight-bold">{{ item.title }}</div>
@@ -57,10 +57,15 @@
   </template>
   
   <script>
-  import HandelCatalog from "@/components/portfolio/TemolateOne/dashboard/HandelCatalog.vue";
-  import HandelService from "@/components/portfolio/TemolateOne/dashboard/HandelService.vue";
-  import HandelProjects from "@/components/portfolio/TemolateOne/dashboard/HandelProjects.vue";
-  import HandelTemplate from "@/components/portfolio/TemolateOne/dashboard/HandelTemplate.vue";
+  // Components
+  import HandelCatalog from "@/components/portfolio/shared/dashboard/HandelCatalog.vue";
+  import HandelService from "@/components/portfolio/shared/dashboard/HandelService.vue";
+  import HandelProjects from "@/components/portfolio/shared/dashboard/HandelProjects.vue";
+  import HandelTemplate from "@/components/portfolio/shared/dashboard/HandelTemplate.vue";
+  // Store
+  import { mapActions } from 'pinia';
+  import { useUserStore } from '@/store/auth/auth';
+  import { useTemplateStore } from '@/store/portfolio/templates/templates';
 
   export default {
     props: {
@@ -77,12 +82,23 @@
         dialog: true,
         activeTab: 1, // 0 => Inspection, 1 => Setup
         selectedSection: null,
+        allowedComponents: null,
+        
+        // Handel different names betwenn backEnd data and my components
+        componentMap: {
+          Catalog: 'HandelCatalog',
+          Projects: 'HandelProjects',
+          Services: 'HandelService',
+          Contact: 'HandelContact' 
+      },
+        // All my Avilable components 
         setupOptions: [
           { key: 'HandelCatalog', title: 'الكاتالوج', icon: 'mdi-folder' },
           { key: 'HandelProjects', title: 'المشاريع', icon: 'mdi-briefcase' },
           { key: 'HandelService', title: 'الخدمات', icon: 'mdi-cog' },
           { key: 'HandelTemplate', title: 'إعدادات القالب', icon: 'mdi-tune' }
         ],
+        // Static Data
         inspectionRequests: [
           { name: 'أحمد محمد', date: '2025-04-15', location: 'القاهرة', status: 'جاري' },
           { name: 'منى علي', date: '2025-04-10', location: 'الجيزة', status: 'تم' },
@@ -92,8 +108,47 @@
     methods: {
       selectSection(key) {
         this.selectedSection = key;
+      },
+      ...mapActions(useUserStore, ['fetchTenantByCompanyName']),
+      ...mapActions(useTemplateStore, ['fetchTemplateById']),
+
+      // fetch Allowed Components Depend on Campany Name (every tenant chossed Dif Template , so Dif Features)
+      async fetchAllowedComponents(companyName) {
+        try {
+          const tenant = await this.fetchTenantByCompanyName(companyName);
+          const templateId = tenant.template_id;
+          const selectedTemplate = await this.fetchTemplateById(templateId);
+          this.allowedComponents = selectedTemplate.components;
+          console.log(this.allowedComponents)
+
+        } catch (err) {
+          console.error(err);
+        }
       }
-    }
+
+    },
+    computed: {
+      // Filter Feature That Will Apear
+      filteredSetupOptions() {
+        if (!this.allowedComponents) return [];
+
+        const allowedKeys = this.allowedComponents.map(name => this.componentMap[name]);
+
+        //  HandelTemplate With All Templates
+        if (!allowedKeys.includes('HandelTemplate')) {
+          allowedKeys.push('HandelTemplate');
+        }
+
+        return this.setupOptions.filter(option => allowedKeys.includes(option.key));
+      }
+    },
+
+    mounted() {
+    const companyName = this.$route.params.companyName;
+    this.fetchAllowedComponents(companyName);
+
+}
+
   }
   </script>
   

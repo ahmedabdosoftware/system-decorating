@@ -129,7 +129,7 @@
   </template>
   
   <script>
-import ProjectDialog from "@/components/portfolio/TemolateOne/projects/ProjectDialog.vue";
+import ProjectDialog from "@/components/portfolio/templates/Modern/projects/ProjectDialog.vue";
   
   export default {
     components: { ProjectDialog },

@@ -125,7 +125,7 @@
         },
         selectedTemplate: {},
         file: null,
-        availableComponents: ['Hero', 'Gallery', 'Blog', 'Contact', 'About', 'Services', 'Team'],
+        availableComponents: ['Catalog', 'Projects', 'Blog', 'Contact', 'About', 'Services', 'Team'],
       };
     },
     computed: {

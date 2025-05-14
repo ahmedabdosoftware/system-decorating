@@ -476,7 +476,7 @@
             ]"
           >
           <font-awesome-icon class="iconAwesome" icon="chevron-right" />
-          <router-link v-if="!isCollapsed" to="/portfolio/companyName">
+          <router-link v-if="!isCollapsed" to="/companyName">
             <p class="link">Your portfolio</p>
           </router-link>
         </div>

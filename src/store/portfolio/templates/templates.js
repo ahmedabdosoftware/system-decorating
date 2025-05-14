@@ -17,7 +17,20 @@ export const useTemplateStore = defineStore("templateStore", {
       }));
       this.loading = false;
     },
-
+    async fetchTemplateById(templateId) {
+      try {
+        const doc = await db.collection("templates").doc(templateId).get();
+        if (doc.exists) {
+          return { id: doc.id, ...doc.data() };
+        } else {
+          throw new Error("Template not found.");
+        }
+      } catch (error) {
+        console.error("Error fetching template:", error);
+        throw error;
+      }
+    },
+    
     async addTemplate(template, file) {
       let imageUrl = "";
       if (file) {

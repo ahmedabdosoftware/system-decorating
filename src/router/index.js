@@ -76,9 +76,10 @@ import UserSetting from "../views/UserProfile/settings/UserSetting.vue";
 import Login from "../views/auth/Login.vue";
 // Portfolio 
 import ManagePortfolios from "../views/portfolio/manage/ManagePortfolios.vue";
-import portfolio from "../views/portfolio/portfolio.vue";
+import CompanyPortfolio from "../views/portfolio/portfolioPage/CompanyPortfolio.vue";
 // Error acces 
 import accessDenied from "../views/Error/access-denied.vue";
+import PortfolioAlert from "../views/Error/Portfolio-alert.vue";
 
 Vue.use(VueRouter);
 const routes = [
@@ -87,6 +88,12 @@ const routes = [
     path: '/access-denied/:reason',
     name: 'AccessDenied',
     component: accessDenied,
+    
+  },
+  {
+    path: '/Portfolio-alert',
+    name: 'PortfolioAlert',
+    component: PortfolioAlert,
     
   },
   // Dashboard
@@ -680,9 +687,9 @@ const routes = [
     component: Login,
   },
   {
-    path: "/portfolio/:companyName",
-    name: "portfolio",
-    component: portfolio,
+    path: "/:companyName",
+    name: "companyPortfolio",
+    component: CompanyPortfolio,
   },
   {
     path: "/profile/:profileId",

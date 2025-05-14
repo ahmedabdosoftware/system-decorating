@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import ServiceCard from "@/components/portfolio/TemolateOne/services/ServiceCard.vue";
+import ServiceCard from "@/components/portfolio/templates/Modern/services/ServiceCard.vue";
 
 export default {
   components: { ServiceCard },

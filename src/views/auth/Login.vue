@@ -83,7 +83,7 @@ export default {
           if (subscriptionType === "full system") {
             this.$router.push("/dashboard");
           } else if (subscriptionType === "Portfolio") {
-            this.$router.push(`/portfolio/${companyName}`);
+            this.$router.push(`/${companyName}`);
           } else {
             console.error("Unknown subscription type for admin:", subscriptionType);
             alert("Subscription type not supported. Please contact support.");

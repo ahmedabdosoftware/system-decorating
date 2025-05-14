@@ -22,7 +22,7 @@
   </v-container>
 </template>
 <script>
-import CatalogDialog from "@/components/portfolio/TemolateOne/catalog/CatalogDialog.vue";
+import CatalogDialog from "@/components/portfolio/templates/Modern/catalog/CatalogDialog.vue";
 
 export default {
   props: {},
@@ -41,7 +41,7 @@ export default {
 .hero-section {
   min-height: 80vh;
   width: 100%;
-  background: url("../../../../assets/portfolio/bci.png") no-repeat;
+  background: url("../../../../../assets/portfolio/bci.png") no-repeat;
   background-size: cover;
   background-size: 100% 100% !important;
   padding: 40px;
@@ -96,7 +96,7 @@ export default {
     // width: 100%;
     display: none;
     height: 300px;
-    background: url("../../../../assets/portfolio/bci.png") no-repeat;
+    background: url("../../../../../assets/portfolio/bci.png") no-repeat;
     background-size: cover;
     background-size: 100% 100% !important;
   }

@@ -43,8 +43,8 @@
 </template>
 
 <script>
-import PortfolioCard from "@/components/portfolio/TemolateOne/projects/PortfolioCard.vue";
-import ProjectDialog from "@/components/portfolio/TemolateOne/projects/ProjectDialog.vue";
+import PortfolioCard from "@/components/portfolio/templates/Modern/projects/PortfolioCard.vue";
+import ProjectDialog from "@/components/portfolio/templates/Modern/projects/ProjectDialog.vue";
 
 export default {
   components: {
