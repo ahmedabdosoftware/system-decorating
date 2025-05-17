@@ -5,14 +5,14 @@
     >
       <h2 class="font-weight-bold">Portfolio</h2>
       <div class="custom-select">
-        <select v-model="selectedCategory">
-          <option value="All">All</option>
+        <select v-model="searchQuery">
+          <option value="">All</option>
           <option
-            v-for="(cat, index) in uniqueCategories"
+            v-for="(service, index) in services"
             :key="index"
-            :value="cat"
+            :value="service.name"
           >
-            {{ cat }}
+            {{ service.name }}
           </option>
         </select>
       </div>
@@ -27,22 +27,42 @@
           md="3"
           class="mb-4"
         >
-          <portfolio-card :project="project" @open="openDialog(index)" />
+          <portfolio-card :project="project" @open="viewProject(project)" />
         </v-col>
       </v-row>
     </v-container>
 
+      <!-- 📄 Pagination -->
+      <v-btn
+        v-if="!endReached && !loading"
+        @click="handelloadMore"
+        block color="primary"
+        class="mt-4"
+        >
+        تحميل المزيد
+      </v-btn>
+
     <project-dialog
-      :visible="dialog"
-      :project="selectedProject"
-      @close="dialog = false"
-      @next="nextProject"
-      @prev="prevProject"
+     v-if="selectedProject"
+    :visible="viewDialog"
+    :project="selectedProject"
+    :index="selectedIndex"
+    :loadingNext="loading"
+    @close="viewDialog = false"
+    @next="handleNextProject"
+    @prev="handlePrevProject"
     />
   </div>
 </template>
 
 <script>
+
+// Store
+import { mapState, mapActions } from "pinia";
+import { useProjectsStore } from "@/store/portfolio/portfolioData/projects";
+import { useServicesStore } from "@/store/portfolio/portfolioData/services";
+
+// components
 import PortfolioCard from "@/components/portfolio/templates/Modern/projects/PortfolioCard.vue";
 import ProjectDialog from "@/components/portfolio/templates/Modern/projects/ProjectDialog.vue";
 
@@ -53,122 +73,159 @@ export default {
   },
   data() {
     return {
-      dialog: false,
-      currentIndex: 0,
-      selectedCategory: "All",
-      projects: [
-        {
-          title: "Modern Kitchen Cabinetry",
-          subtitle: "Malibu, CA",
-          cover:
-            "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
-          gallery: [
-            "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
-            "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
-            "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
-            "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
-          ],
-          category: "Cabinetry",
-          location: "Malibu, CA",
-          description:
-            "Full kitchen renovation featuring custom maple cabinetry with integrated lighting.",
-          materials:
-            "Maple hardwood, satin nickel hardware, LED lighting, polyurethane finish",
-          duration: "8 weeks",
-          testimonial:
-            "Working with John on our kitchen renovation was a dream...",
-          client: "David & Sarah Miller, Malibu",
-        },
-        {
-          title: "Modern Kitchen Cabinetry",
-          subtitle: "Malibu, CA",
-          cover:
-            "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
-          gallery: [
-            "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
-            "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
-            "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
-            "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
-          ],
-          category: "Cabinetry",
-          location: "Malibu, CA",
-          description:
-            "Full kitchen renovation featuring custom maple cabinetry with integrated lighting.",
-          materials:
-            "Maple hardwood, satin nickel hardware, LED lighting, polyurethane finish",
-          duration: "8 weeks",
-          testimonial:
-            "Working with John on our kitchen renovation was a dream...",
-          client: "David & Sarah Miller, Malibu",
-        },
-        {
-          title: "Modern Kitchen Cabinetry",
-          subtitle: "Malibu, CA",
-          cover:
-            "https://public.readdy.ai/ai/img_res/8b8f050bdd9dbca1ffc0553795fb2381.jpg",
-          gallery: [
-            "https://public.readdy.ai/ai/img_res/8b8f050bdd9dbca1ffc0553795fb2381.jpg",
-            "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
-            "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
-            "https://public.readdy.ai/ai/img_res/8b8f050bdd9dbca1ffc0553795fb2381.jpg",
-          ],
-          category: "Cabinetry",
-          location: "Malibu, CA",
-          description:
-            "Full kitchen renovation featuring custom maple cabinetry with integrated lighting.",
-          materials:
-            "Maple hardwood, satin nickel hardware, LED lighting, polyurethane finish",
-          duration: "8 weeks",
-          testimonial:
-            "Working with John on our kitchen renovation was a dream...",
-          client: "David & Sarah Miller, Malibu",
-        },
-        {
-          title: "Modern Kitchen Cabinetry",
-          subtitle: "Malibu, CA",
-          cover:
-            "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
-          gallery: [
-            "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
-            "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
-            "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
-            "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
-          ],
-          category: "Cabinetry",
-          location: "Malibu, CA",
-          description:
-            "Full kitchen renovation featuring custom maple cabinetry with integrated lighting.",
-          materials:
-            "Maple hardwood, satin nickel hardware, LED lighting, polyurethane finish",
-          duration: "8 weeks",
-          testimonial:
-            "Working with John on our kitchen renovation was a dream...",
-          client: "David & Sarah Miller, Malibu",
-        },
-      ],
+      searchQuery: "",
+      viewDialog: false,
+      selectedProject: null,
+      selectedIndex: null,
+
+      // projects: [
+      //   {
+      //     title: "Modern Kitchen Cabinetry",
+      //     subtitle: "Malibu, CA",
+      //     cover:
+      //       "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
+      //     gallery: [
+      //       "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
+      //       "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
+      //       "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
+      //       "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
+      //     ],
+      //     category: "Cabinetry",
+      //     location: "Malibu, CA",
+      //     description:
+      //       "Full kitchen renovation featuring custom maple cabinetry with integrated lighting.",
+      //     materials:
+      //       "Maple hardwood, satin nickel hardware, LED lighting, polyurethane finish",
+      //     duration: "8 weeks",
+      //     testimonial:
+      //       "Working with John on our kitchen renovation was a dream...",
+      //     client: "David & Sarah Miller, Malibu",
+      //   },
+      //   {
+      //     title: "Modern Kitchen Cabinetry",
+      //     subtitle: "Malibu, CA",
+      //     cover:
+      //       "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
+      //     gallery: [
+      //       "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
+      //       "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
+      //       "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
+      //       "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
+      //     ],
+      //     category: "Cabinetry",
+      //     location: "Malibu, CA",
+      //     description:
+      //       "Full kitchen renovation featuring custom maple cabinetry with integrated lighting.",
+      //     materials:
+      //       "Maple hardwood, satin nickel hardware, LED lighting, polyurethane finish",
+      //     duration: "8 weeks",
+      //     testimonial:
+      //       "Working with John on our kitchen renovation was a dream...",
+      //     client: "David & Sarah Miller, Malibu",
+      //   },
+      //   {
+      //     title: "Modern Kitchen Cabinetry",
+      //     subtitle: "Malibu, CA",
+      //     cover:
+      //       "https://public.readdy.ai/ai/img_res/8b8f050bdd9dbca1ffc0553795fb2381.jpg",
+      //     gallery: [
+      //       "https://public.readdy.ai/ai/img_res/8b8f050bdd9dbca1ffc0553795fb2381.jpg",
+      //       "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
+      //       "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
+      //       "https://public.readdy.ai/ai/img_res/8b8f050bdd9dbca1ffc0553795fb2381.jpg",
+      //     ],
+      //     category: "Cabinetry",
+      //     location: "Malibu, CA",
+      //     description:
+      //       "Full kitchen renovation featuring custom maple cabinetry with integrated lighting.",
+      //     materials:
+      //       "Maple hardwood, satin nickel hardware, LED lighting, polyurethane finish",
+      //     duration: "8 weeks",
+      //     testimonial:
+      //       "Working with John on our kitchen renovation was a dream...",
+      //     client: "David & Sarah Miller, Malibu",
+      //   },
+      //   {
+      //     title: "Modern Kitchen Cabinetry",
+      //     subtitle: "Malibu, CA",
+      //     cover:
+      //       "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
+      //     gallery: [
+      //       "https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg",
+      //       "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
+      //       "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
+      //       "https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg",
+      //     ],
+      //     category: "Cabinetry",
+      //     location: "Malibu, CA",
+      //     description:
+      //       "Full kitchen renovation featuring custom maple cabinetry with integrated lighting.",
+      //     materials:
+      //       "Maple hardwood, satin nickel hardware, LED lighting, polyurethane finish",
+      //     duration: "8 weeks",
+      //     testimonial:
+      //       "Working with John on our kitchen renovation was a dream...",
+      //     client: "David & Sarah Miller, Malibu",
+      //   },
+      // ],
     };
   },
   computed: {
-    selectedProject() {
-      return this.projects[this.currentIndex];
-    },
-    uniqueCategories() {
-      const all = this.projects.map((p) => p.category);
-      return [...new Set(all)];
-    },
+ 
+   ...mapState(useProjectsStore, ["projects", "loading","endReached"]),
+   ...mapState(useServicesStore, ["services"]),
+  companyName() {
+            return this.$route.params.companyName;
+          },
   },
   methods: {
-    openDialog(index) {
-      this.currentIndex = index;
-      this.dialog = true;
+     ...mapActions(useProjectsStore, ['fetchProjects',"loadMore","searchProjectsByService","deleteProject", "addProject", "updateProject","uploadImageToImgBB"]),
+    ...mapActions(useServicesStore, [
+        "fetchServices",
+        ]),
+    async handelloadMore() {
+        await this.loadMore(this.companyName);
     },
-    nextProject() {
-      if (this.currentIndex < this.projects.length - 1) this.currentIndex++;
+     // **********  Search **************
+      async handleSearch() {
+
+        if (this.searchQuery.trim()) {
+            await this.searchProjectsByService(this.companyName, this.searchQuery.trim());
+        } else {
+            await this.fetchProjects(this.companyName);
+        }
     },
-    prevProject() {
-      if (this.currentIndex > 0) this.currentIndex--;
+     viewProject(proj) {
+      this.selectedProject = proj;
+      this.selectedIndex = this.projects.findIndex(p => p.id === proj.id);
+      this.viewDialog = true;
     },
+     handleNextProject() {
+      if (this.selectedIndex < this.projects.length - 1) {
+        this.selectedIndex += 1;
+        this.selectedProject = this.projects[this.selectedIndex];
+      } else {
+        this.handelloadMore(); 
+      }
   },
+  handlePrevProject() {
+    if (this.selectedIndex > 0) {
+      this.selectedIndex -= 1;
+      this.selectedProject = this.projects[this.selectedIndex];
+    }
+  },
+  
+  },
+  watch: {
+    searchQuery: function () {
+        this.handleSearch(this.companyName,this.searchQuery);
+    },
+    },
+   mounted() {
+    this.fetchProjects(this.companyName);
+    this.fetchServices(this.companyName);
+
+}
 };
 </script>
 

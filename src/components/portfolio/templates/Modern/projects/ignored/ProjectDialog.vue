@@ -13,14 +13,33 @@
           <v-row>
             <!-- ✅ Gallery Left -->
             <v-col cols="12" md="6">
-            <div class="main-preview mb-4" @click="handleMainClick">
+            <div class="main-preview mb-4">
+              <v-dialog v-model="showIframe" max-width="960">
+                <v-card>
+                  <v-card-title class="d-flex justify-end">
+                    <v-btn icon @click="showIframe = false">
+                      <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                  </v-card-title>
+                  <v-card-text>
+                    <iframe
+                      :src="currentMedia?.url"
+                      width="100%"
+                      height="500"
+                      frameborder="0"
+                      allowfullscreen
+                    ></iframe>
+                  </v-card-text>
+                </v-card>
+              </v-dialog>
+
               <v-img
                 v-if="currentMedia?.type === 'image'"
                 :src="currentMedia?.url"
                 height="250"
                 contain
               ></v-img>
-              <div v-else-if="currentMedia?.type === 'video'" class="video-thumb-main">
+                <div v-else-if="currentMedia?.type === 'video'" class="video-thumb-main" @click="handleMainClick">
                 <v-img
                   :src="project.cover"
                   height="250"
@@ -53,7 +72,6 @@
               <div
                 v-else-if="item.type === 'video'"
                 class="video-thumb"
-                @click="openVideoInNewTab(item.url)"
               >
                 <div class="video-overlay">
                   <v-icon color="white">mdi-play-circle</v-icon>
@@ -123,18 +141,24 @@ export default {
   },
   data() {
     return {
-    currentMedia: null
+    currentMedia: null,
+    showIframe: false
+
     };
   },
   methods: {
   openVideoInNewTab(url) {
     window.open(url, '_blank');
   },
-  handleMainClick() {
-    if (this.currentMedia?.type === 'video') {
-      this.openVideoInNewTab(this.currentMedia.url);
-    }
-  },
+ handleMainClick() {
+  if (this.currentMedia?.type === 'video') {
+    this.showIframe = true;
+  }
+},
+closeIframe() {
+  this.showIframe = false;
+}
+
 },
 
  watch: {
@@ -221,6 +245,15 @@ export default {
   background-color: rgba(0, 0, 0, 0.4);
   border-radius: 50%;
   padding: 8px;
+}
+.iframe-container {
+  position: relative;
+}
+.close-iframe {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 10;
 }
 
 </style>

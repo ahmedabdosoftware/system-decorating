@@ -1,12 +1,14 @@
 <template>
-    <component :is="currentTemplate" v-if="currentTemplate" />
-    <div v-else>جارٍ تحميل الموقع...</div>
+  <AnimatedLoader v-if="loading" />
+    <component :is="currentTemplate" v-else-if="currentTemplate" />
   </template>
   
   <script>
 
 //  All My Templates  
   import Modern from "@/components/portfolio/templates/Modern/Modern.vue";
+      // Component
+      import AnimatedLoader from "@/shared/components/loading/AnimatedLoader/AnimatedLoader.vue";
 // Stores
   import { mapActions } from "pinia";
   import { useUserStore } from "@/store/auth/auth";
@@ -16,11 +18,14 @@
     name: "CompanyPortfolio",
     components: {
         Modern,
+        AnimatedLoader
     },
     data() {
       return {
         currentTemplate: null,
         tenantData: null,
+        loading: true,
+
       };
     },
     methods: {
@@ -72,7 +77,9 @@
         } catch (err) {
             console.error("خطأ أثناء تحميل التيمبلت:", err);
             // I Didnt Creat it Yet
-            this.$router.replace({ name: "NotFound" });
+            this.$router.replace({ name: "PortfolioNotFound" });
+        }finally {
+          this.loading = false;
         }
     },
 

@@ -80,6 +80,7 @@ import CompanyPortfolio from "../views/portfolio/portfolioPage/CompanyPortfolio.
 // Error acces 
 import accessDenied from "../views/Error/access-denied.vue";
 import PortfolioAlert from "../views/Error/Portfolio-alert.vue";
+import PortfolioNotFound from "../views/Error/PortfolioNotFound.vue";
 
 Vue.use(VueRouter);
 const routes = [
@@ -94,6 +95,12 @@ const routes = [
     path: '/Portfolio-alert',
     name: 'PortfolioAlert',
     component: PortfolioAlert,
+    
+  },
+  {
+    path: '/Portfolio-not-found',
+    name: 'PortfolioNotFound',
+    component: PortfolioNotFound,
     
   },
   // Dashboard

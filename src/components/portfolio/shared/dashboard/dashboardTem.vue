@@ -13,23 +13,12 @@
     
         <v-tabs-items v-model="activeTab">
           <!-- Tab 0: Inspection Requests -->
-          <v-tab-item>
+         <v-tab-item>
             <v-card-text>
-              <v-list two-line>
-                <v-list-item v-for="(request, index) in inspectionRequests" :key="index">
-                  <v-list-item-content>
-                    <v-list-item-title>{{ request.name }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ request.date }} - {{ request.location }}</v-list-item-subtitle>
-                  </v-list-item-content>
-                  <v-list-item-action>
-                    <v-chip :color="request.status === 'جاري' ? 'orange' : 'green'" text-color="white">
-                      {{ request.status }}
-                    </v-chip>
-                  </v-list-item-action>
-                </v-list-item>
-              </v-list>
+              <HandelInspectionRequests />
             </v-card-text>
           </v-tab-item>
+
   
           <!-- Tab 1: Setup -->
           <v-tab-item>
@@ -62,6 +51,8 @@
   import HandelService from "@/components/portfolio/shared/dashboard/HandelService.vue";
   import HandelProjects from "@/components/portfolio/shared/dashboard/HandelProjects.vue";
   import HandelTemplate from "@/components/portfolio/shared/dashboard/HandelTemplate.vue";
+  import HandelInspectionRequests from "@/components/portfolio/shared/dashboard/HandelInspectionRequests.vue";
+
   // Store
   import { mapActions } from 'pinia';
   import { useUserStore } from '@/store/auth/auth';
@@ -76,6 +67,7 @@
         HandelService,
         HandelProjects,
         HandelTemplate,
+        HandelInspectionRequests,
   },
     data() {
       return {
@@ -98,11 +90,6 @@
           { key: 'HandelService', title: 'الخدمات', icon: 'mdi-cog' },
           { key: 'HandelTemplate', title: 'إعدادات القالب', icon: 'mdi-tune' }
         ],
-        // Static Data
-        inspectionRequests: [
-          { name: 'أحمد محمد', date: '2025-04-15', location: 'القاهرة', status: 'جاري' },
-          { name: 'منى علي', date: '2025-04-10', location: 'الجيزة', status: 'تم' },
-        ]
       }
     },
     methods: {

@@ -77,7 +77,7 @@ export default {
         const companyName = this.MoreUserInfo?.company_name;
 
         if (role === "superAdmin") {
-          this.$router.push("/dashboard/ManageUsers");
+          this.$router.push("/dashboard/ManageTenants");
         } 
         else if (role === "admin") {
           if (subscriptionType === "full system") {

@@ -28,7 +28,7 @@
             <v-btn icon small @click="editService(service, index)">
                 <v-icon>mdi-pencil</v-icon>
             </v-btn>
-            <v-btn icon small color="red" @click="deleteService(index)">
+            <v-btn icon small color="red" @click="handeldeleteService(index)">
                 <v-icon>mdi-delete</v-icon>
             </v-btn>
             </v-list-item-action>
@@ -69,7 +69,7 @@
           </v-card-text>
           <v-card-actions class="justify-end">
             <v-btn text @click="resetForm">إلغاء</v-btn>
-            <v-btn color="primary" @click="saveService">حفظ</v-btn>
+            <v-btn :loading="loading" color="primary" @click="saveService">حفظ</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -106,6 +106,9 @@
   </template>
   
   <script>
+
+  import { mapState, mapActions } from "pinia";
+  import { useServicesStore } from "@/store/portfolio/portfolioData/services";
   export default {
     data() {
       return {
@@ -113,18 +116,6 @@
         dialogViewService: false,
         editedIndex: null,
         selectedService: {},
-        services: [
-          {
-            name: 'بديل الخشب',
-            description: 'تركيب بديل خشب عالي الجودة',
-            price: '34 للمتر',
-            specifications: [
-              { label: 'Viotic installation', value: '$150' },
-              { label: 'GBR details', value: 'Included' }
-            ],
-            offer: 'احجز قبل 30 أبريل 2025 واحصل على خصم 15% على جميع خدمات بديل الخشب.'
-          }
-        ],
         form: {
           name: '',
           description: '',
@@ -134,7 +125,18 @@
         }
       };
     },
+    computed: {
+      ...mapState(useServicesStore, ["services","loading"]),
+       companyName() {
+      return this.$route.params.companyName;
+    },
+
+  },
     methods: {
+      ...mapActions(useServicesStore, [
+        "fetchServices","addService","updateService",
+        "deleteService",
+      ]),
       resetForm() {
         this.form = {
           name: '',
@@ -146,33 +148,45 @@
         this.dialogAddService = false;
         this.editedIndex = null;
       },
-      saveService() {
+
+       async saveService() {
+        
+          const service = { ...this.form };
+          service.companyName = this.companyName;
         if (this.editedIndex !== null) {
-          this.services.splice(this.editedIndex, 1, { ...this.form });
+          const id = this.services[this.editedIndex].id
+          await this.updateService(id, service)
         } else {
-          this.services.push({ ...this.form });
+          await this.addService(service)
         }
-        this.resetForm();
-      },
-      deleteService(index) {
-        this.services.splice(index, 1);
-      },
+        this.resetForm()
+    },
+
       editService(service, index) {
-        this.form = { ...service, specifications: [...(service.specifications || [])] };
-        this.editedIndex = index;
-        this.dialogAddService = true;
-      },
-      viewService(service) {
-        this.selectedService = service;
-        this.dialogViewService = true;
-      },
+          this.form = { ...service, specifications: [...(service.specifications || [])] }
+          this.editedIndex = index
+          this.dialogAddService = true
+        },
+        
+    async handeldeleteService(index) {
+      const id = this.services[index].id
+      await this.deleteService(id)
+    },
+
+    viewService(service) {
+      this.selectedService = service
+      this.dialogViewService = true
+    },
       addSpecification() {
         this.form.specifications.push({ label: '', value: '' });
       },
       removeSpecification(index) {
         this.form.specifications.splice(index, 1);
       }
-    }
+    },
+    created() {
+     this.fetchServices(this.companyName);
+  },
   };
   </script>
   
