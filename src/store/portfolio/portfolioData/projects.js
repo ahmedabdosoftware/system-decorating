@@ -10,12 +10,12 @@ export const useProjectsStore = defineStore("projectsStore", {
   }),
 
   actions: {
-    async fetchProjects(companyName) {
+    async fetchProjects(userId) {
       this.loading = true;
       try {
         const snapshot = await db
           .collection("portfolioProjects")
-          .where("companyName", "==", companyName)
+          .where("userId", "==", userId)
           // .orderBy("createdAt", "desc")
           .limit(5)
           .get();
@@ -31,14 +31,14 @@ export const useProjectsStore = defineStore("projectsStore", {
       }
     },
 
-    async loadMore(companyName) {
+    async loadMore(userId) {
       if (this.endReached || !this.lastVisibleDoc) return;
       this.loading = true;
 
       try {
         const snapshot = await db
           .collection("portfolioProjects")
-          .where("companyName", "==", companyName)
+          .where("userId", "==", userId)
           // .orderBy("createdAt", "desc")
           .startAfter(this.lastVisibleDoc)
           .limit(5)
@@ -55,12 +55,12 @@ export const useProjectsStore = defineStore("projectsStore", {
       }
     },
 
-    async searchProjects(companyName, searchQuery) {
+    async searchProjects(userId, searchQuery) {
       this.loading = true;
       try {
         const snapshot = await db
           .collection("portfolioProjects")
-          .where("companyName", "==", companyName)
+          .where("userId", "==", userId)
           .where("keywords", "array-contains", searchQuery.toLowerCase())
           .get();
 
@@ -73,12 +73,12 @@ export const useProjectsStore = defineStore("projectsStore", {
         this.loading = false;
       }
     },
-    async searchProjectsByService(companyName, searchQuery) {
+    async searchProjectsByService(userId, searchQuery) {
       this.loading = true;
       try {
         const snapshot = await db
           .collection("portfolioProjects")
-          .where("companyName", "==", companyName)
+          .where("userId", "==", userId)
           .where("keywordsService", "array-contains", searchQuery.toLowerCase())
           .get();
 

@@ -172,9 +172,9 @@ import { useServicesStore } from "@/store/portfolio/portfolioData/services";
 import ProjectDialog from "@/components/portfolio/templates/Modern/projects/ProjectDialog.vue";
 // mixins
   import textHelpers from "@/mixins/textHelpers";
-
+  import tenantUidMixin from "@/mixins/tenantUidMixin";
 export default {
-  mixins: [textHelpers],
+  mixins: [textHelpers,tenantUidMixin],
   components: { ProjectDialog },
   data() {
     return {
@@ -214,9 +214,7 @@ export default {
       return this.form.gallery?.length || 0;
     },
 
-    companyName() {
-            return this.$route.params.companyName;
-          },
+    
   },
   methods: {
     ...mapActions(useProjectsStore, ['fetchProjects',"loadMore","searchProjects","deleteProject", "addProject", "updateProject","uploadImageToImgBB"]),
@@ -277,14 +275,14 @@ export default {
       async handleSearch() {
 
         if (this.searchQuery.trim()) {
-            await this.searchProjects(this.companyName, this.searchQuery.trim());
+            await this.searchProjects(this.tenantUid, this.searchQuery.trim());
         } else {
-            await this.fetchProjects(this.companyName);
+            await this.fetchProjects(this.tenantUid);
         }
     },
 
      async handelloadMore() {
-        await this.loadMore(this.companyName);
+        await this.loadMore(this.tenantUid);
     },
     async handelDeleteProjects(id) {
       if (confirm("هل أنت متأكد من حذف الطلب؟")) {
@@ -317,7 +315,7 @@ export default {
       console.log("start")
       try {
         const Project = { ...this.form };
-        Project.companyName = this.companyName;
+        Project.userId = this.tenantUid;
         Project.keywords = this.generateKeywords(Project.title);
         Project.keywordsService = this.generateKeywords(Project.category);
         let coverURL;
@@ -400,16 +398,18 @@ export default {
   },
    
   watch: {
+      tenantUid(newVal) {
+      if (newVal) {
+        console.log("userId", newVal);
+        this.fetchProjects(newVal);
+        this.fetchServices(newVal);
+      }
+    },
     searchQuery: function () {
-        this.handleSearch(this.companyName,this.searchQuery);
-    },
-    },
-   mounted() {
-    this.fetchProjects(this.companyName);
-    this.fetchServices(this.companyName);
-
-
-}
+      this.handleSearch(this.tenantUid,this.searchQuery);
+    }
+  },
+  
 };
 </script>
 

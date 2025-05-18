@@ -109,7 +109,10 @@
 
   import { mapState, mapActions } from "pinia";
   import { useServicesStore } from "@/store/portfolio/portfolioData/services";
+  // mixins
+  import tenantUidMixin from "@/mixins/tenantUidMixin";
   export default {
+    mixins: [tenantUidMixin],
     data() {
       return {
         dialogAddService: false,
@@ -127,9 +130,6 @@
     },
     computed: {
       ...mapState(useServicesStore, ["services","loading"]),
-       companyName() {
-      return this.$route.params.companyName;
-    },
 
   },
     methods: {
@@ -149,10 +149,10 @@
         this.editedIndex = null;
       },
 
-       async saveService() {
-        
-          const service = { ...this.form };
-          service.companyName = this.companyName;
+      async saveService() {
+      
+        const service = { ...this.form };
+        service.userId = this.tenantUid;
         if (this.editedIndex !== null) {
           const id = this.services[this.editedIndex].id
           await this.updateService(id, service)
@@ -162,11 +162,11 @@
         this.resetForm()
     },
 
-      editService(service, index) {
-          this.form = { ...service, specifications: [...(service.specifications || [])] }
-          this.editedIndex = index
-          this.dialogAddService = true
-        },
+    editService(service, index) {
+        this.form = { ...service, specifications: [...(service.specifications || [])] }
+        this.editedIndex = index
+        this.dialogAddService = true
+      },
         
     async handeldeleteService(index) {
       const id = this.services[index].id
@@ -184,8 +184,14 @@
         this.form.specifications.splice(index, 1);
       }
     },
-    created() {
-     this.fetchServices(this.companyName);
+    watch: {
+      tenantUid(newVal) {
+      if (newVal) {
+        console.log("userId", newVal);
+        this.fetchServices(newVal);
+      }
+    },
+   
   },
   };
   </script>

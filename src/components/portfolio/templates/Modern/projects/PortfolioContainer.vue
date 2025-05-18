@@ -66,7 +66,12 @@ import { useServicesStore } from "@/store/portfolio/portfolioData/services";
 import PortfolioCard from "@/components/portfolio/templates/Modern/projects/PortfolioCard.vue";
 import ProjectDialog from "@/components/portfolio/templates/Modern/projects/ProjectDialog.vue";
 
+// mixins
+import tenantUidMixin from "@/mixins/tenantUidMixin";
+import textHelpers from "@/mixins/textHelpers";
+
 export default {
+  mixins: [textHelpers,tenantUidMixin],
   components: {
     PortfolioCard,
     ProjectDialog,
@@ -174,9 +179,6 @@ export default {
  
    ...mapState(useProjectsStore, ["projects", "loading","endReached"]),
    ...mapState(useServicesStore, ["services"]),
-  companyName() {
-            return this.$route.params.companyName;
-          },
   },
   methods: {
      ...mapActions(useProjectsStore, ['fetchProjects',"loadMore","searchProjectsByService","deleteProject", "addProject", "updateProject","uploadImageToImgBB"]),
@@ -184,15 +186,15 @@ export default {
         "fetchServices",
         ]),
     async handelloadMore() {
-        await this.loadMore(this.companyName);
+        await this.loadMore(this.tenantUid);
     },
      // **********  Search **************
       async handleSearch() {
 
         if (this.searchQuery.trim()) {
-            await this.searchProjectsByService(this.companyName, this.searchQuery.trim());
+            await this.searchProjectsByService(this.tenantUid, this.searchQuery.trim());
         } else {
-            await this.fetchProjects(this.companyName);
+            await this.fetchProjects(this.tenantUid);
         }
     },
      viewProject(proj) {
@@ -217,15 +219,17 @@ export default {
   
   },
   watch: {
+      tenantUid(newVal) {
+      if (newVal) {
+        console.log("userId", newVal);
+        this.fetchProjects(newVal);
+        this.fetchServices(newVal);
+      }
+    },
     searchQuery: function () {
-        this.handleSearch(this.companyName,this.searchQuery);
-    },
-    },
-   mounted() {
-    this.fetchProjects(this.companyName);
-    this.fetchServices(this.companyName);
-
-}
+      this.handleSearch(this.tenantUid,this.searchQuery);
+    }
+  },
 };
 </script>
 

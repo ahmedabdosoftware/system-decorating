@@ -10,12 +10,12 @@ export const useServicesStore = defineStore("services", {
   }),
 
   actions: {
-    async fetchServices(companyName) {
+    async fetchServices(userId) {
       this.loading = true;
       try {
         const snapshot = await db
           .collection("portfolioServices")
-          .where("companyName", "==", companyName)
+          .where("userId", "==", userId)
           .get();
 
         this.services = snapshot.docs.map((doc) => ({

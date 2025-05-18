@@ -57,7 +57,7 @@
         </v-list>
 
         <div class="text-center mt-4">
-          <v-btn v-if="!endReached && !searchQuery" style="width: 120px;" @click="loadMore(companyName)" :loading="loading" color="primary" outlined>عرض المزيد</v-btn>
+          <v-btn v-if="!endReached && !searchQuery" style="width: 120px;" @click="loadMore(tenantUid)" :loading="loading" color="primary" outlined>عرض المزيد</v-btn>
         </div>
       </div>
 
@@ -137,11 +137,17 @@
   </template>
   
   <script>
+  // Store
 import { mapState, mapActions } from "pinia";
 import { usePortfolioStore } from "@/store/portfolio/portfolioData/catalog";
+import { useUserStore } from "@/store/auth/auth";
+// mixins
+import tenantUidMixin from "@/mixins/tenantUidMixin";
+import textHelpers from "@/mixins/textHelpers";
 
   export default {
     name: "HandelCatalog",
+    mixins: [textHelpers,tenantUidMixin],
     data() {
       return {
         searchQuery: "",
@@ -168,12 +174,6 @@ import { usePortfolioStore } from "@/store/portfolio/portfolioData/catalog";
     computed: {
 
   ...mapState(usePortfolioStore, ["products", "categories", "loading","endReached"]),
-
-  companyName() {
-      return this.$route.params.companyName;
-    },
-    
-
     },
     methods: {
 
@@ -181,22 +181,23 @@ import { usePortfolioStore } from "@/store/portfolio/portfolioData/catalog";
         "fetchCategories", "fetchProducts", "addCategory", "updateCategory", "deleteCategory",
         "addProduct", "updateProduct", "deleteProduct","searchProducts","loadMore", "uploadImageToImgBB"
       ]),
+      ...mapActions(useUserStore, ["fetchTenantByCompanyName"]),
 
       
       async saveProduct() {
         const product = { ...this.productForm };
-        product.companyName = this.companyName;
+        // Link The Product With UserId
+        product.userId = this.tenantUid;
+        // For Search Easely In Firestore Without Problem (index)
         product.keywords = this.generateKeywords(product.name);
-
-        // رفع الصور أولاً
+        // Pictures First
         const imageUrls = [];
         for (const file of product.images) {
           const url = file.url || await this.uploadImageToImgBB(file);
           imageUrls.push(url);
         }
         product.images = imageUrls;
-
-        // إضافة أو تعديل
+        // Add Or Edit
         if (product.id) {
           await this.updateProduct(product.id, product);
         } else {
@@ -210,7 +211,7 @@ import { usePortfolioStore } from "@/store/portfolio/portfolioData/catalog";
     
       async saveCategory() {
         const category = { ...this.categoryForm };
-        category.companyName = this.companyName;
+        category.userId = this.tenantUid;
 
         if (category.id) {
           await this.updateCategory(category.id, category);
@@ -276,25 +277,22 @@ import { usePortfolioStore } from "@/store/portfolio/portfolioData/catalog";
       removeImage(index) {
         this.productForm.images.splice(index, 1);
       },
-      generateKeywords(productName) {
-      const keywords = [];
-      for (let i = 1; i <= productName.length; i++) {
-        keywords.push(productName.slice(0, i));
-      }
-      return keywords;
-    }
-
+     
     },
     watch: {
+      tenantUid(newVal) {
+      if (newVal) {
+        console.log("userId", newVal);
+        this.fetchCategories(newVal);
+        this.fetchProducts(newVal);
+      }
+    },
     searchQuery: function () {
-      this.searchProducts(this.companyName,this.searchQuery);
+      this.searchProducts(this.tenantUid,this.searchQuery);
     }
   },
 
-    created() {
-      this.fetchCategories(this.companyName);
-      this.fetchProducts(this.companyName);
-    }
+
 
 
   };

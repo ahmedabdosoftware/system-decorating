@@ -31,13 +31,13 @@
 
               <v-col cols="12" md="6">
                 <ValidationProvider
-                  name="Email"
-                  rules="required|email"
+                  name="location"
+                  rules="required"
                   v-slot="{ errors }"
                 >
                   <v-text-field
-                    label="Email Address"
-                    v-model="form.email"
+                    label="location"
+                    v-model="form.location"
                     :error-messages="errors"
                     outlined
                     dense
@@ -70,11 +70,9 @@
                   <v-select
                     label="Service Type"
                     v-model="form.service"
-                    :items="[
-                      'Interior Design',
-                      'Full Renovation',
-                      'Design Consultation',
-                    ]"
+                    :items="services"
+                    item-text="name"
+                    item-value="name"
                     :error-messages="errors"
                     outlined
                     dense
@@ -90,7 +88,7 @@
                 >
                   <v-textarea
                     label="Project Description"
-                    v-model="form.description"
+                    v-model="form.projectDescription"
                     :error-messages="errors"
                     outlined
                     rows="4"
@@ -152,37 +150,88 @@
 </template>
 
 <script>
-import { required, email } from "vee-validate/dist/rules";
+import { required } from "vee-validate/dist/rules";
 import { extend } from "vee-validate";
-
 // Register rules with custom messages
 extend("required", {
   ...required,
   message: "{_field_} is required to create a product.",
 });
-extend("email", email);
+// mixins
+import tenantUidMixin from "@/mixins/tenantUidMixin";
+import textHelpers from "@/mixins/textHelpers";
+// Store
+  import { mapState, mapActions } from "pinia";
+import { useInspectionStore } from "@/store/portfolio/portfolioData/inspection";
+import { useServicesStore } from "@/store/portfolio/portfolioData/services";
 
 export default {
+  mixins: [textHelpers,tenantUidMixin],
   components: {},
   data() {
     return {
       form: {
         name: "",
-        email: "",
+        location: "",
         phone: "",
         service: "",
-        description: "",
+        projectDescription: "",
         date: "",
+        status: "جاري",
         agree: false,
       },
     };
   },
   methods: {
-    onSubmit() {
-      console.log("Form submitted:", this.form);
-      // Firebase logic goes here in the future
-    },
+    
+    ...mapActions(useInspectionStore, ["addRequest"]),
+       ...mapActions(useServicesStore, [
+                "fetchServices",
+     ]),
+    async onSubmit() {
+      try {
+        
+        const userId = this.tenantUid;
+        const requestData = {
+          ...this.form,
+          userId,
+          keywords:this.generateKeywords(this.form.name),
+        };
+
+        await this.addRequest(requestData);
+        
+        this.$toast.success("تم إرسال الطلب بنجاح سيتم التواصل معك قريبا");
+
+        // Reset
+        this.form = {
+          name: "---",
+          location: "---",
+          phone: "---",
+          service: "---",
+          projectDescription: "---",
+          date: "---",
+          agree: false,
+        };
+      } catch (error) {
+        console.error("فشل في إرسال الطلب", error);
+        this.$toast.error("حدث خطأ أثناء إرسال الطلب");
+
+      }
+    
   },
+
+  },
+    computed: {
+    ...mapState(useServicesStore, ["services"]),
+  },
+   watch: {
+      tenantUid(newVal) {
+      if (newVal) {
+        console.log("userId", newVal);
+        this.fetchServices(newVal);
+      }
+    },
+    },
 };
 </script>
 

@@ -13,25 +13,25 @@ export const usePortfolioStore = defineStore("portfolioStore", {
   }),
 
   actions: {
-     async fetchCategories(companyName) {
+     async fetchCategories(userId) {
       this.loading = true;
       const querySnapshot = await db.collection("portfolioCategories")
-     .where("companyName", "==", companyName)
-     .get();
-      this.categories = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      this.loading = false;
+      .where("userId", "==", userId)
+      .get();
+        this.categories = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        this.loading = false;
     },
 
     // Pagination Products
-    async fetchProducts(companyName) {
+    async fetchProducts(userId) {
     this.loading = true;
     try {
         const querySnapshot = await db
         .collection("portfolioProducts")
-        .where("companyName", "==", companyName)
+        .where("userId", "==", userId)
         .limit(5)
         .get();
 
@@ -50,14 +50,14 @@ export const usePortfolioStore = defineStore("portfolioStore", {
     }
     },
 
-    async loadMore(companyName) {
+    async loadMore(userId) {
     if (this.endReached || !this.lastVisibleDoc) return;
     this.loading = true;
 
     try {
         const querySnapshot = await db
         .collection("portfolioProducts")
-        .where("companyName", "==", companyName)
+        .where("userId", "==", userId)
         .startAfter(this.lastVisibleDoc)
         .limit(5)
         .get();
@@ -82,19 +82,19 @@ export const usePortfolioStore = defineStore("portfolioStore", {
     }
     },
 
-    async searchProducts(companyName,searchQuery) {
+    async searchProducts(userId,searchQuery) {
     if (!searchQuery) {
         this.products = [];
         this.lastVisibleDoc = null;
         this.endReached = false;
-        return this.fetchProducts(companyName); // رجوع للوضع العادي
+        return this.fetchProducts(userId); // رجوع للوضع العادي
     }
 
     this.loading = true;
     try {
         const querySnapshot = await 
        db.collection("portfolioProducts")
-        .where("companyName", "==", companyName)
+        .where("userId", "==", userId)
         // To Fix Using More Than Query Issue In Firebase ::👇💪--
         //  Added Magic keywords To Every Product And Use "array-contains" (THATS WOW ) 
         .where("keywords", "array-contains", searchQuery)

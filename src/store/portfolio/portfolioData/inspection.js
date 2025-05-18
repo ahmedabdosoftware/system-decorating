@@ -10,12 +10,12 @@ export const useInspectionStore = defineStore("inspectionStore", {
   }),
 
   actions: {
-    async fetchRequests(companyName) {
+    async fetchRequests(userId) {
       this.loading = true;
       try {
         const snapshot = await db
           .collection("portfolioInspectionRequests")
-          .where("companyName", "==", companyName)
+          .where("userId", "==", userId)
         //   .orderBy("createdAt", "desc")
           .limit(5)
           .get();
@@ -30,14 +30,14 @@ export const useInspectionStore = defineStore("inspectionStore", {
       }
     },
 
-    async loadMore(companyName) {
+    async loadMore(userId) {
       if (this.endReached || !this.lastVisibleDoc) return;
       this.loading = true;
 
       try {
         const snapshot = await db
           .collection("portfolioInspectionRequests")
-          .where("companyName", "==", companyName)
+          .where("userId", "==", userId)
         //   .orderBy("createdAt", "desc")
           .startAfter(this.lastVisibleDoc)
           .limit(5)
@@ -55,12 +55,12 @@ export const useInspectionStore = defineStore("inspectionStore", {
       }
     },
 
-    async searchRequests(companyName, searchQuery) {
+    async searchRequests(userId, searchQuery) {
       this.loading = true;
       try {
         let snapshot = await db
           .collection("portfolioInspectionRequests")
-          .where("companyName", "==", companyName)
+          .where("userId", "==", userId)
           .where("keywords", "array-contains", searchQuery.toLowerCase()) 
           .get();
 

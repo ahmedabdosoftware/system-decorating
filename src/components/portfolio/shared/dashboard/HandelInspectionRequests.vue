@@ -156,10 +156,11 @@
   import { useServicesStore } from "@/store/portfolio/portfolioData/services";
 // mixins
   import textHelpers from "@/mixins/textHelpers";
-
+  import tenantUidMixin from "@/mixins/tenantUidMixin";
 export default {    
 
-  mixins: [textHelpers],
+  mixins: [textHelpers,tenantUidMixin],
+
   data() {
     return {
         searchQuery: "",
@@ -182,7 +183,7 @@ export default {
             location: "",
             phone: "",
             date: "",
-            notes: "",
+            projectDescription: "",
             status: "جاري",
             createdAt: new Date(),
             };
@@ -197,7 +198,7 @@ export default {
             if (!isValid) return;
             
             const request = { ...this.selectedRequest };
-            request.companyName = this.companyName;
+            request.userId = this.tenantUid;
             // Add Keywords For Search
             request.keywords = this.generateKeywords(request.name);
             if (this.isEditing) {
@@ -206,20 +207,20 @@ export default {
             await this.addRequest(request);
             }
             this.showRequestDialog = false;
-            this.fetchRequests(this.companyName);
+            this.fetchRequests(this.tenantUid);
         },
      // ********** inspection Search **************
       async handleSearch() {
 
         if (this.searchQuery.trim()) {
-            await this.searchRequests(this.companyName, this.searchQuery.trim());
+            await this.searchRequests(this.tenantUid, this.searchQuery.trim());
         } else {
-            await this.fetchRequests(this.companyName);
+            await this.fetchRequests(this.tenantUid);
         }
     },
 
      async hadelloadMore() {
-        await this.loadMore(this.companyName);
+        await this.loadMore(this.tenantUid);
     },
     async handelDeleteRequest(id) {
       if (confirm("هل أنت متأكد من حذف الطلب؟")) {
@@ -237,24 +238,21 @@ export default {
     },
   },
    computed: {
-
       ...mapState(useInspectionStore, ["requests", "loading","endReached"]),
       ...mapState(useServicesStore, ["services"]),
-
-      companyName() {
-            return this.$route.params.companyName;
-          },
-},
+    },
     watch: {
+      tenantUid(newVal) {
+      if (newVal) {
+        console.log("userId", newVal);
+        this.fetchRequests(newVal);
+        this.fetchServices(newVal);
+      }
+    },
     searchQuery: function () {
-        this.handleSearch(this.companyName,this.searchQuery);
-    },
-    },
-   mounted() {
-    this.fetchRequests(this.companyName);
-    this.fetchServices(this.companyName);
+      this.searchProducts(this.tenantUid,this.searchQuery);
+    }
+  },
 
-
-}
 }
 </script>
