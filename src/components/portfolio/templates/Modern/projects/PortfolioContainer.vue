@@ -32,26 +32,26 @@
       </v-row>
     </v-container>
 
-      <!-- 📄 Pagination -->
-      <v-btn
+    <!-- 📄 Pagination -->
+      <v-icon
         v-if="!endReached && !loading"
         @click="handelloadMore"
-        block color="primary"
-        class="mt-4"
-        >
-        تحميل المزيد
-      </v-btn>
+        class="arrow-icon-portfolio down-arrow mt-4"
 
-    <project-dialog
-     v-if="selectedProject"
-    :visible="viewDialog"
-    :project="selectedProject"
-    :index="selectedIndex"
-    :loadingNext="loading"
-    @close="viewDialog = false"
-    @next="handleNextProject"
-    @prev="handlePrevProject"
-    />
+      >
+          mdi-chevron-down
+      </v-icon>
+
+      <project-dialog
+      v-if="selectedProject"
+      :visible="viewDialog"
+      :project="selectedProject"
+      :index="selectedIndex"
+      :loadingNext="loading"
+      @close="viewDialog = false"
+      @next="handleNextProject"
+      @prev="handlePrevProject"
+      />
   </div>
 </template>
 

@@ -71,7 +71,7 @@
             <v-textarea v-model="productForm.description" label="الوصف" outlined dense />
             <v-text-field v-model="productForm.size" label="المقاس" outlined dense />
             <v-text-field v-model="productForm.price" label="السعر" outlined dense />
-            <v-select :items="categories" item-text="name" item-value="id" v-model="productForm.categoryId" label="التصنيف" outlined dense />
+            <v-select :items="categories" item-text="name" item-value="name" v-model="productForm.category" label="التصنيف" outlined dense />
             <v-text-field v-model="productForm.unit" label="الوحدة (مثل متر / لوح)" outlined dense />
             <v-text-field v-model="productForm.discount" label="الخصم (إن وجد)" outlined dense />
             
@@ -140,7 +140,6 @@
   // Store
 import { mapState, mapActions } from "pinia";
 import { usePortfolioStore } from "@/store/portfolio/portfolioData/catalog";
-import { useUserStore } from "@/store/auth/auth";
 // mixins
 import tenantUidMixin from "@/mixins/tenantUidMixin";
 import textHelpers from "@/mixins/textHelpers";
@@ -159,7 +158,7 @@ import textHelpers from "@/mixins/textHelpers";
           description: "",
           size: "",
           price: "",
-          categoryId: null,
+          category: null,
           unit: "",
           colors: [],
           Feature: [],
@@ -181,7 +180,6 @@ import textHelpers from "@/mixins/textHelpers";
         "fetchCategories", "fetchProducts", "addCategory", "updateCategory", "deleteCategory",
         "addProduct", "updateProduct", "deleteProduct","searchProducts","loadMore", "uploadImageToImgBB"
       ]),
-      ...mapActions(useUserStore, ["fetchTenantByCompanyName"]),
 
       
       async saveProduct() {
@@ -190,13 +188,33 @@ import textHelpers from "@/mixins/textHelpers";
         product.userId = this.tenantUid;
         // For Search Easely In Firestore Without Problem (index)
         product.keywords = this.generateKeywords(product.name);
+        product.keywordsCategory = this.generateKeywords(product.category);
+        product.keywordsPrice = this.generateKeywords(product.price);
+        product.keywordsColors = this.generateKeywords(product.colors);
+        product.keywordsFeature = this.generateKeywords(product.Feature);
+
         // Pictures First
-        const imageUrls = [];
-        for (const file of product.images) {
-          const url = file.url || await this.uploadImageToImgBB(file);
-          imageUrls.push(url);
+         const imageUrls = [];
+        if (product.images && product.images.length > 0) {
+          for (const img of product.images) {
+            if (typeof img === "string") {
+              // الصورة موجودة مسبقًا كرابط (مش صورة جديدة)
+              imageUrls.push(img);
+            } else if (img instanceof File) {
+              // الصورة جديدة من نوع File - نرفعها
+              const uploadedURL = await this.uploadImageToImgBB(img);
+              imageUrls.push(uploadedURL);
+            } else {
+              // حالة غير متوقعة، ممكن تتجاهل أو تعطي تحذير هنا
+              console.warn("صورة غير صالحة في المعرض:", img);
+            }
+          }
+        } else {
+          console.warn("لا توجد صور في المعرض للرفع");
         }
-        product.images = imageUrls;
+        product.images = imageUrls
+        
+        ;
         // Add Or Edit
         if (product.id) {
           await this.updateProduct(product.id, product);
@@ -263,7 +281,7 @@ import textHelpers from "@/mixins/textHelpers";
         description: "",
         size: "",
         price: "",
-        categoryId: null,
+        category: null,
         unit: "",
         colors: [],
         Feature: [],

@@ -7,6 +7,10 @@ export const useServicesStore = defineStore("services", {
   state: () => ({
     services: [],
     loading: false,
+    // For Website
+    paginatedServices: [],  
+    lastVisibleDoc: null,
+    endReached: false,
   }),
 
   actions: {
@@ -28,7 +32,63 @@ export const useServicesStore = defineStore("services", {
         this.loading = false;
       }
     },
+ // ✅ For WEbsite Fetch First Amount
+    async fetchInitialServices(userId) {
+      this.loading = true;
+      try {
+        const snapshot = await db
+          .collection("portfolioServices")
+          .where("userId", "==", userId)
+          // .orderBy("createdAt") 
+          .limit(4)
+          .get();
 
+        this.paginatedServices = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        this.lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
+        this.endReached = snapshot.docs.length < 4;
+      } catch (error) {
+        console.error("❌ فشل في جلب أول دفعة من الخدمات", error);
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    // ✅ Load More
+    async loadMoreServices(userId) {
+      if (this.endReached || !this.lastVisibleDoc) return;
+      this.loading = true;
+
+      try {
+        const snapshot = await db
+          .collection("portfolioServices")
+          .where("userId", "==", userId)
+          .startAfter(this.lastVisibleDoc)
+          .limit(4)
+          .get();
+
+        const moreServices = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        this.paginatedServices.push(...moreServices);
+        this.lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
+        this.endReached = snapshot.docs.length < 4;
+      } catch (error) {
+        console.error("❌ خطأ في تحميل المزيد من الخدمات", error);
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    // ✅ See Less
+    async resetServices(userId) {
+      await this.fetchInitialServices(userId);
+    },
+  
     async addService(service) {
       this.loading = true;
 

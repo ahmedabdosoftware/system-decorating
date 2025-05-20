@@ -36,7 +36,7 @@
                     <div class="search-label mb-1"> Search by {{ selectedFilter }}</div>
                     <v-text-field
                         v-if="selectedFilter !== 'category'"
-                        v-model="filterText"
+                        v-model="searchQuery"
                         label="write here"
                         class="full-width-input search-input"
                         hide-details
@@ -47,8 +47,10 @@
                     />
                     <v-select
                     v-else
-                    v-model="filterText"
-                    :items="categoryOptions"
+                    v-model="searchQuery"
+                    :items="categories"
+                    item-text="name"
+                    item-value="name"
                     label="Select Category"
                     class="full-width-input search-input"
                     solo
@@ -64,18 +66,18 @@
         <!-- Catalog List -->
         <v-list dense>
             <v-list-item
-                v-for="(item, index) in catalogItems"
+                v-for="(item, index) in products"
                 :key="index"
                 class="catalog-item px-3 py-2"
                 style="border-radius: 16px; background-color: #f7f7f7;"
             >
 
             <v-list-item-avatar>
-              <v-img :src="item.image" />
+              <v-img :src="item.images[0]" />
             </v-list-item-avatar>
   
             <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-title>{{ item.name }}</v-list-item-title>
               <v-list-item-subtitle class="text-caption">
                 {{ item.description }}
               </v-list-item-subtitle>
@@ -90,78 +92,76 @@
             </v-list-item-action>
           </v-list-item>
         </v-list>
+        <v-progress-linear v-if="loading" indeterminate color="primary" class="mt-2" />
+
+        <div class="par-btns">
+          <!-- 🔘See More-->
+          <v-icon
+            v-if="!endReached && !loading && !searchQuery"
+            @click="loadMore(tenantUid)"
+            :loading="loading"
+            class="arrow-icon-portfolio down-arrow mt-4"
+            >
+            mdi-chevron-down
+          </v-icon>
+        </div>
+
       </v-card>
     </v-dialog>
   </template>
   
   <script>
+   // Store
+  import { mapState, mapActions } from "pinia";
+  import { usePortfolioStore } from "@/store/portfolio/portfolioData/catalog";
+  // mixins
+  import tenantUidMixin from "@/mixins/tenantUidMixin";
+
   export default {
     name: "CatalogDialog",
+    mixins: [tenantUidMixin],
+
     props: {
       visible: Boolean,
     },
     data() {
       return {
         selectedFilter: "name", // Default selected filter
-        filterText: '',
+        searchQuery: '',
         filterOptions: [
         { label: 'By name', value: 'name' },
         { label: 'By category', value: 'category' },
         { label: 'By color', value: 'color' },
-        { label: 'By price range', value: 'price' },
-        { label: 'Usage Type', value: 'usage' },
+        { label: 'By price', value: 'price' },
+        { label: 'By Feature', value: 'Feature' },
       ],
-      categoryOptions: ['Wood', 'PVC', 'Marble', 'GRP'],
 
-      catalogItems: [
-        {
-          id: 1,
-          title: 'Wood Alternative',
-          description: 'Premium wood-like panels',
-          size: '32.5x04',
-          price: 42.02,
-          category: 'Wood',
-          color: 'brown',
-          usage: 'Indoor',
-          image: 'https://public.readdy.ai/ai/img_res/85594205265b80dac205cb4531686a75.jpg',
-        },
-        {
-          id: 2,
-          title: 'PVC Panels',
-          description: 'Durable and lightweight',
-          size: '12.5C',
-          price: 2.52,
-          category: 'PVC',
-          color: 'white',
-          usage: 'Outdoor',
-          image: 'https://public.readdy.ai/ai/img_res/7da2fdbe14c9b3986c0e81c939132017.jpg',
-        },
-        {
-          id: 3,
-          title: 'Futec',
-          description: 'Durable and lightweight',
-          size: '12.5C',
-          price: 2.52,
-          category: 'PVC',
-          color: 'blue',
-          usage: 'Outdoor',
-          image: 'https://public.readdy.ai/ai/img_res/8b8f050bdd9dbca1ffc0553795fb2381.jpg',
-        },
-        {
-          id: 4,
-          title: 'Futec',
-          description: 'Durable and lightweight',
-          size: '12.5C',
-          price: 2.52,
-          category: 'PVC',
-          color: 'blue',
-          usage: 'Outdoor',
-          image: 'https://public.readdy.ai/ai/img_res/8b8f050bdd9dbca1ffc0553795fb2381.jpg',
-        },
-        // more items...
-      ],
       };
     },
+     computed: {
+
+  ...mapState(usePortfolioStore, ["products", "categories", "loading","endReached"]),
+    },
+    methods: {
+
+    ...mapActions(usePortfolioStore, [
+      "fetchCategories", "fetchProducts", 
+      "searchProducts","loadMore"
+    ]),
+
+  },
+    watch: {
+      tenantUid(newVal) {
+      if (newVal) {
+        console.log("userId", newVal);
+        this.fetchCategories(newVal);
+        this.fetchProducts(newVal);
+      }
+  },
+    searchQuery: function () {
+      this.searchProducts(this.tenantUid,this.searchQuery,this.selectedFilter);
+    }
+  },
   };
   </script>
   

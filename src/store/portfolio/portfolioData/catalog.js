@@ -82,24 +82,43 @@ export const usePortfolioStore = defineStore("portfolioStore", {
     }
     },
 
-    async searchProducts(userId,searchQuery) {
-    if (!searchQuery) {
-        this.products = [];
-        this.lastVisibleDoc = null;
-        this.endReached = false;
-        return this.fetchProducts(userId); // رجوع للوضع العادي
-    }
+    async searchProducts(userId,searchQuery,type = "name") {
+        if (!searchQuery) {
+            this.products = [];
+            this.lastVisibleDoc = null;
+            this.endReached = false;
+            return this.fetchProducts(userId); // Back To First Fetch
+        }
 
-    this.loading = true;
-    try {
-        const querySnapshot = await 
-       db.collection("portfolioProducts")
-        .where("userId", "==", userId)
-        // To Fix Using More Than Query Issue In Firebase ::👇💪--
+        this.loading = true;
+        try {
+
+        let queryRef = db.collection("portfolioProducts").where("userId", "==", userId);
+         // To Fix Using More Than Query Issue In Firebase ::👇💪--
         //  Added Magic keywords To Every Product And Use "array-contains" (THATS WOW ) 
-        .where("keywords", "array-contains", searchQuery)
-        // .where("name", "<=", searchQuery + "\uf8ff")
-        .get();
+        switch (type) {
+          case "name":
+            queryRef = queryRef.where("keywords", "array-contains", searchQuery);
+            break;
+          case "category":
+            queryRef = queryRef.where("keywordsCategory", "array-contains", searchQuery);
+            break;
+          case "color":
+            queryRef = queryRef.where("keywordsColors", "array-contains", searchQuery);
+            break;
+          case "Feature":
+            queryRef = queryRef.where("keywordsFeature", "array-contains", searchQuery);
+            break;
+          case "price":
+            queryRef = queryRef.where("keywordsPrice", "array-contains", searchQuery);
+            break;
+          default:
+            queryRef = queryRef.where("keywords", "array-contains", searchQuery);
+            break;
+        }
+
+        const querySnapshot = await queryRef.get();
+
 
         this.products = querySnapshot.docs.map((doc) => ({
         id: doc.id,

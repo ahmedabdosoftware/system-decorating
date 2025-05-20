@@ -1,0 +1,42 @@
+.par-btns{
+  display: flex;
+  justify-content: center;
+
+}
+.arrow-icon-portfolio {
+  font-size: 46px;
+  color: #3f51b5;
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+  &:hover {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+.down-arrow {
+  animation: bounceDown 1s infinite;
+}
+
+.up-arrow {
+  animation: bounceUp 1s infinite;
+}
+
+@keyframes bounceDown {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+@keyframes bounceUp {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
