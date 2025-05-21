@@ -64,34 +64,52 @@
 
 
         <!-- Catalog List -->
-        <v-list dense>
-            <v-list-item
-                v-for="(item, index) in products"
-                :key="index"
-                class="catalog-item px-3 py-2"
-                style="border-radius: 16px; background-color: #f7f7f7;"
-            >
+        <!-- Catalog List Using Expansion Panels -->
+        <v-expansion-panels
+          v-model="expandedPanel"
+          multiple
+          accordion
+          focusable
+          inset
+        >
+          <v-expansion-panel
+            v-for="(item) in products"
+            :key="item.id"
+            class="mb-2"
+          >
+            <!-- Card Header as Panel Title -->
+            <v-expansion-panel-header class="pa-0">
+              <v-card
+                flat
+                tile
+                class="d-flex align-center justify-space-between px-3 py-2"
+                style="width: 100%; border-radius: 16px; background-color: #f7f7f7;"
+              >
+                <div class="d-flex align-center over-hid">
+                  <v-list-item-avatar>
+                    <v-img :src="item.images[0]" />
+                  </v-list-item-avatar>
+                  <v-list-item-content >
+                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                    <v-list-item-subtitle class="text-caption description-limited">{{ item.description }}</v-list-item-subtitle>
+                    <div class="text-caption grey--text">{{ item.size }}</div>
+                  </v-list-item-content>
+                </div>
 
-            <v-list-item-avatar>
-              <v-img :src="item.images[0]" />
-            </v-list-item-avatar>
-  
-            <v-list-item-content>
-              <v-list-item-title>{{ item.name }}</v-list-item-title>
-              <v-list-item-subtitle class="text-caption">
-                {{ item.description }}
-              </v-list-item-subtitle>
-              <div class="text-caption grey--text">{{ item.size }}</div>
-            </v-list-item-content>
-  
-            <v-list-item-action class="text-right">
-              <div class="font-weight-bold">{{ item.price }}</div>
-              <v-btn icon>
-                <v-icon>mdi-chevron-right</v-icon>
-              </v-btn>
-            </v-list-item-action>
-          </v-list-item>
-        </v-list>
+                <div class="text-right d-flex align-center">
+                  <div class="font-weight-bold mr-2">{{ item.price }}</div>
+                  <v-icon>mdi-chevron-down</v-icon>
+                </div>
+              </v-card>
+            </v-expansion-panel-header>
+
+            <!-- Details Panel -->
+            <v-expansion-panel-content class="py-3">
+              <ProductDetails :product="item" />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-expansion-panels>
+
         <v-progress-linear v-if="loading" indeterminate color="primary" class="mt-2" />
 
         <div class="par-btns">
@@ -116,11 +134,15 @@
   import { usePortfolioStore } from "@/store/portfolio/portfolioData/catalog";
   // mixins
   import tenantUidMixin from "@/mixins/tenantUidMixin";
+  // components
+  import ProductDetails from "@/components/portfolio/templates/Modern/catalog/ProductDetails.vue";
 
   export default {
     name: "CatalogDialog",
     mixins: [tenantUidMixin],
-
+    components: {
+      ProductDetails,
+    },
     props: {
       visible: Boolean,
     },
@@ -128,6 +150,8 @@
       return {
         selectedFilter: "name", // Default selected filter
         searchQuery: '',
+        expandedProductId: null,
+        expandedPanel: [],
         filterOptions: [
         { label: 'By name', value: 'name' },
         { label: 'By category', value: 'category' },
@@ -148,6 +172,10 @@
       "fetchCategories", "fetchProducts", 
       "searchProducts","loadMore"
     ]),
+   
+      toggleProduct(id) {
+      this.expandedProductId = this.expandedProductId === id ? null : id;
+    },
 
   },
     watch: {
@@ -190,6 +218,13 @@
   transition: box-shadow 0.2s ease;
   margin-top: 10px;
 }
+.description-limited {
+  max-width: 90%; 
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  /* background-color: red; */
+}
 
 .catalog-item:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -212,5 +247,15 @@
 .Search-Input-Select{
     border-bottom: 2px solid #eee;
 }
+ ::v-deep(.v-expansion-panel-header__icon) {
+    display: none;
+  }
+  .over-hid{
+    overflow: hidden;
+  }
+ ::v-deep( .v-expansion-panels--inset>.v-expansion-panel--active){
+    max-width: 100% !important;
+  }
+
   </style>
   
