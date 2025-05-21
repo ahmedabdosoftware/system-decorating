@@ -11,3 +11,11 @@ module.exports = {
     : '/'
 }
 
+
+// Edit -Not Work-
+// module.exports = {
+//   publicPath: process.env.NODE_ENV === 'production'
+//     ? './'
+//     : '/'
+// };
+
