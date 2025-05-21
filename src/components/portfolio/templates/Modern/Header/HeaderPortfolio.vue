@@ -1,24 +1,24 @@
 <template>
   <nav class="navbar">
-    <!-- اللوجو -->
+    <!-- logo -->
     <div class="logo logo-portfolio">
       <!-- <img src="@/assets/images/logo.svg" alt="Craftsman" /> -->
       <span style="font-weight: bold; font-size: 19px">Logo</span>
     </div>
 
-    <!-- زر القائمة (يظهر فقط في الشاشات الصغيرة) -->
+    <!-- menue Borger-->
     <button class="menu-button" @click="toggleSidebar">
       <font-awesome-icon :icon="['fas', 'bars']" />
     </button>
 
-    <!-- الروابط -->
+    <!-- nav-links -->
     <ul class="nav-links">
       <li v-for="link in links" :key="link">{{ link }}</li>
     </ul>
 
-    <!-- الأزرار -->
+    <!-- buttons -->
     <div class="buttons-catalog">
-      <button class="request-catalog">Catalog</button>
+      <button @click="dialogCatalog = true" class="request-catalog">Catalog</button>
      <button
         v-if="isAdmin"
         @click="dialog = true"
@@ -26,13 +26,14 @@
       >
         <font-awesome-icon :icon="['fas', 'plus']" />
       </button>
-
+      <!-- Catalog -->
+      <Catalog-dialog :visible="dialogCatalog" @close="dialogCatalog = false" />
       <v-avatar size="50" class="avatar">
         <img src="https://i.pravatar.cc/300" alt="User Avatar" />
       </v-avatar>
     </div>
 
-    <!-- السايدبار -->
+    <!-- sidebar -->
     <div class="sidebar-portfolio" :class="{ 'sidebar-open': isSidebarOpen }">
       <!-- هيدر السايدبار -->
       <div class="sidebar-header">
@@ -51,7 +52,7 @@
       </ul>
     </div>
 
-    <!-- الـ Overlay عند فتح السايدبار -->
+    <!--  Overlay -->
     <div class="overlay" v-if="isSidebarOpen" @click="toggleSidebar"></div>
     <dashboard-tem :visible="dialog" @close="dialog = false" />
 
@@ -62,14 +63,18 @@
 // Stores
 import { mapState } from "pinia";
 import { useUserStore } from "@/store/auth/auth";
+// Components
 import dashboardTem from "@/components/portfolio/shared/dashboard/dashboardTem.vue";
+import CatalogDialog from "@/components/portfolio/templates/Modern/catalog/CatalogDialog.vue";
 
 export default {
   data() {
+    
     return {
       links: ["Moonst", "Cuotioos", "Faltcos", "Bolps", "Doctiors"],
       isSidebarOpen: false,
       dialog: false,
+      dialogCatalog: false,
 
     };
   },
@@ -79,6 +84,7 @@ export default {
     },
   components: {
     dashboardTem,
+    CatalogDialog,
   },
   methods: {
     toggleSidebar() {
