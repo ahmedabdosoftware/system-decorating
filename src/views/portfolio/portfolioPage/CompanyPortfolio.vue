@@ -13,12 +13,16 @@
   import { mapActions } from "pinia";
   import { useUserStore } from "@/store/auth/auth";
   import { useTemplateStore } from "@/store/portfolio/templates/templates";
+  import { useTemplateSettingsStore } from "@/store/portfolio/templates/template-portfolio";
   
+// Mixins
+  // import tenantUidMixin from "@/mixins/tenantUidMixin";
+
   export default {
     name: "CompanyPortfolio",
     components: {
         Modern,
-        AnimatedLoader
+        AnimatedLoader,
     },
     data() {
       return {
@@ -31,7 +35,8 @@
     methods: {
       ...mapActions(useUserStore, ["fetchTenantByCompanyName"]),
       ...mapActions(useTemplateStore, ["fetchTemplateById"]),
-  
+      ...mapActions(useTemplateSettingsStore, ["fetchTemplateSettings"]),
+
       async resolveTemplate() {
         try {
             const companyName = this.$route.params.companyName;
@@ -70,6 +75,9 @@
             if (!this.currentTemplate) {
             console.warn("لم يتم العثور على تيمبلت مناسب");
             }
+            
+            // fetch Template Settings
+            await this.fetchTemplateSettings(tenant.uid);
 
             //Maybe I Need Them
             this.tenantData = tenant;

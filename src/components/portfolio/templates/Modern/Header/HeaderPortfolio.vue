@@ -2,8 +2,9 @@
   <nav class="navbar">
     <!-- logo -->
     <div class="logo logo-portfolio">
-      <!-- <img src="@/assets/images/logo.svg" alt="Craftsman" /> -->
-      <span style="font-weight: bold; font-size: 19px">Logo</span>
+
+      <img :src="logoUrl" alt="Craftsman" />
+      <!-- <span style="font-weight: bold; font-size: 19px">Logo</span> -->
     </div>
 
     <!-- menue Borger-->
@@ -18,7 +19,7 @@
 
     <!-- buttons -->
     <div class="buttons-catalog">
-      <button @click="dialogCatalog = true" class="request-catalog">Catalog</button>
+      <button @click="dialogCatalog = true" class="request-catalog" :style="{ backgroundColor: settings.primaryColor || '#f57c00' }">Catalog</button>
      <button
         v-if="isAdmin"
         @click="dialog = true"
@@ -29,7 +30,7 @@
       <!-- Catalog -->
       <Catalog-dialog :visible="dialogCatalog" @close="dialogCatalog = false" />
       <v-avatar size="50" class="avatar">
-        <img src="https://i.pravatar.cc/300" alt="User Avatar" />
+        <img :src="logoUrl" alt="User Avatar" />
       </v-avatar>
     </div>
 
@@ -38,7 +39,7 @@
       <!-- هيدر السايدبار -->
       <div class="sidebar-header">
         <div class="logo">
-          <img src="@/assets/images/logo.svg" alt="Craftsman" />
+          <img :src="logoUrl" alt="Craftsman" />
         </div>
         <button class="close-button" @click="toggleSidebar">
           <font-awesome-icon :icon="['fas', 'times']" />
@@ -63,6 +64,8 @@
 // Stores
 import { mapState } from "pinia";
 import { useUserStore } from "@/store/auth/auth";
+import { useTemplateSettingsStore } from "@/store/portfolio/templates/template-portfolio";
+
 // Components
 import dashboardTem from "@/components/portfolio/shared/dashboard/dashboardTem.vue";
 import CatalogDialog from "@/components/portfolio/templates/Modern/catalog/CatalogDialog.vue";
@@ -80,7 +83,10 @@ export default {
   },
    computed: {
       ...mapState(useUserStore, ["isAdmin"]),
-    
+      ...mapState(useTemplateSettingsStore, ["settings"]),
+      logoUrl() {
+          return this.settings?.logo || require("@/assets/images/logo.svg");
+        }
     },
   components: {
     dashboardTem,
@@ -132,7 +138,7 @@ export default {
 }
 
 .request-catalog {
-  background-color: #f57c00;
+  /* background-color: #f57c00; */
   color: white;
   border-radius: 20px;
   border: none;

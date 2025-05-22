@@ -34,7 +34,7 @@ export const useUserStore = defineStore("user", {
             notes,
             profileImageURL,
           } = userData;
-      console.log(userData)
+            console.log(userData)
           // ✅ حفظ بيانات الإدمن الحالي قبل ما تتغير
           const adminUser = auth.currentUser;
           const adminEmail = adminUser.email;
@@ -68,25 +68,9 @@ export const useUserStore = defineStore("user", {
             baseUser.template_id = template_id || null;
             baseUser.is_active = is_active || null;
             baseUser.company_name = company_name || null;
-            baseUser.notes = notes || ""
+            baseUser.notes = notes || "";
 
-            await db.collection("Tenants").doc(uid).set({
-              uid,
-              name,
-              email,
-              number,
-              role,
-              profileImageURL: profileImageURL|| null,
-              subscription_type: subscription_type || null, 
-              subscription_start : subscription_start || null,
-              subscription_end : subscription_end || null,
-              subscription_days : subscription_days || null,
-              company_name: company_name || null,
-              template_id: template_id || null,
-              is_active: is_active|| null,
-              notes:notes || null,
-              createdAt: new Date(),
-            });
+            await this.handleTenantCreation(uid, userData);
           }
       
           // ✅ حفظ بيانات المستخدم الجديد في Firestore
@@ -109,7 +93,78 @@ export const useUserStore = defineStore("user", {
           return { success: false, error: error.message };
         }
       },
-    
+
+      // Handle Tenant Creation
+      async  handleTenantCreation(uid, userData) {
+        const {
+          name,
+          email,
+          number,
+          role,
+          profileImageURL,
+          subscription_type,
+          subscription_start,
+          subscription_end,
+          subscription_days,
+          company_name,
+          template_id,
+          is_active,
+          notes,
+        } = userData;
+
+        // ✅ إنشاء مستند المستأجر
+        await db.collection("Tenants").doc(uid).set({
+          uid,
+          name,
+          email,
+          number,
+          role,
+          profileImageURL: profileImageURL || null,
+          subscription_type: subscription_type || null,
+          subscription_start: subscription_start || null,
+          subscription_end: subscription_end || null,
+          subscription_days: subscription_days || null,
+          company_name: company_name || null,
+          template_id: template_id || null,
+          is_active: is_active || null,
+          notes: notes || null,
+          createdAt: new Date(),
+        });
+
+        // ✅ إنشاء إعدادات القالب الافتراضية إذا كان نوع الاشتراك يدعم البورتفوليو
+        if (["Portfolio", "Full System"].includes(subscription_type)) {
+          const defaultTemplateSettings = {
+            userId: uid,
+            logo: null,
+            heroTitle: "Exquisite Décor, Perfect Details",
+            heroDescription: "We bring artistic touches that blend creativity with quality, using the finest materials like Viotech, wood alternatives, marble, and GRP. With precision and expertise, we turn your vision into a stunning",
+            email: "",
+            phoneNumber: "",
+            showWhatsapp: false,
+            whatsappNumber: "",
+            primaryColor: "#1976D2",
+            businessHours: [
+              { day: "Monday - Friday", hours: "9:00 AM – 6:00 PM" },
+              { day: "Saturday", hours: "10:00 AM – 4:00 PM" },
+              { day: "Sunday", hours: "Closed" },
+            ],
+            socialLinks: {
+              facebook: "",
+              instagram: "",
+              website: "",
+            },
+            location: "",
+          };
+
+          try {
+            await db.collection("portfolioHandelTemplate").doc(uid).set(defaultTemplateSettings);
+            console.log("✅ تم إنشاء إعدادات القالب الافتراضية");
+          } catch (error) {
+            console.error("❌ خطأ أثناء إنشاء إعدادات القالب:", error);
+          }
+        }
+      },
+
     async login(email, password) {
       console.log("before signInWithEmailAndPassword", email, password);
 

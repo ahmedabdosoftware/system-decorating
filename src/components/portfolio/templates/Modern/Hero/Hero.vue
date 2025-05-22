@@ -3,16 +3,14 @@
   <v-container fluid class="hero-section d-flex align-center">
     <v-row class="align-center hero-content">
       <v-col cols="12" md="6" class="hero-text">
-        <h1>Exquisite Décor, Perfect Details</h1>
+        <h1>{{settings.heroTitle}}</h1>
         <p>
-          We bring artistic touches that blend creativity with quality, using
-          the finest materials like Viotech, wood alternatives, marble, and GRP.
-          With precision and expertise, we turn your vision into a stunning
+         {{settings.heroDescription}}
         </p>
         <div class="action-container">
-          <v-btn @click="dialog = true" class="catalog-btn">Catalog</v-btn>
+          <v-btn @click="dialog = true" :style="{ backgroundColor: settings.primaryColor || '#f57c00' }" class="catalog-btn">Catalog</v-btn>
           <v-avatar size="50" class="avatar">
-            <img src="https://i.pravatar.cc/300" alt="User Avatar" />
+            <img :src="avatarUrl || 'https://i.pravatar.cc/300'" alt="User Avatar" />
           </v-avatar>
         </div>
         <Catalog-dialog :visible="dialog" @close="dialog = false" />
@@ -22,13 +20,23 @@
   </v-container>
 </template>
 <script>
+// Component
 import CatalogDialog from "@/components/portfolio/templates/Modern/catalog/CatalogDialog.vue";
+// Store
+import { mapState } from "pinia";
+import { useTemplateSettingsStore } from "@/store/portfolio/templates/template-portfolio";
 
 export default {
   props: {},
   components: {
     CatalogDialog,
   },
+   computed: {
+      ...mapState(useTemplateSettingsStore, ["settings"]),
+       avatarUrl() {
+          return this.settings?.logo || require("@/assets/images/logo.svg");
+        }
+    },
   data() {
     return {
       dialog: false,
@@ -80,7 +88,7 @@ export default {
         padding: 10px 20px;
         font-size: 1rem;
         font-weight: bold;
-        background-color: #f57c00;
+       // background-color: #f57c00;
         border: none;
         border-radius: 30px;
         color: white;

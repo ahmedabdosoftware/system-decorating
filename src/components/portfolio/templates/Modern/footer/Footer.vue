@@ -4,35 +4,59 @@
       <v-row class="footer-top" no-gutters>
         <!-- Column 1 -->
         <v-col cols="12" md="4" class="mb-6">
-          <h3 class="footer-title">John Carpenter</h3>
+          <h3 class="footer-title">{{ settings?.heroTitle || 'Our Business' }}</h3>
           <p class="footer-desc">
-            Master craftsman specializing in custom woodworking, furniture
-            design, and restoration services.
+            {{ settings?.heroDescription || 'High quality craftsmanship and service.' }}
           </p>
           <div class="footer-socials">
-            <v-icon small class="mr-2" color="amber lighten-2"
-              >mdi-facebook</v-icon
+            <a
+              v-if="settings?.socialLinks?.facebook"
+              :href="settings.socialLinks.facebook"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-            <v-icon small class="mr-2" color="amber lighten-2"
-              >mdi-instagram</v-icon
+              <v-icon small class="mr-2" color="amber lighten-2">mdi-facebook</v-icon>
+            </a>
+
+            <a
+              v-if="settings?.socialLinks?.instagram"
+              :href="settings.socialLinks.instagram"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-            <v-icon small class="mr-2" color="amber lighten-2"
-              >mdi-pinterest</v-icon
+              <v-icon small class="mr-2" color="amber lighten-2">mdi-instagram</v-icon>
+            </a>
+
+            <a
+              v-if="settings?.socialLinks?.pinterest"
+              :href="settings.socialLinks.pinterest"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-            <v-icon small class="mr-2" color="amber lighten-2">mdi-home</v-icon>
+              <v-icon small class="mr-2" color="amber lighten-2">mdi-pinterest</v-icon>
+            </a>
+
+            <a
+              v-if="settings?.socialLinks?.website"
+              :href="settings.socialLinks.website"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <v-icon small class="mr-2" color="amber lighten-2">mdi-web</v-icon>
+            </a>
           </div>
           <div class="footer-contact mt-3">
-            <p>
-              <v-icon small style="margin-right: 6px" color="amber darken-2"
-                >mdi-email</v-icon
-              >
-              john@carpentercrafts.com
+            <p v-if="settings?.email">
+                <v-icon small class="mr-1" color="amber darken-2">mdi-email</v-icon>
+                {{ settings.email }}
             </p>
-            <p>
-              <v-icon small style="margin-right: 6px" color="amber darken-2"
-                >mdi-phone</v-icon
-              >
-              (555) 123-4567
+            <p v-if="settings?.phoneNumber">
+                <v-icon small class="mr-1" color="amber darken-2">mdi-phone</v-icon>
+                {{ settings.phoneNumber }}
+            </p>
+            <p v-if="settings?.showWhatsApp && settings?.whatsappNumber">
+                <v-icon small class="mr-1" color="amber darken-2">mdi-whatsapp</v-icon>
+                {{ settings.whatsappNumber }}
             </p>
           </div>
         </v-col>
@@ -65,14 +89,15 @@
         <!-- Column 3 -->
         <v-col cols="12" md="4" class="mb-6">
           <h4 class="footer-heading">Business Hours</h4>
-          <ul class="footer-hours">
-            <li><span>Monday - Friday:</span><span>9:00 AM – 6:00 PM</span></li>
-            <li><span>Saturday:</span><span>10:00 AM – 4:00 PM</span></li>
-            <li><span>Sunday:</span><span>Closed</span></li>
-          </ul>
-          <div class="footer-location mt-4">
+        <ul class="footer-hours">
+          <li v-for="(item, index) in settings?.businessHours || []" :key="index">
+            <span>{{ item.day }}:</span>
+            <span>{{ item.from && item.to ? `${item.from} – ${item.to}` : item.to }}</span>
+          </li>
+        </ul>
+          <div v-if="settings?.location" class="footer-location mt-4">
             <strong>Workshop Location</strong>
-            <p>123 Craftsman Way<br />Woodville, CA 90210</p>
+            <p>{{ settings.location }}</p>
             <p class="footer-payment">
               <span class="text-warning">Payment Methods (soon):</span>
               <v-icon small class="ml-1" color="amber lighten-2"
@@ -104,6 +129,27 @@
     </v-container>
   </footer>
 </template>
+
+<script>
+// Stores
+import { mapState } from "pinia";
+import { useTemplateSettingsStore } from "@/store/portfolio/templates/template-portfolio";
+
+export default {
+  data() {
+    return {
+    };
+  },
+   computed: {
+      ...mapState(useTemplateSettingsStore, ["settings"]),
+      logoUrl() {
+          return this.settings?.logo || require("@/assets/images/logo.svg");
+        }
+    },
+
+};
+</script>
+
 <style scoped>
 .footer {
   background-color: #0f172a;
