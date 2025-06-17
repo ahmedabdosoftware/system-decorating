@@ -9,6 +9,10 @@
         <Baner :isCustomTheme="isCustomTheme" />
         <InspectionReques :isCustomTheme="isCustomTheme" />
         <Footer :isCustomTheme="isCustomTheme" />
+        <WhatsAppFloating
+        v-if="showWhatsappButton"
+        :whatsappNumber="settings.whatsappNumber"
+      />
     </div>
     </v-app>
   </template>
@@ -23,6 +27,8 @@
   import Baner from "@/components/portfolio/templates/Modern/baners/Baner.vue";
   import InspectionReques from "@/components/portfolio/templates/Modern/baners/Request/Inspection-reques.vue";
   import Footer from "@/components/portfolio/templates/Modern/footer/Footer.vue";
+  import WhatsAppFloating from "@/components/portfolio/shared/additions/WhatsAppFloating.vue";
+
   // Store
   import { mapState } from "pinia";
   import { useTemplateSettingsStore } from "@/store/portfolio/templates/template-portfolio";
@@ -36,12 +42,22 @@
       Baner,
       InspectionReques,
       Footer,
+      WhatsAppFloating
+      
     },
     computed: {
       ...mapState(useTemplateSettingsStore, ["settings"]),
       isCustomTheme() {
         return !this.settings.heroSection.isDefault;
-      }
+      },
+       showWhatsappButton() {
+        // console.log("from up whats",this.settings.whatsappNumber,this.settings.showWhatsapps)
+        return (
+          this.settings.showWhatsApp === true &&
+          this.settings.whatsappNumber &&
+          this.settings.whatsappNumber.trim() !== ""
+        );
+    },
     },
   };
   </script>

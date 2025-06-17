@@ -10,7 +10,7 @@
           <v-list-item v-for="category in categories" :key="category.id">
             <v-list-item-title>{{ category.name }}</v-list-item-title>
             <v-btn icon @click="editCategory(category)"><v-icon>mdi-pencil</v-icon></v-btn>
-            <v-btn icon @click="deleteCategory(category.id)"><v-icon>mdi-delete</v-icon></v-btn>
+            <v-btn icon @click="handelDeleteCategory(category.id)"><v-icon>mdi-delete</v-icon></v-btn>
           </v-list-item>
         </v-list>
       </div>
@@ -255,7 +255,7 @@ import textHelpers from "@/mixins/textHelpers";
       this.categoryForm = { ...category };
       this.showCategoryDialog = true;
     },
-    async deleteCategory(id) {
+    async handelDeleteCategory(id) {
       if (confirm("هل أنت متأكد من حذف التصنيف؟")) {
         await this.deleteCategory(id);
       }
