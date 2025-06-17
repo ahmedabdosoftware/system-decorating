@@ -1,5 +1,5 @@
 <template>
-  <div class="portfolio-section pa-5">
+  <div class="portfolio-section pa-5" :class="{ 'custom-theme': isCustomTheme }">
     <div
       class="portfolio-header d-flex justify-space-between align-center mb-4"
     >
@@ -75,6 +75,12 @@ export default {
   components: {
     PortfolioCard,
     ProjectDialog,
+  },
+   props: {
+    isCustomTheme: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -237,6 +243,9 @@ export default {
 .portfolio-section {
   background: #eeece9;
   // min-height: 100vh;
+}
+.portfolio-section.custom-theme {
+  background: #fff ;
 }
 .portfolio-header {
   select {

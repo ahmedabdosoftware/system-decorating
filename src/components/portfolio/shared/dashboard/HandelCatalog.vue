@@ -267,9 +267,9 @@ import textHelpers from "@/mixins/textHelpers";
         const total = this.productForm.images.length + newFiles.length;
 
         if (total > 4) {
-            const availableSlots = 4 - this.form.gallery.length;
+            const availableSlots = 4 - this.form.images.length;
             const filesToAdd = newFiles.slice(0, availableSlots);
-            this.productForm.images(...filesToAdd);
+            this.productForm.images.push(...filesToAdd);
         } else {
             this.productForm.images.push(...newFiles);
         }

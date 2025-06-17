@@ -68,6 +68,13 @@ Vue.directive("font", {
 // إنشاء Vuetify instance
 const vuetify = new Vuetify();
 
+
+// Swiper
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+import 'swiper/css/swiper.css' // Swiper 5
+
+Vue.use(VueAwesomeSwiper)
+
 new Vue({
   render: (h) => h(App),
   pinia,

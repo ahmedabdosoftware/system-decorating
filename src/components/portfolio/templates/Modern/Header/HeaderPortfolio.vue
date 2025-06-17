@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar">
+  <nav class="navbar" :class="{ 'custom-theme': isCustomTheme }">
     <!-- logo -->
     <div class="logo logo-portfolio">
 
@@ -71,6 +71,12 @@ import dashboardTem from "@/components/portfolio/shared/dashboard/dashboardTem.v
 import CatalogDialog from "@/components/portfolio/templates/Modern/catalog/CatalogDialog.vue";
 
 export default {
+    props: {
+    isCustomTheme: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     
     return {
@@ -111,6 +117,9 @@ export default {
   /* position: sticky; */
   width: 100%;
   height: 100px;
+}
+.navbar.custom-theme {
+  background: #fff ;
 }
 .avatar {
   border: 2px solid #fff;
@@ -236,7 +245,8 @@ export default {
   }
 
   .menu-button {
-    display: block; /* يظهر زر القائمة في الشاشات الصغيرة */
+    display: block; 
   }
 }
+
 </style>

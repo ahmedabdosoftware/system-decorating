@@ -75,10 +75,29 @@
                 accept="image/*"
               ></v-file-input>
               <v-img v-if="form.image" :src="form.image" height="150px" contain></v-img>
+
+              <!-- رفع صور -->
+              <v-file-input
+                label="صور الهيرو"
+                multiple
+                show-size
+                outlined
+                dense
+                @change="handleImageUpload"
+              />
+              <div class="flex flex-wrap mt-2 gap-2">
+                <div v-for="(img, index) in form.heroImages" :key="index" class="relative w-24 h-24">
+                  <img :src="getImageSrc(img)" height="80" width="80" />
+                  <v-btn icon small class="absolute top-0 right-0" @click="removeImage(index)">
+                    <v-icon small>mdi-close</v-icon>
+                  </v-btn>
+                </div>
+              </div>
+
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-2" text @click="saveTemplate">{{ isEdit ? 'Update' : 'Save' }}</v-btn>
+              <v-btn :loading="loading" color="blue darken-2" text @click="saveTemplate">{{ isEdit ? 'Update' : 'Save' }}</v-btn>
               <v-btn text @click="dialog = false">Cancel</v-btn>
             </v-card-actions>
           </v-card>
@@ -95,6 +114,17 @@
               <p><strong>Name:</strong> {{ selectedTemplate.name }}</p>
               <p><strong>Description:</strong> {{ selectedTemplate.description }}</p>
               <p><strong>Components:</strong> {{ selectedTemplate?.components?.join(', ') }}</p>
+              <p><strong>Hero Images:</strong></p>
+              <div style="display: flex; flex-wrap: wrap; justify-content: space-evenly;" class="flex flex-wrap mt-2 gap-2">
+                <div
+                  v-for="(img, index) in selectedTemplate.heroImages"
+                  :key="index"
+                  class="relative w-24 h-24"
+                >
+                  <img :src="getImageSrc(img)" height="80" width="80" />
+                </div>
+              </div>
+
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -121,7 +151,9 @@
           name: '',
           components: [],
           description: '',
+          heroImages: [],
           image: '',
+
         },
         selectedTemplate: {},
         file: null,
@@ -129,7 +161,7 @@
       };
     },
     computed: {
-      ...mapState(useTemplateStore, ['templates']),
+      ...mapState(useTemplateStore, ['templates','loading']),
       filteredTemplates() {
         if (!this.search) return this.templates;
         const term = this.search.toLowerCase();
@@ -139,7 +171,7 @@
       },
     },
     methods: {
-      ...mapActions(useTemplateStore, ['fetchTemplates', 'addTemplate', 'updateTemplate', 'deleteTemplate']),
+      ...mapActions(useTemplateStore, ['fetchTemplates', 'addTemplate', 'updateTemplate', 'deleteTemplate','uploadImageToImgBB']),
       openAddDialog() {
         this.resetForm();
         this.isEdit = false;
@@ -158,6 +190,28 @@
         this.file = file;
       },
       async saveTemplate() {
+        console.log("hi")
+        // Pictures First
+        const imageUrls = [];
+        if (this.form.heroImages && this.form.heroImages.length > 0) {
+          for (const img of this.form.heroImages) {
+            if (typeof img === "string") {
+              // الصورة موجودة مسبقًا كرابط (مش صورة جديدة)
+              imageUrls.push(img);
+            } else if (img instanceof File) {
+              // الصورة جديدة من نوع File - نرفعها
+              const uploadedURL = await this.uploadImageToImgBB(img);
+              imageUrls.push(uploadedURL);
+            } else {
+              // حالة غير متوقعة، ممكن تتجاهل أو تعطي تحذير هنا
+              console.warn("صورة غير صالحة في المعرض:", img);
+            }
+          }
+        } else {
+          console.warn("لا توجد صور في المعرض للرفع");
+        }
+        this.form.heroImages = imageUrls
+        
         if (this.isEdit) {
           await this.updateTemplate(this.form.id, this.form, this.file);
         } else {
@@ -166,12 +220,35 @@
         this.dialog = false;
         this.resetForm();
       },
+
+       handleImageUpload(newFiles) {
+        if (!newFiles) return;
+        console.log("heroImages",this.form.heroImages)
+        // console.log("description",this.form.description)
+        const total = this.form.heroImages.length + newFiles.length;
+
+        if (total > 4) {
+            const availableSlots = 4 - this.form.heroImages.length;
+            const filesToAdd = newFiles.slice(0, availableSlots);
+            this.form.heroImages.push(...filesToAdd);
+        } else {
+            this.form.heroImages.push(...newFiles);
+        }
+        },
+      getImageSrc(img) {
+        return typeof img === "string" ? img : URL.createObjectURL(img);
+      },
+      removeImage(index) {
+        this.form.heroImages.splice(index, 1);
+      },
       resetForm() {
         this.form = {
           name: '',
           components: [],
           description: '',
           image: '',
+          heroImages: [],
+
         };
         this.file = null;
       },

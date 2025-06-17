@@ -15,6 +15,7 @@
             prepend-icon="mdi-upload"
             accept="image/*"
           />
+      
 
           <v-text-field
             v-model="form.heroTitle"
@@ -127,6 +128,13 @@
             </div>
           </v-expand-transition>
 
+          <!-- Choose Hero background -->
+          <ChooseHero 
+            :initialHeroSection="form.heroSection"
+            @hero-selection-changed="handleHeroSelection"
+            
+          />
+
           <!-- واتساب -->
           <v-divider class="my-6" />
           <h4 class="mb-4 mr-4">خيارات التواصل واتساب</h4>
@@ -187,9 +195,14 @@ import tenantUidMixin from "@/mixins/tenantUidMixin";
 import { mapState, mapActions } from "pinia";
 import { useTemplateSettingsStore } from "@/store/portfolio/templates/template-portfolio";
 
+// Components
+import ChooseHero from "@/components/portfolio/shared/dashboard/Template-Setting/ChooseHero.vue";
+
 export default {
   name: "TemplateSettings",
   mixins: [tenantUidMixin],
+  components: { ChooseHero },
+
   data() {
     return {
       showAdditionalInfo: false,
@@ -215,6 +228,10 @@ export default {
         },
         showWhatsApp: false,
         whatsappNumber: "",
+        heroSection: {
+        isDefault: true,
+        images: []
+      }
       },
     };
   },
@@ -248,6 +265,10 @@ export default {
             instagram: this.settings.socialLinks?.instagram || "",
             pinterest: this.settings.socialLinks?.pinterest || "",
             website: this.settings.socialLinks?.website || "",
+          },
+           heroSection: this.settings.heroSection || {
+            isDefault: true,
+            images: []
           },
           showWhatsApp: this.settings.showWhatsApp || false,
           whatsappNumber: this.settings.whatsappNumber || "",
@@ -287,6 +308,12 @@ export default {
           console.error("خطأ أثناء حفظ الإعدادات:", error);
           this.$toast.error("حدث خطأ أثناء تحديث الإعدادات");
         });
+    },
+     handleHeroSelection(payload) {
+       console.log("payload",payload)
+   
+      this.form.heroSection.images = payload.images;
+      this.form.heroSection.isDefault = payload.isDefault;
     },
 
   },

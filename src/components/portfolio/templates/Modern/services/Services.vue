@@ -1,5 +1,5 @@
 <template>
-  <div class="services-section pa-5">
+  <div class="services-section pa-5" :class="{ 'custom-theme': isCustomTheme }">
     <h2 class="font-weight-bold mb-4">Services</h2>
     <div>
       <div
@@ -60,7 +60,12 @@ import tenantUidMixin from "@/mixins/tenantUidMixin";
 export default {
   mixins: [tenantUidMixin],
   components: { ServiceCard,ServiceDetails },
-  
+  props: {
+    isCustomTheme: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       expandedServiceId: null,
@@ -127,6 +132,8 @@ export default {
   // border-radius: 12px !important;
   // background-color: red;
 }
-
+.services-section.custom-theme {
+  background: #fff;
+}
 
 </style>

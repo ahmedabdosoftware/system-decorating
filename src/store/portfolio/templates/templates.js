@@ -82,5 +82,24 @@ export const useTemplateStore = defineStore("templateStore", {
       await db.collection("templates").doc(id).delete();
       this.templates = this.templates.filter((t) => t.id !== id);
     },
+    
+    async uploadImageToImgBB(file) {
+    const apiKey = 'a70bc1d60d105c80b4eb207fb2ca3ba1';
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+    method: "POST",
+    body: formData,
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+    throw new Error("رفع الصورة فشل");
+    }
+
+    return data.data.url;
+    },
   },
 });
