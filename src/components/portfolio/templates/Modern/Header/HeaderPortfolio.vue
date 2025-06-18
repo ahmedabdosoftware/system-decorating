@@ -23,13 +23,14 @@
     <!-- buttons -->
     <div class="buttons-catalog">
       <button @click="scrollToSection('request-section')" class="request-catalog" :style="{ backgroundColor: settings.primaryColor || '#f57c00' }">Request</button>
-       <button
+      <button
         @click="isAdmin ? dialog = true : null"
         class="add-button"
-        :style="{ visibility: isAdmin ? 'visible' : 'hidden' , width:'30px'}"
+        :style="{ visibility: isAdmin ? 'visible' : 'hidden', width: '30px' }"
       >
         <font-awesome-icon :icon="['fas', 'plus']" />
       </button>
+
       <!-- Catalog -->
       <Catalog-dialog :visible="dialogCatalog" @close="dialogCatalog = false" />
       <v-avatar size="50" class="avatar">
@@ -73,7 +74,6 @@ import { useTemplateSettingsStore } from "@/store/portfolio/templates/template-p
 // Components
 import dashboardTem from "@/components/portfolio/shared/dashboard/dashboardTem.vue";
 import CatalogDialog from "@/components/portfolio/templates/Modern/catalog/CatalogDialog.vue";
-import { width } from "@fortawesome/free-brands-svg-icons/faAccessibleIcon";
 
 export default {
     props: {
