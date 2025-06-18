@@ -14,16 +14,19 @@
 
     <!-- nav-links -->
     <ul class="nav-links">
-      <li v-for="link in links" :key="link">{{ link }}</li>
+      <li v-for="link in links" :key="link.name" @click="scrollToSection(link.target)">
+        {{ link.name }}
+      </li>
     </ul>
+
 
     <!-- buttons -->
     <div class="buttons-catalog">
-      <button @click="dialogCatalog = true" class="request-catalog" :style="{ backgroundColor: settings.primaryColor || '#f57c00' }">Catalog</button>
-     <button
-        v-if="isAdmin"
-        @click="dialog = true"
+      <button @click="scrollToSection('request-section')" class="request-catalog" :style="{ backgroundColor: settings.primaryColor || '#f57c00' }">Request</button>
+       <button
+        @click="isAdmin ? dialog = true : null"
         class="add-button"
+        :style="{ visibility: isAdmin ? 'visible' : 'hidden' , width:'30px'}"
       >
         <font-awesome-icon :icon="['fas', 'plus']" />
       </button>
@@ -47,10 +50,11 @@
       </div>
 
       <ul>
-        <li v-for="link in links" :key="link" @click="toggleSidebar">
-          {{ link }}
+        <li v-for="link in links" :key="link.name" @click="scrollToSection(link.target); toggleSidebar()">
+          {{ link.name }}
         </li>
       </ul>
+
     </div>
 
     <!--  Overlay -->
@@ -69,6 +73,7 @@ import { useTemplateSettingsStore } from "@/store/portfolio/templates/template-p
 // Components
 import dashboardTem from "@/components/portfolio/shared/dashboard/dashboardTem.vue";
 import CatalogDialog from "@/components/portfolio/templates/Modern/catalog/CatalogDialog.vue";
+import { width } from "@fortawesome/free-brands-svg-icons/faAccessibleIcon";
 
 export default {
     props: {
@@ -80,7 +85,12 @@ export default {
   data() {
     
     return {
-      links: ["Moonst", "Cuotioos", "Faltcos", "Bolps", "Doctiors"],
+      links: [
+        { name: "Services", target: "services-section" },
+        { name: "Portfolio", target: "portfolio-section" },
+        { name: "Request", target: "request-section" },
+        { name: "Contact", target: "contact-section" }
+      ],
       isSidebarOpen: false,
       dialog: false,
       dialogCatalog: false,
@@ -102,6 +112,18 @@ export default {
     toggleSidebar() {
       this.isSidebarOpen = !this.isSidebarOpen;
     },
+     scrollToSection(target) {
+      if (target === "contact-section" && this.settings.whatsappNumber) {
+        const cleanedNumber = this.settings.whatsappNumber.replace(/[^+\d]/g, "");
+        window.open(`https://wa.me/${cleanedNumber}`, '_blank');
+        return;
+      }
+      
+      const element = document.getElementById(target);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+  }
   },
 };
 </script>

@@ -62,7 +62,7 @@
             <p>
               {{ service.offer }}
             </p>
-            <v-btn class="limited-offer-btn" color="orange" dark small>
+            <v-btn class="limited-offer-btn" color="orange" dark small   @click="scrollToRequestSection">
               Claim Offer
             </v-btn>
           </div>
@@ -78,6 +78,15 @@ export default {
   props: {
     service: Object,
     expanded: Boolean
+  },
+  methods:{
+    scrollToRequestSection() {
+  const element = document.getElementById("request-section");
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
   }
 };
 </script>

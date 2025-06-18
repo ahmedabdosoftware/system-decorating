@@ -155,7 +155,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="grey" @click="formDialog = false">إلغاء</v-btn>
-            <v-btn :loading="saving" :disabled="saving" color="orange darken-2" dark @click="saveProject">حفظ</v-btn>
+            <v-btn :loading="saving" color="orange darken-2" dark @click="saveProject">حفظ</v-btn>
           </v-card-actions>
         </v-form>
         </v-card>

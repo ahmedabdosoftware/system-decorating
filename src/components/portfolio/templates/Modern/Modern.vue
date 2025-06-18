@@ -4,11 +4,19 @@
        <div class="portfolio-view" :class="{ 'custom-theme': isCustomTheme }">
         <HeaderComponent :isCustomTheme="isCustomTheme" />
         <HeroWrapper/>
-        <Services :isCustomTheme="isCustomTheme" />
-        <PortfolioContainer :isCustomTheme="isCustomTheme" />
+        <div id="services-section">
+          <Services :isCustomTheme="isCustomTheme" />
+        </div>
+        <div id="portfolio-section">
+          <PortfolioContainer :isCustomTheme="isCustomTheme" />
+        </div>
         <Baner :isCustomTheme="isCustomTheme" />
-        <InspectionReques :isCustomTheme="isCustomTheme" />
-        <Footer :isCustomTheme="isCustomTheme" />
+        <div id="request-section">
+          <InspectionReques :isCustomTheme="isCustomTheme" />
+        </div>
+        <div id="contact-section">
+          <Footer :isCustomTheme="isCustomTheme" />
+        </div>
         <WhatsAppFloating
         v-if="showWhatsappButton"
         :whatsappNumber="settings.whatsappNumber"

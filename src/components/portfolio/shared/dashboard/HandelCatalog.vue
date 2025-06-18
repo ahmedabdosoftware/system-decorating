@@ -73,7 +73,7 @@
             <v-text-field v-model="productForm.price" label="السعر" outlined dense />
             <v-select :items="categories" item-text="name" item-value="name" v-model="productForm.category" label="التصنيف" outlined dense />
             <v-text-field v-model="productForm.unit" label="الوحدة (مثل متر / لوح)" outlined dense />
-            <v-text-field v-model="productForm.discount" label="الخصم (إن وجد)" outlined dense />
+            <v-text-field v-model="productForm.discount" label="الخصم اي ان السعر الجديد بعد الخصم (إن وجد)" outlined dense />
             
             <!-- رفع صور -->
             <v-file-input

@@ -96,10 +96,26 @@
                   </v-list-item-content>
                 </div>
 
-                <div class="text-right d-flex align-center">
-                  <div class="font-weight-bold mr-2">{{ item.price }}</div>
-                  <v-icon>mdi-chevron-down</v-icon>
+              <div class="text-right d-flex align-center">
+                <div v-if="item.discount" class="d-flex align-center">
+                   <v-tooltip bottom>
+                      <template v-slot:activator="{ on, attrs }">
+                        <div class="discounted-price font-weight-bold mr-1" v-bind="attrs" v-on="on">
+                          {{item.discount }} EGP
+                        </div>
+                      </template>
+                      <span>خصم خاص 🎉</span>
+                    </v-tooltip>
+                  <div class="original-price grey--text text--darken-1">
+                    {{ item.price }} EGP
+                  </div>
                 </div>
+                <div v-else class="font-weight-bold mr-2">
+                  {{ item.price }} EGP
+                </div>
+                <v-icon>mdi-chevron-down</v-icon>
+              </div>
+
               </v-card>
             </v-expansion-panel-header>
 
@@ -256,6 +272,16 @@
  ::v-deep( .v-expansion-panels--inset>.v-expansion-panel--active){
     max-width: 100% !important;
   }
+.discounted-price {
+  color: #d32f2f; /* لون أحمر خفيف للسعر بعد الخصم */
+  font-size: 16px;
+}
+
+.original-price {
+  text-decoration: line-through;
+  font-size: 13px;
+  margin-left: 4px;
+}
 
   </style>
   
