@@ -1,7 +1,11 @@
 <template>
   <div class="services-section pa-5" :class="{ 'custom-theme': isCustomTheme }">
     <h2 class="font-weight-bold mb-4">Services</h2>
-    <div>
+    <LoadingSpinner v-if="loading" message="Loading Services..." />
+
+    <NoData v-else-if="!loading && paginatedServices.length === 0" message="No services found." />
+
+    <div v-else>
       <div
         v-for="service in paginatedServices"
         :key="service.id"
@@ -52,6 +56,8 @@
 // Component
 import ServiceCard from "@/components/portfolio/templates/Modern/services/ServiceCard.vue";
 import ServiceDetails from "@/components/portfolio/templates/Modern/services/ServiceDetails.vue";
+import NoData from "@/components/portfolio/shared/additions/NoData.vue";
+import LoadingSpinner from "@/components/portfolio/shared/additions/LoadingSpinner.vue";
 // Store
 import { useServicesStore } from "@/store/portfolio/portfolioData/services";
 import { mapState, mapActions } from "pinia";
@@ -59,7 +65,7 @@ import { mapState, mapActions } from "pinia";
 import tenantUidMixin from "@/mixins/tenantUidMixin";
 export default {
   mixins: [tenantUidMixin],
-  components: { ServiceCard,ServiceDetails },
+  components: { ServiceCard,ServiceDetails,NoData, LoadingSpinner},
   props: {
     isCustomTheme: {
       type: Boolean,

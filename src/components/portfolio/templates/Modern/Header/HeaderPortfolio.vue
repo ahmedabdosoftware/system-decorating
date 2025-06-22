@@ -26,7 +26,7 @@
       <button
         @click="isAdmin ? dialog = true : null"
         class="add-button"
-        :style="{ visibility: isAdmin ? 'visible' : 'hidden', width: '30px' }"
+        :style="{ visibility: isAdmin ? 'visible' : 'hidden', width: !isAdmin ? '30px':'' }"
       >
         <font-awesome-icon :icon="['fas', 'plus']" />
       </button>

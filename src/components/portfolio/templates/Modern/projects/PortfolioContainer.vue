@@ -4,6 +4,7 @@
       class="portfolio-header d-flex justify-space-between align-center mb-4"
     >
       <h2 class="font-weight-bold">Portfolio</h2>
+  
       <div class="custom-select">
         <select v-model="searchQuery">
           <option value="">All</option>
@@ -17,7 +18,10 @@
         </select>
       </div>
     </div>
-    <v-container fluid>
+      
+    <LoadingSpinner v-if="loading" message="Loading projects..." />
+    <NoData v-else-if="!loading && projects.length === 0" message="No projects found." />
+    <v-container  v-else  fluid>
       <v-row>
         <v-col
           v-for="(project, index) in projects"
@@ -65,7 +69,8 @@ import { useServicesStore } from "@/store/portfolio/portfolioData/services";
 // components
 import PortfolioCard from "@/components/portfolio/templates/Modern/projects/PortfolioCard.vue";
 import ProjectDialog from "@/components/portfolio/templates/Modern/projects/ProjectDialog.vue";
-
+import NoData from "@/components/portfolio/shared/additions/NoData.vue";
+import LoadingSpinner from "@/components/portfolio/shared/additions/LoadingSpinner.vue";
 // mixins
 import tenantUidMixin from "@/mixins/tenantUidMixin";
 import textHelpers from "@/mixins/textHelpers";
@@ -75,6 +80,8 @@ export default {
   components: {
     PortfolioCard,
     ProjectDialog,
+    NoData,
+    LoadingSpinner,
   },
    props: {
     isCustomTheme: {

@@ -62,10 +62,13 @@
                 </v-col>
             </v-row>
 
+        <!-- <LoadingSpinner v-if="loading" message="Loading products..." /> -->
+
+        <NoData v-if="!loading && products.length === 0" message="No products found." />
 
         <!-- Catalog List -->
         <!-- Catalog List Using Expansion Panels -->
-        <v-expansion-panels
+        <v-expansion-panels v-else
           v-model="expandedPanel"
           multiple
           accordion
@@ -152,12 +155,14 @@
   import tenantUidMixin from "@/mixins/tenantUidMixin";
   // components
   import ProductDetails from "@/components/portfolio/templates/Modern/catalog/ProductDetails.vue";
+  import NoData from "@/components/portfolio/shared/additions/NoData.vue";
+  // import LoadingSpinner from "@/components/portfolio/shared/additions/LoadingSpinner.vue";
 
   export default {
     name: "CatalogDialog",
     mixins: [tenantUidMixin],
     components: {
-      ProductDetails,
+      ProductDetails,NoData,
     },
     props: {
       visible: Boolean,
@@ -240,6 +245,9 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   /* background-color: red; */
+  /* flex-direction: column; */
+  
+
 }
 
 .catalog-item:hover {
