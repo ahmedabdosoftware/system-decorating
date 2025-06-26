@@ -67,6 +67,13 @@
         );
     },
     },
+      created() {
+        const lang = this.settings?.language || 'en';
+        this.$i18n.locale = lang;
+        this.$vuetify.rtl = lang === "ar";
+
+
+  },
   };
   </script>
   <style lang="scss">
@@ -77,5 +84,6 @@
   .portfolio-view.custom-theme {
     background: #fff; 
 }
+  
   </style>
   

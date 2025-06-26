@@ -3,7 +3,7 @@
     <v-dialog v-model="visible" max-width="650" scrollable>
       <v-card class="rounded-xl pa-2" style="height: 90vh; overflow-y: auto">
         <v-card-title class="d-flex justify-space-between align-center">
-          <div class="catalog-label">Catalog</div>
+          <div class="catalog-label">{{ $t('catalog.title') }}</div>
           <v-btn icon @click="$emit('close')">
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -24,7 +24,7 @@
                 :color="selectedFilter === option.value ? 'orange darken-2' : 'grey lighten-1'"
                 @click="selectedFilter = option.value"
                 >
-                {{ option.label }}
+                {{ $t(`catalog.filters.${option.value}`) }}
                 </v-btn>
             </v-col>
             </v-row>
@@ -33,11 +33,11 @@
         <!-- Search Input/Select -->
             <v-row class="mb-4">
                 <v-col cols="12" class="Search-Input-Select">
-                    <div class="search-label mb-1"> Search by {{ selectedFilter }}</div>
+                    <div class="search-label mb-1"> {{ $t('catalog.searchBy') }} {{ $t(`catalog.filters.${selectedFilter}`) }}</div>
                     <v-text-field
                         v-if="selectedFilter !== 'category'"
                         v-model="searchQuery"
-                        label="write here"
+                        :label="$t('catalog.writeHere')"
                         class="full-width-input search-input"
                         hide-details
                         solo
@@ -51,7 +51,7 @@
                     :items="categories"
                     item-text="name"
                     item-value="name"
-                    label="Select Category"
+                    :label="$t('catalog.selectCategory')"
                     class="full-width-input search-input"
                     solo
                     flat
@@ -63,8 +63,7 @@
             </v-row>
 
         <!-- <LoadingSpinner v-if="loading" message="Loading products..." /> -->
-
-        <NoData v-if="!loading && products.length === 0" message="No products found." />
+        <NoData v-if="!loading && products.length === 0" :message="$t('catalog.noProducts')" />
 
         <!-- Catalog List -->
         <!-- Catalog List Using Expansion Panels -->
@@ -107,7 +106,7 @@
                           {{item.discount }} EGP
                         </div>
                       </template>
-                      <span>خصم خاص 🎉</span>
+                      <span>{{ $t('catalog.specialDiscount') }}</span>
                     </v-tooltip>
                   <div class="original-price grey--text text--darken-1">
                     {{ item.price }} EGP

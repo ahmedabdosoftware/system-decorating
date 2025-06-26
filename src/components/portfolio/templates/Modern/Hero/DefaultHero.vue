@@ -1,14 +1,15 @@
 <!-- HeroSection.vue -->
 <template>
-  <v-container fluid class="hero-section d-flex align-center">
+ <!-- <v-locale-provider :rtl="false"> -->
+  <v-container fluid class="hero-section d-flex align-center" >
     <v-row class="align-center hero-content">
       <v-col cols="12" md="6" class="hero-text">
-        <h1>{{settings.heroTitle}}</h1>
+        <h1  dir="ltr">{{settings.heroTitle}}</h1>
         <p>
          {{settings.heroDescription}}
         </p>
         <div class="action-container">
-          <v-btn @click="dialog = true" :style="{ backgroundColor: settings.primaryColor || '#f57c00' }" class="catalog-btn">Catalog</v-btn>
+          <v-btn @click="dialog = true" :style="{ backgroundColor: settings.primaryColor || '#f57c00' }" class="catalog-btn"> {{ $t("hero.catalog") }}</v-btn>
           <v-avatar size="50" class="avatar">
             <img :src="avatarUrl || 'https://i.pravatar.cc/300'" alt="User Avatar" />
           </v-avatar>
@@ -18,6 +19,7 @@
       <v-col cols="12" md="6" class="cont-imag-hero-res"> </v-col>
     </v-row>
   </v-container>
+ <!-- </v-locale-provider> -->
 </template>
 <script>
 // Component
@@ -46,7 +48,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 .hero-section {
+  direction:ltr !important;
   min-height: 80vh;
   width: 100%;
   background: url("../../../../../assets/portfolio/bci.png") no-repeat;

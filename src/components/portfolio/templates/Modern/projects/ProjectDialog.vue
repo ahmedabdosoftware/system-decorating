@@ -80,17 +80,17 @@
               <p class="mt-2">{{ project.description }}</p>
 
               <div class="mt-2">
-                <strong>Materials Used</strong><br />
+                <strong>{{ $t('portfolio.project.materials') }}</strong><br />
                 {{ project.materials }}
               </div>
 
               <div class="mt-2">
-                <strong>Project Duration</strong><br />
+                <strong>{{ $t('portfolio.project.duration') }}</strong><br />
                 {{ project.duration }}
               </div>
 
               <div class="mt-2">
-                <strong>Client Testimonial</strong>
+                <strong>{{ $t('portfolio.project.testimonial') }}</strong>
                 <v-card class="mt-1 pa-2" color="grey lighten-4" outlined>
                   <em>"{{ project.testimonial }}"</em>
                   <br />
@@ -103,10 +103,12 @@
       </v-card-text>
 
       <v-card-actions class="justify-space-between">
-        <v-btn class="Previous" color="grey" :disabled="!canGoPrev" @click="$emit('prev')"
-          >Previous</v-btn
-        >
-        <v-btn color="orange darken-1" dark :loading="loadingNext" @click="$emit('next')">Next</v-btn>
+        <v-btn class="Previous" color="grey" :disabled="!canGoPrev" @click="$emit('prev')"> 
+           {{ $t('portfolio.project.previous') }}
+        </v-btn>
+        <v-btn color="orange darken-1" dark :loading="loadingNext" @click="$emit('next')">
+          {{ $t('portfolio.project.next') }}
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

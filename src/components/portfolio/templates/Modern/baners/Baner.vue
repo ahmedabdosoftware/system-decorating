@@ -2,10 +2,9 @@
   <div class="banner-section" :style="{ backgroundImage: computedBackgroundImage }">
     <div class="banner-overlay">
       <div class="banner-content">
-        <h1 class="banner-title">Transforming Spaces with Elegance</h1>
+        <h1 class="banner-title">{{ $t('banner.title') }}</h1>
         <p class="banner-subtitle">
-          Where craftsmanship meets design to create timeless beauty in every
-          detail.
+          {{ $t('banner.subtitle') }}
         </p>
         <!-- Temprary -->
       
@@ -19,11 +18,11 @@
 
         >
           <v-icon start>mdi-wrench</v-icon>
-          Explore Design Services
+         {{ $t('banner.button') }}
         </v-btn>
 
          <v-snackbar v-model="snackbar" :timeout="3000" top>
-          Design services will be available soon!
+           {{ $t('banner.snackbar') }}
         </v-snackbar>
 
       </div>

@@ -25,7 +25,7 @@
             :style="{ backgroundColor: settings.primaryColor || '#f57c00' }"
             class="catalog-btn"
           >
-            Catalog
+            {{ $t("hero.catalog") }}
           </v-btn>
           <v-avatar size="50" class="avatar">
             <img :src="avatarUrl || 'https://i.pravatar.cc/300'" alt="User Avatar" />

@@ -3,11 +3,11 @@
     <div
       class="portfolio-header d-flex justify-space-between align-center mb-4"
     >
-      <h2 class="font-weight-bold">Portfolio</h2>
+      <h2 class="font-weight-bold">{{ $t('portfolio.title') }}</h2>
   
       <div class="custom-select">
         <select v-model="searchQuery">
-          <option value="">All</option>
+          <option value="">{{ $t('portfolio.all') }}</option>
           <option
             v-for="(service, index) in services"
             :key="index"
@@ -19,8 +19,8 @@
       </div>
     </div>
       
-    <LoadingSpinner v-if="loading" message="Loading projects..." />
-    <NoData v-else-if="!loading && projects.length === 0" message="No projects found." />
+    <LoadingSpinner v-if="loading" :message="$t('portfolio.loading')" />
+    <NoData v-else-if="!loading && projects.length === 0" :message="$t('portfolio.noProjects')" />
     <v-container  v-else  fluid>
       <v-row>
         <v-col

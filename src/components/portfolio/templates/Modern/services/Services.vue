@@ -1,9 +1,9 @@
 <template>
   <div class="services-section pa-5" :class="{ 'custom-theme': isCustomTheme }">
-    <h2 class="font-weight-bold mb-4">Services</h2>
-    <LoadingSpinner v-if="loading" message="Loading Services..." />
+    <h2 class="font-weight-bold mb-4">{{ $t("services.title") }}</h2>
+    <LoadingSpinner v-if="loading" :message='$t("services.loading")' />
 
-    <NoData v-else-if="!loading && paginatedServices.length === 0" message="No services found." />
+    <NoData v-else-if="!loading && paginatedServices.length === 0" :message='$t("services.noData")'/>
 
     <div v-else>
       <div
@@ -60,7 +60,10 @@ import NoData from "@/components/portfolio/shared/additions/NoData.vue";
 import LoadingSpinner from "@/components/portfolio/shared/additions/LoadingSpinner.vue";
 // Store
 import { useServicesStore } from "@/store/portfolio/portfolioData/services";
+import { useTemplateSettingsStore } from "@/store/portfolio/templates/template-portfolio";
 import { mapState, mapActions } from "pinia";
+// localization
+// import { useI18n } from "vue-i18n";
 // Mixins
 import tenantUidMixin from "@/mixins/tenantUidMixin";
 export default {
@@ -95,6 +98,8 @@ export default {
       "endReached",
       "loading"
     ]),
+        ...mapState(useTemplateSettingsStore, ["settings"]),
+
   },
   methods: {
     ...mapActions(useServicesStore, [
@@ -127,6 +132,7 @@ export default {
       }
     },
   },
+
 };
 </script>
 

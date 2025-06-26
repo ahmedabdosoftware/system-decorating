@@ -154,6 +154,12 @@ export const useUserStore = defineStore("user", {
               website: "",
             },
             location: "",
+              heroSection: {
+                isDefault: true,
+                images: [],
+                
+              },
+            language: "en",
           };
 
           try {

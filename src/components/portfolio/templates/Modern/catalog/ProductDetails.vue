@@ -4,7 +4,7 @@
     <p class="description-catlog-details">{{ product.description }}</p>
 
     <div class="colors-section">
-      <h3 class="section-title">Images</h3>
+      <h3 class="section-title">{{ $t('catalog.productDetails.images') }}</h3>
       <div class="color-previews">
         <div
           v-for="(img, index) in product.images"
@@ -16,7 +16,7 @@
       </div>
 
       <div class="color-select">
-        <h3 class="section-title">Colors & Shapes</h3>
+        <h3 class="section-title">{{ $t('catalog.productDetails.colorsAndShapes') }}</h3>
         <div class="color-circles">
           <span
             v-for="(color, index) in product.colors"
@@ -30,7 +30,7 @@
     </div>
 
     <div class="features">
-      <h3 class="section-title">Features :</h3>
+      <h3 class="section-title">{{ $t('catalog.productDetails.features') }} :</h3>
       <ul>
         <li v-for="(feature, index) in product.Feature" :key="index">
           <span class="arrow-catlog-details">▶</span> {{ feature }}

@@ -22,7 +22,7 @@
 
     <!-- buttons -->
     <div class="buttons-catalog">
-      <button @click="scrollToSection('request-section')" class="request-catalog" :style="{ backgroundColor: settings.primaryColor || '#f57c00' }">Request</button>
+      <button @click="scrollToSection('request-section')" class="request-catalog" :style="{ backgroundColor: settings.primaryColor || '#f57c00' }"> {{ $t("header.request") }}</button>
       <button
         @click="isAdmin ? dialog = true : null"
         class="add-button"
@@ -85,12 +85,12 @@ export default {
   data() {
     
     return {
-      links: [
-        { name: "Services", target: "services-section" },
-        { name: "Portfolio", target: "portfolio-section" },
-        { name: "Request", target: "request-section" },
-        { name: "Contact", target: "contact-section" }
-      ],
+     links: [
+      { name: this.$t("header.navbar.services"), target: "services-section" },
+      { name: this.$t("header.navbar.portfolio"), target: "portfolio-section" },
+      { name: this.$t("header.navbar.request"), target: "request-section" },
+      { name: this.$t("header.navbar.contact"), target: "contact-section" },
+    ],
       isSidebarOpen: false,
       dialog: false,
       dialogCatalog: false,

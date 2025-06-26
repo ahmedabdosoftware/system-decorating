@@ -4,7 +4,7 @@
     <div class="details-layout">
       <!-- main-content-->
       <div class="main-content">
-        <h3 class="section-title">Service Description</h3>
+      <h3 class="section-title">{{ $t('services.details.descriptionTitle') }}</h3>
         <p class="mb-4">
           {{ service.description }}
         </p>
@@ -12,31 +12,31 @@
         <ul class="benefits mb-4">
           <li>
             <v-icon color="orange" small>mdi-check-circle</v-icon>
-            Professional installation by certified technicians
+            {{ $t('services.details.benefit1') }}
           </li>
           <li>
             <v-icon color="orange" small>mdi-check-circle</v-icon>
-            Premium materials and components
+            {{ $t('services.details.benefit2') }}
           </li>
           <li>
             <v-icon color="orange" small>mdi-check-circle</v-icon>
-            2-year warranty on all installations
+            {{ $t('services.details.benefit3') }}
           </li>
         </ul>
 
-        <h3 class="section-title">Installation Details</h3>
+        <h3 class="section-title">{{ $t('services.details.installationTitle') }}</h3>
         <div class="install-box mb-4">
-          <strong>Standard Installation</strong>
-          <p class="mb-0">Includes basic setup and configuration</p>
+          <strong>{{ $t('services.details.standardInstallation') }}</strong>
+          <p>{{ $t('services.details.standardInstallationNote') }}</p>
           <p class="install-price">{{ service.price }}</p>
         </div>
 
-        <h3 class="section-title">Additional Specifications</h3>
+        <h3 class="section-title">{{ $t('services.details.additionalSpecs') }}</h3>
          <ul class="specs-list mb-4">
           <li v-for="(spec, index) in service.specifications" :key="index">
             <span>{{ spec.label }}</span>
             <span class="service-price">
-              {{ spec.value?.toLowerCase() === 'included' ? 'included' : spec.value }}
+              {{ spec.value?.toLowerCase() === 'included' ? $t('services.details.included') : spec.value }}
             </span>
           </li>
         </ul>
@@ -44,26 +44,29 @@
 
       <div class="side-box">
         <div class="highlights-box">
-          <h3 class="section-title mb-3">Service Highlights</h3>
+          <h3 class="section-title mb-3">{{ $t('services.details.highlightsTitle') }}</h3>
           <ul class="highlight-points mb-3">
             <li>
-              <v-icon left color="orange" small>mdi-timer</v-icon> Average completion time: 4–6 hours
+              <v-icon left color="orange" small>mdi-timer</v-icon>
+              {{ $t('services.details.time') }}
             </li>
             <li>
-              <v-icon left color="orange" small>mdi-calendar</v-icon> Scheduling available 7 days a week
+              <v-icon left color="orange" small>mdi-calendar</v-icon>
+              {{ $t('services.details.schedule') }}
             </li>
             <li>
-              <v-icon left color="orange" small>mdi-tools</v-icon> All tools and materials provided
+              <v-icon left color="orange" small>mdi-tools</v-icon>
+              {{ $t('services.details.tools') }}
             </li>
           </ul>
 
           <div class="limited-offer-box">
-            <h4>Limited Time Offer</h4>
+            <h4>{{ $t('services.details.limitedTitle') }}</h4>
             <p>
               {{ service.offer }}
             </p>
             <v-btn class="limited-offer-btn" color="orange" dark small   @click="scrollToRequestSection">
-              Claim Offer
+             {{ $t('services.details.claim') }}
             </v-btn>
           </div>
         </div>
@@ -134,7 +137,7 @@ export default {
 
 /* العناوين كلها تبقى على الشمال */
 .section-title {
-  text-align: left;
+  text-align: start;
   margin-bottom: 8px;
   font-size: 17px;
   font-weight: bold;
@@ -154,6 +157,7 @@ export default {
   border-radius: 10px;
   padding: 16px;
   border: 1px solid #eee;
+  max-width: 95%;
 }
 
 .install-price {

@@ -56,6 +56,21 @@
             <div v-show="showAdditionalInfo">
               <h4 class="mb-3">معلومات إضافية</h4>
 
+                <!-- اختيار اللغة -->
+                <v-select
+                  v-model="form.language"
+                  :items="languages"
+                  item-text="label"
+                  item-value="value"
+                  label="اختار لغة الموقع"
+                  outlined
+                  class="mb-2"
+                />
+
+                <p class="text-caption text--secondary mb-4">
+                  ⚠️ تأكد من رفع البيانات مثل الكاتالوج والخدمات باللغة التي تختارها، لأن الموقع هيتم ضبطه بناءً عليها.
+                </p>
+
               <!-- الموقع -->
               <v-text-field
                 v-model="form.location"
@@ -229,10 +244,17 @@ export default {
         showWhatsApp: false,
         whatsappNumber: "",
         heroSection: {
-        isDefault: true,
-        images: []
-      }
+          isDefault: true,
+          images: [],
+          
+        },
+      language: "en", 
       },
+      languages: [
+      { label: "الإنجليزية", value: "en" },
+      { label: "العربية", value: "ar" },
+    ],
+
     };
   },
     computed: {
@@ -272,6 +294,8 @@ export default {
           },
           showWhatsApp: this.settings.showWhatsApp || false,
           whatsappNumber: this.settings.whatsappNumber || "",
+          language: this.settings.language || "en",
+
         };
         this.oldLogo = this.settings.logo || null;
         }

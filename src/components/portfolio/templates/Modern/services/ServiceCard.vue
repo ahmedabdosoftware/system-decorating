@@ -10,10 +10,20 @@
       <v-avatar class="icon-wrapper" size="40">
         <v-icon>{{ icon }}</v-icon>
       </v-avatar>
-      <span class="service-title ml-4">{{ title }}</span>
+      <span
+        class="service-title"
+        :class="$vuetify.rtl ? 'mr-4' : 'ml-4'"
+      >
+        {{ title }}
+      </span>
     </div>
     <div class="d-flex align-center">
-      <span class="service-price mr-2">{{ price }}</span>
+    <span
+      class="service-price"
+      :class="$vuetify.rtl ? 'ml-2' : 'mr-2'"
+    >
+      {{ price }}
+    </span>
       <v-icon small>mdi-chevron-right</v-icon>
     </div>
   </v-card>

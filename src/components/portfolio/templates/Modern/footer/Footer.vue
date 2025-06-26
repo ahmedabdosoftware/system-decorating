@@ -4,9 +4,9 @@
       <v-row class="footer-top" no-gutters>
         <!-- Column 1 -->
         <v-col cols="12" md="4" class="mb-6">
-          <h3 class="footer-title">{{ settings?.heroTitle || 'Our Business' }}</h3>
+          <h3 class="footer-title">{{ settings?.heroTitle ||  $t('footer.businessTitle')}}</h3>
           <p class="footer-desc">
-            {{ settings?.heroDescription || 'High quality craftsmanship and service.' }}
+            {{ settings?.heroDescription ||$t('footer.businessDesc') }}
           </p>
           <div class="footer-socials">
             <a
@@ -63,32 +63,20 @@
 
         <!-- Column 2 -->
         <v-col cols="12" md="4" class="mb-6">
-          <h4 class="footer-heading">Quick Links</h4>
+          <h4 class="footer-heading">{{ $t('footer.quickLinks') }}</h4>
           <ul class="footer-links">
-            <li>
-              <a href="#"> <span>›</span> Services</a>
-            </li>
-            <li>
-              <a href="#"> <span>›</span> Portfolio</a>
-            </li>
-            <li>
-              <a href="#"> <span>›</span> About Me</a>
-            </li>
-            <li>
-              <a href="#"> <span>›</span> Testimonials</a>
-            </li>
-            <li>
-              <a href="#"> <span>›</span> Blog</a>
-            </li>
-            <li>
-              <a href="#"> <span>›</span> Contact</a>
-            </li>
+            <li><a href="#"><span>›</span> {{ $t('footer.links.services') }}</a></li>
+            <li><a href="#"><span>›</span> {{ $t('footer.links.portfolio') }}</a></li>
+            <li><a href="#"><span>›</span> {{ $t('footer.links.about') }}</a></li>
+            <li><a href="#"><span>›</span> {{ $t('footer.links.testimonials') }}</a></li>
+            <li><a href="#"><span>›</span> {{ $t('footer.links.blog') }}</a></li>
+            <li><a href="#"><span>›</span> {{ $t('footer.links.contact') }}</a></li>
           </ul>
         </v-col>
 
         <!-- Column 3 -->
         <v-col cols="12" md="4" class="mb-6">
-          <h4 class="footer-heading">Business Hours</h4>
+          <h4 class="footer-heading">{{ $t('footer.businessHours') }}</h4>
         <ul class="footer-hours">
           <li v-for="(item, index) in settings?.businessHours || []" :key="index">
             <span>{{ item.day }}:</span>
@@ -96,10 +84,10 @@
           </li>
         </ul>
           <div v-if="settings?.location" class="footer-location mt-4">
-            <strong>Workshop Location</strong>
+            <strong>{{ $t('footer.workshopLocation') }}</strong>
             <p>{{ settings.location }}</p>
             <p class="footer-payment">
-              <span class="text-warning">Payment Methods (soon):</span>
+              <span class="text-warning">{{ $t('footer.paymentMethods') }}</span>
               <v-icon small class="ml-1" color="amber lighten-2"
                 >mdi-credit-card</v-icon
               >
@@ -118,12 +106,12 @@
 
       <v-row class="footer-bottom" justify="space-between" align="center">
         <p class="text-caption mb-0">
-          © 2025 John Carpenter Woodworks. All rights reserved.
+           {{ $t('footer.copyRight') }}
         </p>
         <div class="footer-policy text-caption">
-          <a href="#" class="mr-4">Privacy Policy</a>
-          <a href="#" class="mr-4">Terms of Service</a>
-          <a href="#">Sitemap</a>
+          <a href="#" class="mr-4">{{ $t('footer.privacyPolicy') }}</a>
+          <a href="#" class="mr-4">{{ $t('footer.termsOfService') }}</a>
+          <a href="#">{{ $t('footer.sitemap') }}</a>
         </div>
       </v-row>
     </v-container>

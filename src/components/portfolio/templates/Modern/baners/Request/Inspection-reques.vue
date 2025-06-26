@@ -1,11 +1,8 @@
 <template>
   <section class="inspection-request">
     <div class="text-center mb-8">
-      <h2 class="section-title">Request an Inspection</h2>
-      <p class="section-subtitle">
-        Fill out the form below to request an inspection or consultation. I’ll
-        get back to you within 24 hours.
-      </p>
+       <h2 class="section-title">{{ $t('inspection.title') }}</h2>
+      <p class="section-subtitle">{{ $t('inspection.subtitle') }}</p>
     </div>
 
     <ValidationObserver v-slot="{ handleSubmit }">
@@ -20,7 +17,7 @@
                   v-slot="{ errors }"
                 >
                   <v-text-field
-                    label="Full Name"
+                    :label="$t('inspection.fullName')"
                     v-model="form.name"
                     :error-messages="errors"
                     outlined
@@ -36,7 +33,7 @@
                   v-slot="{ errors }"
                 >
                   <v-text-field
-                    label="location"
+                    :label="$t('inspection.location')"
                     v-model="form.location"
                     :error-messages="errors"
                     outlined
@@ -52,7 +49,7 @@
                   v-slot="{ errors }"
                 >
                   <v-text-field
-                    label="Phone Number"
+                    :label="$t('inspection.phone')"
                     v-model="form.phone"
                     :error-messages="errors"
                     outlined
@@ -68,7 +65,7 @@
                   v-slot="{ errors }"
                 >
                   <v-select
-                    label="Service Type"
+                    :label="$t('inspection.serviceType')"
                     v-model="form.service"
                     :items="services"
                     item-text="name"
@@ -87,7 +84,7 @@
                   v-slot="{ errors }"
                 >
                   <v-textarea
-                    label="Project Description"
+                    :label="$t('inspection.projectDescription')"
                     v-model="form.projectDescription"
                     :error-messages="errors"
                     outlined
@@ -103,7 +100,7 @@
                   v-slot="{ errors }"
                 >
                   <v-text-field
-                    label="Preferred Date"
+                    :label="$t('inspection.preferredDate')"
                     v-model="form.date"
                     type="date"
                     :error-messages="errors"
@@ -122,7 +119,7 @@
                   <v-checkbox
                     v-model="form.agree"
                     :error-messages="errors"
-                    label="I agree to the terms and conditions privacy policy."
+                    :label="$t('inspection.agreement')"
                     required
                     hide-details
                   />
@@ -138,7 +135,7 @@
                   type="submit"
                 >
                   <v-icon start>mdi-send</v-icon>
-                  Submit Request
+                  {{ $t('inspection.submit') }}
                 </v-btn>
               </v-col>
             </v-row>
